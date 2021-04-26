@@ -164,7 +164,7 @@ class FormWizardView(TemplateView):
 class PdfDownloadView(TemplateView):
 
     model = Answer
-    template_name = 'law_advice_builder/pdf_download.html'
+    template_name = 'legal_advice_builder/pdf_download.html'
 
     def get_answer(self):
         raise NotImplementedError
