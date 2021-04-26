@@ -1,0 +1,13 @@
+venv
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.so
+*.mo
+
+
+*.sqlite3
+/.DS_Store
+/Django_Legal_Advice_Builder.egg-info/*

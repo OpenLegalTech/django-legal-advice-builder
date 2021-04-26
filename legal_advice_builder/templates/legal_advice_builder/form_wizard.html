@@ -1,0 +1,28 @@
+{% load i18n %}
+{% if form %}
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" />
+</form>
+{% endif %}
+
+{% if success %}
+<div>{{ success_message }}</div>
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-primary btn-lg">
+        <input type="hidden" name="next" value="{{ next.id }}" />
+        {% trans 'Next' %}
+    </button>
+</form>
+{% endif %}
+
+{% if failure %}
+<div>{{ failure_message }}</div>
+{% endif %}
+
+{% if answer %}
+<a href="{% url 'answer-detail-download' answer.id %}">download</a>
+<p>{{ answer.template | safe }}</p>
+{% endif %}
