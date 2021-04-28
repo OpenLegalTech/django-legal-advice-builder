@@ -144,14 +144,14 @@ class Question(MP_Node):
 
     def __str__(self):
         short_title = self.short_title if self.short_title else ''
-        return '{}: {} {} ({}), FAILURE: ({}), SUCCESS: ({}), UNSURE: ({})'.format(
-            self.parent_option,
-            short_title,
-            self.text,
-            self.get_options_names(),
-            ', '.join(self.failure_options),
-            ', '.join(self.success_options),
-            ', '.join(self.unsure_options))
+        if self.field_type == self.SINGLE_OPTION:
+            return '{}: {} {} ({})'.format(
+                self.parent_option,
+                short_title,
+                self.text,
+                self.get_options_names())
+        else:
+            return '{}: {}'.format(short_title, self.text)
 
 
 class Answer(models.Model):
@@ -172,7 +172,6 @@ class Answer(models.Model):
             text = answer.get('text')
             key, value = question.get_dict_key(option, text)
             answers_dict[key] = value
-        print(answers_dict)
         return answers_dict
 
     @property

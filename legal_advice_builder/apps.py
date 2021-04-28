@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class Config(AppConfig):
+class LegalAdviceBuilderConfig(AppConfig):
     name = 'legal_advice_builder'
-    label = 'legal_advice_builder'
+    verbose_name = "Legal Advice Builder"
