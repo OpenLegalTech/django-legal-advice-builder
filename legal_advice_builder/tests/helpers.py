@@ -27,6 +27,7 @@ def get_single_option_question(parent_option=None, questionaire=None):
 def get_text_question(questionaire=None):
     res_dict = {
         'text': factory.Faker('text'),
+        'field_type': Question.TEXT,
     }
     if questionaire:
         res_dict.update({
