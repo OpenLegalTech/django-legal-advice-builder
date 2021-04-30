@@ -20,8 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'treebeard',
-    'legal_advice_builder.apps.LegalAdviceBuilderConfig',
-    'crispy_forms'
+    'legal_advice_builder.apps.LegalAdviceBuilderConfig'
 ]
 
 MIDDLEWARE = [
