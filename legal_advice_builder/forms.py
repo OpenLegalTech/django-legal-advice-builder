@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import fields
 
+from .models import Answer
+
 
 class WizardForm(forms.Form):
 
@@ -34,3 +36,10 @@ class WizardForm(forms.Form):
                 initial=self.question.id,
                 widget=forms.HiddenInput()
             )
+
+
+class DocumentForm(forms.ModelForm):
+
+    class Meta:
+        model = Answer
+        fields = ['rendered_document']

@@ -4,6 +4,8 @@ from django.template import Context, Template
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
+from .utils import generate_answers_dict_for_template
+
 
 class LawCase(models.Model):
     title = models.CharField(max_length=200)
@@ -15,6 +17,13 @@ class LawCase(models.Model):
 
     def get_first_questionaire(self):
         return self.questionaire_set.first()
+
+    def get_rendered_template(self, answers):
+        template = Template(self.result_template)
+        result = template.render(Context(
+            {'answers': generate_answers_dict_for_template(answers)}
+        ))
+        return result
 
 
 class Questionaire(models.Model):
@@ -92,26 +101,28 @@ class Question(MP_Node):
                         return None
         return self.get_children().first()
 
-    def is_success(self, option=None, text=None):
+    def get_status(self, option=None, text=None):
         if option:
-            return option in self.success_options
-        elif text:
-            return False
-        return False
-
-    def is_failure(self, option=None, text=None):
-        if option:
-            return option in self.failure_options
-        elif text:
-            return False
-        return False
-
-    def is_unsure(self, option=None, text=None):
-        if option:
-            return option in self.unsure_options
-        elif text:
-            return False
-        return False
+            if option in self.success_options:
+                return {
+                    'success': True,
+                    'message': self.get_success_message(),
+                    'next': self.next(option, text)
+                }
+            elif option in self.failure_options:
+                return {
+                    'failure': True,
+                    'message': self.get_failure_message(),
+                }
+            elif option in self.unsure_options:
+                return {
+                    'unsure': True,
+                    'message': self.get_unsure_message(),
+                }
+        return {
+            'ongoing': True,
+            'next': self.next(option, text)
+        }
 
     def get_success_message(self):
         if self.success_message:
@@ -160,24 +171,19 @@ class Answer(models.Model):
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True)
     message = models.TextField(blank=True)
+    rendered_document = models.TextField(blank=True)
 
     def __str__(self):
         return self.law_case.title
 
-    def answers_dict(self):
-        answers_dict = {}
-        for answer in self.answers:
-            question = Question.objects.get(id=answer.get('question'))
-            option = answer.get('option')
-            text = answer.get('text')
-            key, value = question.get_dict_key(option, text)
-            answers_dict[key] = value
-        return answers_dict
+    def save_rendered_document(self):
+        self.rendered_document = self.template
+        self.save()
 
     @property
     def template(self):
         template = Template(self.law_case.result_template)
         result = template.render(Context(
-            {'answers': self.answers_dict()}
+            {'answers': generate_answers_dict_for_template(self.answers)}
         ))
         return result
