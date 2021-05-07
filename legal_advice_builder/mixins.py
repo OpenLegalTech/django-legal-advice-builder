@@ -21,13 +21,17 @@ class GenerateEditableDocumentMixin:
         answer = self.save_answers(answers)
         answer.save_rendered_document()
         form = DocumentForm(instance=answer)
-        context = self.get_context_data(form=form,
-                                        answer=answer,
-                                        **kwargs)
+        context = self.get_template_with_context(answer.answers)
+        context.update({
+            'form': form
+        })
         return self.render_to_response(context)
 
 
 class GeneratePDFDownloadMixin:
+
+    def get_filename(self):
+        return 'download.pdf'
 
     def get_pdf_bytes(self, html_string):
         doc = wp.HTML(string=html_string)
@@ -38,7 +42,7 @@ class GeneratePDFDownloadMixin:
             self.get_pdf_bytes(html_string),
             content_type='application/pdf'
         )
-        filename = 'download.pdf'
+        filename = self.get_filename()
         attachment = 'attachment; filename="{}"'.format(filename)
         response['Content-Disposition'] = attachment
         return response

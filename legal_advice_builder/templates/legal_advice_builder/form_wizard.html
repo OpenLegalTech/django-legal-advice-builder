@@ -11,7 +11,7 @@
 <div>{{ message }}</div>
 <form method="post">
     {% csrf_token %}
-    <button class="btn btn-primary btn-lg">
+    <button>
         <input type="hidden" name="next" value="{{ next.id }}" />
         {% trans 'Next' %}
     </button>
@@ -23,7 +23,15 @@
 {% endif %}
 
 {% if template %}
-<a href="?download=1">download</a>
-<p>{{ template | safe }}</p>
+    {% if law_case.allow_download %}
+    <form method="post">
+        {% csrf_token %}
+        <button>
+            <input type="hidden" name="download" value="download" />
+            {% trans 'Download' %}
+        </button>
+    </form>
+    {% endif %}
+    <p>{{ template | safe }}</p>
 {% endif %}
 

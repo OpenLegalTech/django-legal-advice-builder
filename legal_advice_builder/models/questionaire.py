@@ -1,29 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.template import Context, Template
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
-from .utils import generate_answers_dict_for_template
-
-
-class LawCase(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    result_template = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.title
-
-    def get_first_questionaire(self):
-        return self.questionaire_set.first()
-
-    def get_rendered_template(self, answers):
-        template = Template(self.result_template)
-        result = template.render(Context(
-            {'answers': generate_answers_dict_for_template(answers)}
-        ))
-        return result
+from . import LawCase
 
 
 class Questionaire(models.Model):
@@ -182,8 +162,4 @@ class Answer(models.Model):
 
     @property
     def template(self):
-        template = Template(self.law_case.result_template)
-        result = template.render(Context(
-            {'answers': generate_answers_dict_for_template(self.answers)}
-        ))
-        return result
+        return self.law_case.get_rendered_template(self.answers)

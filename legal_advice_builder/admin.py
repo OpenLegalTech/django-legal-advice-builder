@@ -2,7 +2,7 @@ from django.contrib import admin
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
-from .models import Answer, LawCase, Question, Questionaire
+from .models import Answer, LawCase, LawCaseTemplate, Question, Questionaire
 
 
 class QuestionAdmin(TreeAdmin):
@@ -18,3 +18,4 @@ admin.site.register(Questionaire, QuestionaireAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer)
 admin.site.register(LawCase)
+admin.site.register(LawCaseTemplate)

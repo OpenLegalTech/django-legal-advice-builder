@@ -1,3 +1,4 @@
+from django.http import HttpResponseNotAllowed
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
@@ -16,15 +17,11 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
         self.storage = SessionStorage(
             self.prefix, request
         )
+        self.law_case = self.get_lawcase()
         self.initial_dict = self.get_initial_dict()
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('download'):
-            answers = self.storage.get_data().get('answers')
-            if answers:
-                html_string = self.get_html_string(answers)
-                return super().generate_pdf_download(html_string)
         self.storage.reset()
         questionaire = self.get_lawcase().get_first_questionaire()
         question = questionaire.get_first_question()
@@ -33,6 +30,13 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
     def post(self, *args, **kwargs):
         answers = self.storage.get_data().get('answers')
         question = self.get_current_question()
+
+        if self.request.POST.get('download'):
+            answers = self.storage.get_data().get('answers')
+            if answers and self.law_case.allow_download:
+                html_string = self.get_html_string(answers)
+                return super().generate_pdf_download(html_string)
+            return HttpResponseNotAllowed(['POST'])
 
         if self.request.POST.get('next'):
             next_question = Question.objects.get(
