@@ -43,9 +43,6 @@ class WizardForm(forms.Form):
                 widget=forms.HiddenInput()
             )
 
-    # def clean_date(self):
-    #     return str(self.cleaned_data.get('date'))
-
 
 class DocumentForm(forms.ModelForm):
 
