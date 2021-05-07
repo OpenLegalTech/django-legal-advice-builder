@@ -1,5 +1,7 @@
-from django.conf import settings
+from dateutil.relativedelta import relativedelta
+
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
@@ -40,12 +42,14 @@ class Question(MP_Node):
     SINGLE_LINE = 'SL'
     SINGLE_OPTION = 'SO'
     FILE_UPLOAD = 'FU'
+    DATE = 'DT'
 
     FIELD_TYPES = [
         (TEXT, _('Long multiline Text input')),
         (SINGLE_OPTION, _('Pick one of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
-        (FILE_UPLOAD, _('File Upload'))
+        (FILE_UPLOAD, _('File Upload')),
+        (DATE, _('Date'))
     ]
 
     questionaire = models.ForeignKey(Questionaire,
@@ -61,7 +65,10 @@ class Question(MP_Node):
     )
     help_text = models.CharField(max_length=200, blank=True)
     parent_option = models.CharField(max_length=200, blank=True)
+
     failure_options = models.JSONField(default=list, null=True, blank=True)
+    failure_conditions = models.JSONField(default=list, null=True, blank=True)
+
     success_options = models.JSONField(default=list, null=True, blank=True)
     unsure_options = models.JSONField(default=list, null=True, blank=True)
     information = models.TextField(blank=True)
@@ -81,15 +88,34 @@ class Question(MP_Node):
                         return None
         return self.get_children().first()
 
-    def get_status(self, option=None, text=None):
-        if option:
+    def is_failure_by_conditions(self, option=None, date=None):
+        conditions = self.failure_conditions
+        for condition in conditions:
+            if self.field_type == self.DATE and date:
+                condition_type = condition.get('type')
+                period = condition.get('period')
+                unit = condition.get('unit')
+                now = timezone.now().date()
+                kwargs = {}
+                kwargs[unit] = int(period)
+                date_to_validate = date + relativedelta(**kwargs)
+                if condition_type == 'before_today':
+                    return date_to_validate >= now
+            elif self.field_type == self.SINGLE_OPTION and option:
+                options = condition.get('options')
+                if options:
+                    return option in options
+        return False
+
+    def get_status(self, option=None, text=None, date=None):
+        if option or date:
             if option in self.success_options:
                 return {
                     'success': True,
                     'message': self.get_success_message(),
                     'next': self.next(option, text)
                 }
-            elif option in self.failure_options:
+            elif self.is_failure_by_conditions(option=option, date=date):
                 return {
                     'failure': True,
                     'message': self.get_failure_message(),
@@ -143,23 +169,3 @@ class Question(MP_Node):
                 self.get_options_names())
         else:
             return '{}: {}'.format(short_title, self.text)
-
-
-class Answer(models.Model):
-    law_case = models.ForeignKey(LawCase, on_delete=models.CASCADE)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                null=True, on_delete=models.SET_NULL)
-    answers = models.JSONField(null=True, default=dict, blank=True)
-    message = models.TextField(blank=True)
-    rendered_document = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.law_case.title
-
-    def save_rendered_document(self):
-        self.rendered_document = self.template
-        self.save()
-
-    @property
-    def template(self):
-        return self.law_case.get_rendered_template(self.answers)

@@ -48,12 +48,17 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
 
         if question_form.is_valid():
             cleaned_data = question_form.cleaned_data
-            answers = answers + [cleaned_data]
 
             status = question.get_status(
                 option=cleaned_data.get('option'),
-                text=cleaned_data.get('text'))
+                text=cleaned_data.get('text'),
+                date=cleaned_data.get('date'))
             next_question = status.get('next')
+
+            date = cleaned_data.get('date')
+            if date:
+                cleaned_data['date'] = str(date)
+            answers = answers + [cleaned_data]
 
             if not status.get('ongoing'):
                 return self.render_status(**status)

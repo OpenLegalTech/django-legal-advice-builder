@@ -118,7 +118,7 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
            questionaire=qn_1,
            parent_option='yes')))
 
-    q2.failure_options = ['no']
+    q2.failure_conditions = [{'options': ['no']}]
     q2.save()
 
     request = rf.get('/')

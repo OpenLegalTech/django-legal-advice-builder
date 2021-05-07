@@ -32,10 +32,19 @@ class WizardForm(forms.Form):
                     label=self.question.text,
                     help_text=self.question.help_text
                 )
+            elif self.question.field_type == self.question.DATE:
+                self.fields['date'] = fields.DateField(
+                    required=True,
+                    label=self.question.text,
+                    help_text=self.question.help_text
+                )
             self.fields['question'] = fields.CharField(
                 initial=self.question.id,
                 widget=forms.HiddenInput()
             )
+
+    # def clean_date(self):
+    #     return str(self.cleaned_data.get('date'))
 
 
 class DocumentForm(forms.ModelForm):
