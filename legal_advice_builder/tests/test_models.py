@@ -1,8 +1,10 @@
+import datetime
+
 import pytest
 
 from legal_advice_builder.models import Question, Questionaire
 
-from .helpers import get_single_option_question, get_text_question
+from .helpers import get_date_question, get_single_option_question, get_text_question
 
 
 @pytest.mark.django_db
@@ -39,7 +41,7 @@ def test_questionaires(law_case_factory, questionaire_factory):
 
 
 @pytest.mark.django_db
-def test_questions(law_case_factory, questionaire_factory):
+def test_question_next(law_case_factory, questionaire_factory):
 
     law_case = law_case_factory()
     questionaire_1 = questionaire_factory(
@@ -77,3 +79,22 @@ def test_questions(law_case_factory, questionaire_factory):
     assert q1.next(option='unsure') == q2
     assert q2.next() is None
     assert q2.next(option='test') is None
+
+
+@pytest.mark.django_db
+@pytest.mark.freeze_time('2020-05-21')
+def test_question_conditions_date():
+
+    fc = [{"period": "+3",
+           "unit": "months",
+           "type": "before_today"}]
+
+    question = Question.add_root(
+        **(get_date_question(failure_conditions=fc))
+    )
+
+    inserted_date = datetime.date(2020, 4, 21)
+    assert question.is_failure_by_conditions(date=inserted_date)
+
+    inserted_date = datetime.date(2019, 4, 21)
+    assert not question.is_failure_by_conditions(date=inserted_date)
