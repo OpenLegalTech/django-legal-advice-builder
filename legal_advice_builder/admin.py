@@ -2,7 +2,11 @@ from django.contrib import admin
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
-from .models import Answer, LawCase, LawCaseTemplate, Question, Questionaire
+from .models import Answer
+from .models import LawCase
+from .models import LawCaseTemplate
+from .models import Question
+from .models import Questionaire
 
 
 class QuestionAdmin(TreeAdmin):

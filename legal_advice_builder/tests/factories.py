@@ -1,6 +1,7 @@
 import factory
 
-from legal_advice_builder.models import LawCase, Questionaire
+from legal_advice_builder.models import LawCase
+from legal_advice_builder.models import Questionaire
 
 
 class LawCaseFactory(factory.django.DjangoModelFactory):

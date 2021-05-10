@@ -1,5 +1,6 @@
 from django.db import models
-from django.template import Context, Template
+from django.template import Context
+from django.template import Template
 from django.template.loader import get_template
 
 from legal_advice_builder.utils import generate_answers_dict_for_template
@@ -12,6 +13,7 @@ class LawCase(models.Model):
     description = models.TextField(blank=True)
     result_template = models.TextField(blank=True)
     allow_download = models.BooleanField(default=False)
+    save_answers = models.BooleanField(default=False)
     law_case_template = models.ForeignKey(LawCaseTemplate,
                                           null=True,
                                           on_delete=models.SET_NULL)

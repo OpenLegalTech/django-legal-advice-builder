@@ -1,6 +1,7 @@
 import re
 
-from setuptools import find_packages, setup
+from setuptools import find_packages
+from setuptools import setup
 
 # get metadata from mudule using a regexp
 with open('legal_advice_builder/__init__.py') as f:

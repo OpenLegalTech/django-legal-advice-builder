@@ -2,9 +2,12 @@ import datetime
 
 import pytest
 
-from legal_advice_builder.models import Question, Questionaire
+from legal_advice_builder.models import Question
+from legal_advice_builder.models import Questionaire
 
-from .helpers import get_date_question, get_single_option_question, get_text_question
+from .helpers import get_date_question
+from .helpers import get_single_option_question
+from .helpers import get_text_question
 
 
 @pytest.mark.django_db

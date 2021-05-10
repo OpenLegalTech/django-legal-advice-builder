@@ -1,10 +1,12 @@
 import pytest
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from legal_advice_builder.models import LawCase, Question
+from legal_advice_builder.models import LawCase
+from legal_advice_builder.models import Question
 from legal_advice_builder.views import FormWizardView
 
-from .helpers import get_single_option_question, get_text_question
+from .helpers import get_single_option_question
+from .helpers import get_text_question
 
 
 @pytest.mark.django_db
