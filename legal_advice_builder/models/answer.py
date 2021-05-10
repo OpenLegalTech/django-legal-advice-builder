@@ -16,8 +16,9 @@ class Answer(models.Model):
         return self.law_case.title
 
     def save_rendered_document(self):
-        self.rendered_document = self.template
-        self.save()
+        if not self.rendered_document:
+            self.rendered_document = self.template
+            self.save()
 
     @property
     def template(self):

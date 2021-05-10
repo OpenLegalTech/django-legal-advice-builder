@@ -17,15 +17,9 @@ class GenerateEditableDocumentMixin:
             answer.save()
         return answer
 
-    def render_done(self, answers=None, **kwargs):
-        answer = self.save_answers(answers)
+    def get_answer_template_form(self, answer):
         answer.save_rendered_document()
-        form = DocumentForm(instance=answer)
-        context = self.get_template_with_context(answer.answers)
-        context.update({
-            'form': form
-        })
-        return self.render_to_response(context)
+        return DocumentForm(instance=answer)
 
 
 class GeneratePDFDownloadMixin:

@@ -1,6 +1,11 @@
 from django import forms
 from django.forms import fields
 
+try:
+    from tinymce.widgets import TinyMCE
+except ModuleNotFoundError:
+    pass
+
 from .models import Answer
 
 
@@ -46,7 +51,13 @@ class WizardForm(forms.Form):
 
 
 class DocumentForm(forms.ModelForm):
+    id = fields.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = Answer
-        fields = ['rendered_document']
+        fields = ['rendered_document', 'id']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if TinyMCE:
+            self.fields['rendered_document'].widget = TinyMCE(attrs={'cols': 80, 'rows': 30})

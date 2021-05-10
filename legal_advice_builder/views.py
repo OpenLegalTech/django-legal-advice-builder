@@ -3,12 +3,14 @@ from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
 from .forms import WizardForm
+from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
+from .models import Answer
 from .models import Question
 from .storage import SessionStorage
 
 
-class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
+class FormWizardView(TemplateView, GeneratePDFDownloadMixin, GenerateEditableDocumentMixin):
     template_name = 'legal_advice_builder/form_wizard.html'
     form_class = WizardForm
 
@@ -42,6 +44,22 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
             next_question = Question.objects.get(
                 id=self.request.POST.get('next'))
             return self.render_next(next_question, answers)
+
+        if self.request.POST.get('rendered_document'):
+            answer_id = self.request.POST.get('id')
+            rendered_document = self.request.POST.get('rendered_document')
+            answer = Answer.objects.get(id=answer_id)
+            answer.rendered_document = rendered_document
+            answer.save()
+            form = self.get_answer_template_form(answer)
+            template = answer.rendered_document
+            context = self.get_context_data(**kwargs)
+            context.update({
+                'answer': answer,
+                'form': form,
+                'template': template
+            })
+            return self.render_to_response(context)
 
         question_form = self.get_form(question=question,
                                       data=self.request.POST)
@@ -140,6 +158,14 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin):
 
     def render_done(self, answers=None, **kwargs):
         context = self.get_template_with_context(answers)
+        if self.law_case.save_answers:
+            answer = self.save_answers(answers)
+            form = self.get_answer_template_form(answer)
+            template = answer.rendered_document
+            context.update({
+                'form': form,
+                'template': template
+            })
         return self.render_to_response(context)
 
     def render_download(self, answers=None, **kwargs):
@@ -157,10 +183,10 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
     def get_html_string(self):
         ctx = self.get_context_data()
         ctx.update({
-            'answer': self.get_answer()
+            'answer': self.get_answer().rendered_document
         })
         return render_to_string(self.template_name, ctx)
 
     def get(self, request, *args, **kwargs):
         html_string = self.get_html_string()
-        return self.generate_pdf_download(self, html_string)
+        return self.generate_pdf_download(html_string)
