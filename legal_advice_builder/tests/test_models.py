@@ -82,19 +82,57 @@ def test_question_next(law_case_factory, questionaire_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.freeze_time('2020-05-21')
-def test_question_conditions_date():
+@pytest.mark.freeze_time('2021-05-10')
+def test_question_conditions_date_deadline_expired():
 
     fc = [{"period": "+3",
            "unit": "months",
-           "type": "before_today"}]
+           "type": "deadline_expired"}]
 
     question = Question.add_root(
         **(get_date_question(failure_conditions=fc))
     )
 
-    inserted_date = datetime.date(2020, 4, 21)
+    inserted_date = datetime.date(2021, 4, 10)
     assert question.is_failure_by_conditions(date=inserted_date)
 
-    inserted_date = datetime.date(2019, 4, 21)
+    inserted_date = datetime.date(2020, 4, 21)
     assert not question.is_failure_by_conditions(date=inserted_date)
+
+
+@pytest.mark.django_db
+@pytest.mark.freeze_time('2021-05-10')
+def test_question_conditions_date_unit():
+
+    fc = [{"period": "+10",
+           "unit": "days",
+           "type": "deadline_expired"}]
+
+    question = Question.add_root(
+        **(get_date_question(failure_conditions=fc))
+    )
+
+    inserted_date = datetime.date(2021, 5, 1)
+    assert question.is_failure_by_conditions(date=inserted_date)
+
+    inserted_date = datetime.date(2020, 5, 9)
+    assert not question.is_failure_by_conditions(date=inserted_date)
+
+
+@pytest.mark.django_db
+@pytest.mark.freeze_time('2021-05-10')
+def test_question_conditions_date_deadline_running():
+
+    fc = [{"period": "+3",
+           "unit": "months",
+           "type": "deadline_running"}]
+
+    question = Question.add_root(
+        **(get_date_question(failure_conditions=fc))
+    )
+
+    inserted_date = datetime.date(2021, 4, 10)
+    assert not question.is_failure_by_conditions(date=inserted_date)
+
+    inserted_date = datetime.date(2020, 4, 21)
+    assert question.is_failure_by_conditions(date=inserted_date)

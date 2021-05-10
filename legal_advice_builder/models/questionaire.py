@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -99,8 +98,10 @@ class Question(MP_Node):
                 kwargs = {}
                 kwargs[unit] = int(period)
                 date_to_validate = date + relativedelta(**kwargs)
-                if condition_type == 'before_today':
+                if condition_type == 'deadline_expired':
                     return date_to_validate >= now
+                if condition_type == 'deadline_running':
+                    return date_to_validate <= now
             elif self.field_type == self.SINGLE_OPTION and option:
                 options = condition.get('options')
                 if options:
