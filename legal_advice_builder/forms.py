@@ -36,7 +36,8 @@ class WizardForm(forms.Form):
                 self.fields['date'] = fields.DateField(
                     required=True,
                     label=self.question.text,
-                    help_text=self.question.help_text
+                    help_text=self.question.help_text,
+                    widget=forms.DateTimeInput(attrs={'type': 'date'})
                 )
             self.fields['question'] = fields.CharField(
                 initial=self.question.id,
