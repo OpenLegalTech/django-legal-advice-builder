@@ -51,13 +51,14 @@ class WizardForm(forms.Form):
 
 
 class DocumentForm(forms.ModelForm):
-    id = fields.CharField(widget=forms.HiddenInput())
+    answer_id = fields.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = Answer
-        fields = ['rendered_document', 'id']
+        fields = ['rendered_document', 'answer_id']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if TinyMCE:
             self.fields['rendered_document'].widget = TinyMCE(attrs={'cols': 80, 'rows': 30})
+        self.fields['answer_id'].initial = self.instance.id

@@ -2,17 +2,30 @@ from django.http import HttpResponseNotAllowed
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
+from .forms import DocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
+from .mixins import GenrateFormWizardMixin
 from .models import Answer
 from .models import Question
 from .storage import SessionStorage
 
 
-class FormWizardView(TemplateView, GeneratePDFDownloadMixin, GenerateEditableDocumentMixin):
+class FormWizardView(TemplateView,
+                     GenrateFormWizardMixin,
+                     GenerateEditableDocumentMixin,
+                     GeneratePDFDownloadMixin):
     template_name = 'legal_advice_builder/form_wizard.html'
-    form_class = WizardForm
+    download_template_name = 'legal_advice_builder/pdf_download.html'
+    wizard_form_class = WizardForm
+    document_form_class = DocumentForm
+
+    def get_lawcase(self):
+        raise NotImplementedError
+
+    def get_prefix(self):
+        return 'legal_advice_builder_{}'.format(self.get_lawcase().id)
 
     def dispatch(self, request, *args, **kwargs):
         self.prefix = self.get_prefix()
@@ -20,7 +33,12 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin, GenerateEditableDoc
             self.prefix, request
         )
         self.law_case = self.get_lawcase()
+        self.allow_download = self.law_case.allow_download
+        self.save_answers_enabled = self.law_case.save_answers
         self.initial_dict = self.get_initial_dict()
+        self.answer = None
+        if request.POST.get('answer_id'):
+            self.answer = Answer.objects.get(id=request.POST.get('answer_id'))
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -32,150 +50,44 @@ class FormWizardView(TemplateView, GeneratePDFDownloadMixin, GenerateEditableDoc
     def post(self, *args, **kwargs):
         answers = self.storage.get_data().get('answers')
         question = self.get_current_question()
+        download = self.request.POST.get('download')
+        next_question = self.request.POST.get('next')
 
-        if self.request.POST.get('download'):
-            answers = self.storage.get_data().get('answers')
-            if answers and self.law_case.allow_download:
-                html_string = self.get_html_string(answers)
-                return super().generate_pdf_download(html_string)
-            return HttpResponseNotAllowed(['POST'])
-
-        if self.request.POST.get('next'):
-            next_question = Question.objects.get(
-                id=self.request.POST.get('next'))
+        if next_question:
+            next_question = Question.objects.get(id=next_question)
             return self.render_next(next_question, answers)
 
-        if self.request.POST.get('rendered_document'):
-            answer_id = self.request.POST.get('id')
-            rendered_document = self.request.POST.get('rendered_document')
-            answer = Answer.objects.get(id=answer_id)
-            answer.rendered_document = rendered_document
-            answer.save()
-            form = self.get_answer_template_form(answer)
-            template = answer.rendered_document
-            context = self.get_context_data(**kwargs)
-            context.update({
-                'answer': answer,
-                'form': form,
-                'template': template
-            })
-            return self.render_to_response(context)
-
-        question_form = self.get_form(question=question,
-                                      data=self.request.POST)
-
-        if question_form.is_valid():
-            cleaned_data = question_form.cleaned_data
-
-            status = question.get_status(
-                option=cleaned_data.get('option'),
-                text=cleaned_data.get('text'),
-                date=cleaned_data.get('date'))
-            next_question = status.get('next')
-
-            date = cleaned_data.get('date')
-            if date:
-                cleaned_data['date'] = str(date)
-            answers = answers + [cleaned_data]
-
-            if not status.get('ongoing'):
-                return self.render_status(**status)
-            elif next_question:
-                return self.render_next(next_question, answers)
+        elif download:
+            if self.allow_download:
+                if self.answer:
+                    self.save_document_form(self.request.POST, self.answer)
+                return self.render_download_response(answers, answer=self.answer)
             else:
-                return self.render_done(answers)
+                return HttpResponseNotAllowed(['POST'])
+
+        elif self.answer:
+            return self.render_document_form(self.request.POST, self.answer, **kwargs)
+
         else:
-            return self.render_form(question_form)
+            return self.validate_form_and_get_next(question=question,
+                                                   answers=answers,
+                                                   data=self.request.POST)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
+            'allow_download': self.allow_download,
+            'save_answers_enabled': self.save_answers,
             'law_case': self.get_lawcase(),
             'question': self.get_current_question()
         })
         return context
 
-    def get_initial_data(self, question):
-        questionaire = question.questionaire
-        if questionaire.short_title and question.short_title:
-            questionaire_dict = self.initial_dict.get(questionaire.short_title)
-            if questionaire_dict:
-                question_data = questionaire_dict.get(question.short_title)
-                text_types = [question.TEXT, question.SINGLE_LINE]
-                if question.field_type in text_types:
-                    return {'text': question_data}
-                elif question.field_type == question.SINGLE_OPTION:
-                    return {'option': question_data}
-
-    def get_current_question(self):
-        question_id = self.storage.get_data().get('current_question')
-        return Question.objects.get(id=question_id)
-
-    def get_lawcase(self):
-        raise NotImplementedError
-
-    def get_prefix(self):
-        return 'legal_advice_builder_{}'.format(self.get_lawcase().id)
-
-    def get_initial_dict(self):
-        return {}
-
-    def get_form(self, question=None, data=None, initial_data=None):
-        form_class = self.form_class
-        form_kwargs = {
-            'question': question,
-            'data': data,
-            'initial': initial_data
-        }
-        return form_class(**form_kwargs)
-
-    def render_form(self, form=None, **kwargs):
-        form = form or self.get_form()
-        context = self.get_context_data(form=form, **kwargs)
-        return self.render_to_response(context)
-
-    def render_status(self, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
-
-    def render_next(self, question, answers):
-        self.storage.set_data({
-            'current_questionaire': question.questionaire.id,
-            'current_question': question.id,
-            'answers': answers
-        })
-        initial_data = self.get_initial_data(question)
-        form = self.get_form(question=question, initial_data=initial_data)
-        return self.render_form(form)
-
-    def get_html_string(self, answers):
-        context = self.get_template_with_context(answers)
-        return render_to_string(self.template_name, context)
-
-    def get_template_with_context(self, answers, **kwargs):
-        template = self.get_lawcase().get_rendered_template(answers)
-        return self.get_context_data(template=template, **kwargs)
-
-    def render_done(self, answers=None, **kwargs):
-        context = self.get_template_with_context(answers)
-        if self.law_case.save_answers:
-            answer = self.save_answers(answers)
-            form = self.get_answer_template_form(answer)
-            template = answer.rendered_document
-            context.update({
-                'form': form,
-                'template': template
-            })
-        return self.render_to_response(context)
-
-    def render_download(self, answers=None, **kwargs):
-        context = self.get_template_with_context(answers)
-        return self.render_to_response(context)
-
 
 class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
 
     template_name = 'legal_advice_builder/pdf_download.html'
+    download_template_name = 'legal_advice_builder/pdf_download.html'
 
     def get_answer(self):
         raise NotImplementedError
@@ -185,7 +97,7 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
         ctx.update({
             'answer': self.get_answer().rendered_document
         })
-        return render_to_string(self.template_name, ctx)
+        return render_to_string(self.download_template_name, ctx)
 
     def get(self, request, *args, **kwargs):
         html_string = self.get_html_string()
