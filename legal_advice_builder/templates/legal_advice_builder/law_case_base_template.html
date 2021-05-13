@@ -1,13 +1,16 @@
 <p>
     An das</br>
-    {{ object.recipient }}
+    {{ object.recipient|safe|linebreaks }}
     </br>
     </br>
-    {{ object.date | safe }}
+</p>
+
 <p>
+  {{ object.date|safe|linebreaks }}
+</p>
 
-<h1>{{ object.subject }}</h1>
+<h1>{{ object.subject|safe|linebreaks }}</h1>
 
-<p>{{ object.body|linebreaks }}</p>
+<p>{{ object.body|safe|linebreaks }}</p>
 
-<p>{{ object.signature }}</p>
+<p>{{ object.signature|safe|linebreaks }}</p>
