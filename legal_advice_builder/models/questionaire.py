@@ -149,7 +149,7 @@ class Question(MP_Node):
     def get_options_names(self):
         return ', '.join([key for key, value in self.options.items()])
 
-    def get_dict_key(self, option=None, text=None):
+    def get_dict_key(self, option=None, text=None, date=None):
         qn = self.questionaire
         qn_key = qn.short_title if qn.short_title else 'questionaire_{}'.format(qn.id)
         question_key = self.short_title if self.short_title else 'question_{}'.format(self.id)
@@ -158,6 +158,8 @@ class Question(MP_Node):
             value = self.options.get(option)
         elif text:
             value = text
+        elif date:
+            value = date
         return '{}_{}'.format(qn_key, question_key), value
 
     def __str__(self):
