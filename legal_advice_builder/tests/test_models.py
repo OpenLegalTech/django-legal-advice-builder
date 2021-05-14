@@ -58,7 +58,7 @@ def test_question_next(law_case_factory, questionaire_factory):
     q1 = Question.add_root(
         **(get_single_option_question(
             questionaire=questionaire_1)))
-    q1.success_options = ['unsure']
+    q1.success_conditions = [{'options': ['unsure']}]
     q1_yes = q1.add_child(
         **(get_single_option_question(
             questionaire=questionaire_1,

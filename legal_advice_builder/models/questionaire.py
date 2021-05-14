@@ -69,23 +69,46 @@ class Question(MP_Node):
     failure_conditions = models.JSONField(default=list, null=True, blank=True)
 
     success_options = models.JSONField(default=list, null=True, blank=True)
+    success_conditions = models.JSONField(default=list, null=True, blank=True)
+
     unsure_options = models.JSONField(default=list, null=True, blank=True)
     information = models.TextField(blank=True)
     success_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
     unsure_message = models.TextField(blank=True)
 
-    def next(self, option=None, text=None):
-        if option:
+    def next(self, option=None, text=None, date=None):
+        if option or date:
             try:
                 return self.get_children().get(parent_option=option)
             except Question.DoesNotExist:
-                if option in self.success_options:
+                if self.is_success_by_conditions(option, date):
                     if self.questionaire.next():
                         return self.questionaire.next().get_first_question()
                     else:
                         return None
         return self.get_children().first()
+
+    def is_success_by_conditions(self, option=None, date=None):
+        conditions = self.success_conditions
+        for condition in conditions:
+            if self.field_type == self.DATE and date:
+                condition_type = condition.get('type')
+                period = condition.get('period')
+                unit = condition.get('unit')
+                now = timezone.now().date()
+                kwargs = {}
+                kwargs[unit] = int(period)
+                date_to_validate = date + relativedelta(**kwargs)
+                if condition_type == 'deadline_expired':
+                    return date_to_validate <= now
+                if condition_type == 'deadline_running':
+                    return date_to_validate >= now
+            elif self.field_type == self.SINGLE_OPTION and option:
+                options = condition.get('options')
+                if options:
+                    return option in options
+        return False
 
     def is_failure_by_conditions(self, option=None, date=None):
         conditions = self.failure_conditions
@@ -110,11 +133,11 @@ class Question(MP_Node):
 
     def get_status(self, option=None, text=None, date=None):
         if option or date:
-            if option in self.success_options:
+            if self.is_success_by_conditions(option=option, date=date):
                 return {
                     'success': True,
                     'message': self.get_success_message(),
-                    'next': self.next(option, text)
+                    'next': self.next(option, text, date)
                 }
             elif self.is_failure_by_conditions(option=option, date=date):
                 return {
