@@ -66,6 +66,11 @@ class GenrateFormWizardMixin:
                 cleaned_data['date'] = str(date)
             answers = answers + [cleaned_data]
             if not status.get('ongoing'):
+                self.storage.set_data({
+                    'current_questionaire': question.questionaire.id,
+                    'current_question': question.id,
+                    'answers': answers
+                })
                 return self.render_status(**status)
             elif next_question:
                 return self.render_next(next_question, answers)
