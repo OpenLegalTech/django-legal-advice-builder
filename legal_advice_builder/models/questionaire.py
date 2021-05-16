@@ -40,12 +40,14 @@ class Question(MP_Node):
     TEXT = 'TX'
     SINGLE_LINE = 'SL'
     SINGLE_OPTION = 'SO'
+    MULTIPLE_OPTIONS = 'MO'
     FILE_UPLOAD = 'FU'
     DATE = 'DT'
 
     FIELD_TYPES = [
         (TEXT, _('Long multiline Text input')),
         (SINGLE_OPTION, _('Pick one of multiple options')),
+        (MULTIPLE_OPTIONS, _('Pick several of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
         (FILE_UPLOAD, _('File Upload')),
         (DATE, _('Date'))
@@ -178,7 +180,10 @@ class Question(MP_Node):
         question_key = self.short_title if self.short_title else 'question_{}'.format(self.id)
         value = ''
         if option:
-            value = self.options.get(option)
+            if self.field_type == self.SINGLE_OPTION:
+                value = self.options.get(option)
+            elif self.field_type == self.MULTIPLE_OPTIONS:
+                value = [self.options.get(opt) for opt in option]
         elif text:
             value = text
         elif date:

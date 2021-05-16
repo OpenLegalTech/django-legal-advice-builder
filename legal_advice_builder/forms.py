@@ -24,6 +24,14 @@ class WizardForm(forms.Form):
                     label=self.question.text,
                     help_text=self.question.help_text
                 )
+            elif self.question.field_type == self.question.MULTIPLE_OPTIONS:
+                self.fields['option'] = fields.MultipleChoiceField(
+                    choices=self.question.options.items(),
+                    widget=forms.CheckboxSelectMultiple,
+                    required=True,
+                    label=self.question.text,
+                    help_text=self.question.help_text
+                )
             elif self.question.field_type == self.question.SINGLE_LINE:
                 self.fields['text'] = fields.CharField(
                     required=True,
@@ -60,5 +68,6 @@ class DocumentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if TinyMCE:
-            self.fields['rendered_document'].widget = TinyMCE(attrs={'cols': 80, 'rows': 30})
+            self.fields['rendered_document'].widget = TinyMCE(
+                attrs={'cols': 80, 'rows': 30})
         self.fields['answer_id'].initial = self.instance.id
