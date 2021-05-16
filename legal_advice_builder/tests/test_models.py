@@ -2,6 +2,8 @@ import datetime
 
 import pytest
 
+from freezegun import freeze_time
+
 from legal_advice_builder.models import Question
 from legal_advice_builder.models import Questionaire
 
@@ -85,7 +87,6 @@ def test_question_next(law_case_factory, questionaire_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.freeze_time('2021-05-10')
 def test_question_conditions_date_deadline_expired():
 
     fc = [{"period": "+3",
@@ -96,15 +97,15 @@ def test_question_conditions_date_deadline_expired():
         **(get_date_question(failure_conditions=fc))
     )
 
-    inserted_date = datetime.date(2021, 4, 10)
-    assert question.is_failure_by_conditions(date=inserted_date)
+    with freeze_time('2020-05-10'):
+        inserted_date = datetime.date(2020, 4, 10)
+        assert question.is_failure_by_conditions(date=inserted_date)
 
-    inserted_date = datetime.date(2020, 4, 21)
-    assert not question.is_failure_by_conditions(date=inserted_date)
+        inserted_date = datetime.date(2020, 1, 21)
+        assert not question.is_failure_by_conditions(date=inserted_date)
 
 
 @pytest.mark.django_db
-@pytest.mark.freeze_time('2021-05-10')
 def test_question_conditions_date_unit():
 
     fc = [{"period": "+10",
@@ -115,15 +116,15 @@ def test_question_conditions_date_unit():
         **(get_date_question(failure_conditions=fc))
     )
 
-    inserted_date = datetime.date(2021, 5, 1)
-    assert question.is_failure_by_conditions(date=inserted_date)
+    with freeze_time('2020-05-16'):
+        inserted_date = datetime.date(2020, 5, 13)
+        assert question.is_failure_by_conditions(date=inserted_date)
 
-    inserted_date = datetime.date(2020, 5, 9)
-    assert not question.is_failure_by_conditions(date=inserted_date)
+        inserted_date = datetime.date(2020, 5, 1)
+        assert not question.is_failure_by_conditions(date=inserted_date)
 
 
 @pytest.mark.django_db
-@pytest.mark.freeze_time('2021-05-10')
 def test_question_conditions_date_deadline_running():
 
     fc = [{"period": "+3",
@@ -134,8 +135,9 @@ def test_question_conditions_date_deadline_running():
         **(get_date_question(failure_conditions=fc))
     )
 
-    inserted_date = datetime.date(2021, 4, 10)
-    assert not question.is_failure_by_conditions(date=inserted_date)
+    with freeze_time('2020-05-10'):
+        inserted_date = datetime.date(2020, 4, 10)
+        assert not question.is_failure_by_conditions(date=inserted_date)
 
-    inserted_date = datetime.date(2020, 4, 21)
-    assert question.is_failure_by_conditions(date=inserted_date)
+        inserted_date = datetime.date(2020, 1, 21)
+        assert question.is_failure_by_conditions(date=inserted_date)
