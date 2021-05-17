@@ -1,17 +1,17 @@
 {% load legal_advice_builder %}
 
 <p>
-    {{ object.recipient|safe }}
+    {{ object.recipient|render_markdown|safe }}
     </br>
     </br>
 </p>
 
 <p style="text-align: end;">
-  {{ object.date|safe }}
+  {{ object.date|render_markdown|safe }}
 </p>
 
 <h1 style="text-align: center;">{{ object.subject|safe }}</h1>
 
 <p>{{ object.body|render_markdown|safe|linebreaks }}</p>
 
-<p>{{ object.signature|safe }}</p>
+<p>{{ object.signature|render_markdown|safe }}</p>
