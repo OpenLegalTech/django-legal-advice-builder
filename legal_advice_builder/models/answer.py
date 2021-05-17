@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from legal_advice_builder.utils import clean_html_field
 
@@ -12,7 +13,7 @@ class Answer(models.Model):
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True)
     message = models.TextField(blank=True)
-    rendered_document = models.TextField(blank=True)
+    rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
 
     def __str__(self):
         return self.law_case.title

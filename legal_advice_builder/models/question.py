@@ -39,10 +39,7 @@ class Question(MP_Node):
     help_text = models.CharField(max_length=200, blank=True)
     parent_option = models.CharField(max_length=200, blank=True)
 
-    failure_options = models.JSONField(default=list, null=True, blank=True)
     failure_conditions = models.JSONField(default=list, null=True, blank=True)
-
-    success_options = models.JSONField(default=list, null=True, blank=True)
     success_conditions = models.JSONField(default=list, null=True, blank=True)
 
     unsure_options = models.JSONField(default=list, null=True, blank=True)

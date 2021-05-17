@@ -11,7 +11,7 @@ from .template import LawCaseTemplate
 class LawCase(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    result_template = models.TextField(blank=True)
+    extra_help = models.TextField(blank=True)
     allow_download = models.BooleanField(default=False)
     save_answers = models.BooleanField(default=False)
     law_case_template = models.ForeignKey(LawCaseTemplate,
