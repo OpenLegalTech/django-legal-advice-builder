@@ -1,7 +1,6 @@
 import datetime
 
 import pytest
-
 from freezegun import freeze_time
 
 from legal_advice_builder.models import Question

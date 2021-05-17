@@ -1,3 +1,5 @@
+{% load legal_advice_builder %}
+
 <p>
     {{ object.recipient|safe }}
     </br>
@@ -10,6 +12,6 @@
 
 <h1 style="text-align: center;">{{ object.subject|safe }}</h1>
 
-<p>{{ object.body|safe|linebreaks }}</p>
+<p>{{ object.body|render_markdown|safe|linebreaks }}</p>
 
 <p>{{ object.signature|safe }}</p>
