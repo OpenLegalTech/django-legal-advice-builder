@@ -3,3 +3,4 @@ django-treebeard==4.5.1
 WeasyPrint==52.5
 python-dateutil==2.8.1
 Markdown==3.3.4
+bleach==3.3.0

@@ -1,5 +1,7 @@
 from django.db import models
 
+from legal_advice_builder.utils import clean_html_field
+
 
 class LawCaseTemplate(models.Model):
 
@@ -13,3 +15,12 @@ class LawCaseTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.recipient = clean_html_field(self.recipient)
+        self.sender = clean_html_field(self.sender)
+        self.date = clean_html_field(self.date)
+        self.subject = clean_html_field(self.subject)
+        self.body = clean_html_field(self.body)
+        self.signature = clean_html_field(self.signature)
+        return super().save(*args, **kwargs)

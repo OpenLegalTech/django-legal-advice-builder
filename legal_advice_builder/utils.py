@@ -1,3 +1,7 @@
+import bleach
+from django.conf import settings
+
+
 def generate_answers_dict_for_template(answers):
     from .models import Question
 
@@ -10,3 +14,20 @@ def generate_answers_dict_for_template(answers):
         key, value = question.get_dict_key(option, text, date)
         answers_dict[key] = value
     return answers_dict
+
+
+def clean_html_field(text, setting='default'):
+    allowed_tags = ['p', 'strong', 'em',
+                    'u', 'ol', 'li', 'ul', 'h1',
+                    'h2', 'h3', 'h4', 'h5']
+    allowed_attrs = {'*': ['style']}
+    allowed_styles = ['text-align']
+    if hasattr(settings, 'BLEACH_LIST'):
+        allowed_tags = settings.BLEACH_LIST[setting]['tags']
+        allowed_attrs = settings.BLEACH_LIST[setting]['attributes']
+        allowed_styles = settings.BLEACH_LIST[setting].get('styles', [])
+    return bleach.clean(text,
+                        tags=allowed_tags,
+                        attributes=allowed_attrs,
+                        styles=allowed_styles,
+                        strip=True)

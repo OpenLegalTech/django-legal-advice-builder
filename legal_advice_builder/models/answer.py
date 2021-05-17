@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from legal_advice_builder.utils import clean_html_field
+
 from .law_case import LawCase
 
 
@@ -14,6 +16,10 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.law_case.title
+
+    def save(self, *args, **kwargs):
+        self.rendered_document = clean_html_field(self.rendered_document)
+        return super().save(*args, **kwargs)
 
     def save_rendered_document(self):
         if not self.rendered_document:
