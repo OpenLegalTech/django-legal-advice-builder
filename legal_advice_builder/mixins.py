@@ -1,8 +1,8 @@
 import weasyprint as wp
-from django.utils import dateformat
 from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.utils import dateformat
 
 from .models import Answer
 from .models import Question
