@@ -1,3 +1,7 @@
+import os
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseNotAllowed
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
@@ -20,6 +24,7 @@ class FormWizardView(TemplateView,
     download_template_name = 'legal_advice_builder/pdf_download.html'
     wizard_form_class = WizardForm
     document_form_class = DocumentForm
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'legal_advice_builder'))
 
     def get_lawcase(self):
         raise NotImplementedError

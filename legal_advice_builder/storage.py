@@ -3,9 +3,12 @@ class SessionStorage:
     current_question = 'question_id'
     answers = 'answers'
 
-    def __init__(self, prefix, request=None):
+    def __init__(self, prefix, request=None, file_storage=None):
         self.prefix = prefix
         self.request = request
+        self.file_storage = file_storage
+        self._files = {}
+        self._tmp_files = []
 
         if self.prefix not in self.request.session:
             self.init_data()
