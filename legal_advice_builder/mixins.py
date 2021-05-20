@@ -11,17 +11,29 @@ class GenrateFormWizardMixin:
     def get_initial_dict(self):
         return {}
 
-    def get_initial_data(self, question):
+    def _get_dict_entry_for_question(self, question):
         questionaire = question.questionaire
         if questionaire.short_title and question.short_title:
             questionaire_dict = self.initial_dict.get(questionaire.short_title)
             if questionaire_dict:
-                question_data = questionaire_dict.get(question.short_title)
-                text_types = [question.TEXT, question.SINGLE_LINE]
-                if question.field_type in text_types:
-                    return {'text': question_data}
-                elif question.field_type == question.SINGLE_OPTION:
-                    return {'option': question_data}
+                return questionaire_dict.get(question.short_title)
+
+    def get_initial_data(self, question):
+        question_data = self._get_dict_entry_for_question(question)
+        if question_data and 'initial' in question_data:
+            text_types = [question.TEXT, question.SINGLE_LINE]
+            if question.field_type in text_types:
+                return {'text': question_data.get('initial')}
+            elif question.field_type == question.SINGLE_OPTION:
+                return {'option': question_data.get('initial')}
+            elif question.field_type == question.DATE:
+                return {'date': question_data.get('initial')}
+
+    def get_initial_options(self, question):
+        question_data = self._get_dict_entry_for_question(question)
+        if question_data and 'options' in question_data:
+            return question_data.get('options')
+        return question.options
 
     def render_next(self, question, answers):
         self.storage.set_data({
@@ -30,19 +42,23 @@ class GenrateFormWizardMixin:
             'answers': answers
         })
         initial_data = self.get_initial_data(question)
-        form = self.get_form(question=question, initial_data=initial_data)
+        initial_options = self.get_initial_options(question)
+        form = self.get_form(question=question,
+                             initial_data=initial_data,
+                             options=initial_options)
         return self.render_form(form)
 
     def get_current_question(self):
         question_id = self.storage.get_data().get('current_question')
         return Question.objects.get(id=question_id)
 
-    def get_form(self, question=None, data=None, initial_data=None):
+    def get_form(self, question=None, data=None, initial_data=None, options=None):
         form_class = self.wizard_form_class
         form_kwargs = {
             'question': question,
             'data': data,
-            'initial': initial_data
+            'initial': initial_data,
+            'options': options
         }
         return form_class(**form_kwargs)
 
@@ -52,8 +68,10 @@ class GenrateFormWizardMixin:
         return self.render_to_response(context)
 
     def validate_form_and_get_next(self, question=None, answers=None, data=None):
+        initial_options = self.get_initial_options(question)
         question_form = self.get_form(question=question,
-                                      data=self.request.POST)
+                                      data=self.request.POST,
+                                      options=initial_options)
         if question_form.is_valid():
             cleaned_data = question_form.cleaned_data
             status = question.get_status(

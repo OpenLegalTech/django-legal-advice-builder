@@ -13,12 +13,13 @@ class WizardForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.question = kwargs.pop('question')
+        self.options = kwargs.pop('options') or {}
         super().__init__(*args, **kwargs)
 
         if self.question:
             if self.question.field_type == self.question.SINGLE_OPTION:
                 self.fields['option'] = fields.ChoiceField(
-                    choices=self.question.options.items(),
+                    choices=self.options.items(),
                     widget=forms.RadioSelect,
                     required=True,
                     label=self.question.text,
@@ -26,7 +27,7 @@ class WizardForm(forms.Form):
                 )
             elif self.question.field_type == self.question.MULTIPLE_OPTIONS:
                 self.fields['option'] = fields.MultipleChoiceField(
-                    choices=self.question.options.items(),
+                    choices=self.options.items(),
                     widget=forms.CheckboxSelectMultiple,
                     required=True,
                     label=self.question.text,

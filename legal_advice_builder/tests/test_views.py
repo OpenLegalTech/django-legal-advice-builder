@@ -190,7 +190,7 @@ def test_form_wizard_initial_data(rf, law_case_factory, questionaire_factory):
         def get_initial_dict(self):
             return {
                 'qn_1': {
-                    'q1': 'test test'
+                    'q1': {'initial': 'test test'}
                 }
             }
 
@@ -217,3 +217,46 @@ def test_form_wizard_initial_data(rf, law_case_factory, questionaire_factory):
     response = TestWizardView.as_view()(request)
 
     assert response.context_data.get('form').initial == {'text': 'test test'}
+
+
+@pytest.mark.django_db
+def test_form_wizard_initial_options(rf, law_case_factory, questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+        def get_initial_dict(self):
+            return {
+                'qn_1': {
+                    'q1': {'options':
+                           {'option1': 'option1',
+                            'option2': 'option2'}}
+                }
+            }
+
+    law_case = law_case_factory()
+
+    qn_1 = questionaire_factory(
+        law_case=law_case,
+        order=1
+    )
+    qn_1.short_title = 'qn_1'
+    qn_1.save()
+
+    q1 = Question.add_root(
+        **(get_single_option_question(
+            questionaire=qn_1)))
+
+    q1.short_title = 'q1'
+    q1.save()
+
+    request = rf.get('/')
+    middleware = SessionMiddleware()
+    middleware.process_request(request)
+    request.session.save()
+    response = TestWizardView.as_view()(request)
+
+    choices = [('option1', 'option1'), ('option2', 'option2')]
+    assert response.context_data.get('form').fields['option'].choices == choices
