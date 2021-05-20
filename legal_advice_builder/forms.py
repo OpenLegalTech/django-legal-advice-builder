@@ -53,6 +53,12 @@ class WizardForm(forms.Form):
                     help_text=self.question.help_text,
                     widget=forms.DateTimeInput(attrs={'type': 'date'})
                 )
+            elif self.question.field_type == self.question.FILE_UPLOAD:
+                self.fields['file'] = fields.FileField(
+                    required=True,
+                    label=self.question.text,
+                    help_text=self.question.help_text
+                )
             self.fields['question'] = fields.CharField(
                 initial=self.question.id,
                 widget=forms.HiddenInput()
