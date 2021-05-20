@@ -16,6 +16,7 @@ class LawCase(models.Model):
     save_answers = models.BooleanField(default=False)
     law_case_template = models.ForeignKey(LawCaseTemplate,
                                           null=True,
+                                          blank=True,
                                           on_delete=models.SET_NULL)
 
     def __str__(self):
