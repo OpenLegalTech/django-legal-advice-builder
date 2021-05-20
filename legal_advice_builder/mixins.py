@@ -54,11 +54,12 @@ class GenrateFormWizardMixin:
         question_id = self.storage.get_data().get('current_question')
         return Question.objects.get(id=question_id)
 
-    def get_form(self, question=None, data=None, initial_data=None, options=None):
+    def get_form(self, question=None, data=None, files=None, initial_data=None, options=None):
         form_class = self.wizard_form_class
         form_kwargs = {
             'question': question,
             'data': data,
+            'files': files,
             'initial': initial_data,
             'options': options
         }
@@ -69,10 +70,11 @@ class GenrateFormWizardMixin:
         context = self.get_context_data(form=form, **kwargs)
         return self.render_to_response(context)
 
-    def validate_form_and_get_next(self, question=None, answers=None, data=None):
+    def validate_form_and_get_next(self, question=None, answers=None, data=None, files=None):
         initial_options = self.get_initial_options(question)
         question_form = self.get_form(question=question,
-                                      data=self.request.POST,
+                                      data=data,
+                                      files=files,
                                       options=initial_options)
         if question_form.is_valid():
             cleaned_data = question_form.cleaned_data
@@ -82,8 +84,13 @@ class GenrateFormWizardMixin:
                 date=cleaned_data.get('date'))
             next_question = status.get('next')
             date = cleaned_data.get('date')
+            file = cleaned_data.get('file')
+
             if date:
                 cleaned_data['date'] = dateformat.format(date, settings.DATE_FORMAT)
+            if file:
+                cleaned_data['file'] = file.name
+
             answers = answers + [cleaned_data]
             if not status.get('ongoing'):
                 self.storage.set_data({

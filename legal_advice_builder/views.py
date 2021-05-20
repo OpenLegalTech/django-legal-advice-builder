@@ -76,6 +76,7 @@ class FormWizardView(TemplateView,
         else:
             return self.validate_form_and_get_next(question=question,
                                                    answers=answers,
+                                                   files=self.request.FILES,
                                                    data=self.request.POST)
 
     def get_context_data(self, **kwargs):
