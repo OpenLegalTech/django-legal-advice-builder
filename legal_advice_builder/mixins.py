@@ -28,6 +28,8 @@ class GenrateFormWizardMixin:
                 return {'text': question_data.get('initial')}
             elif question.field_type == question.SINGLE_OPTION:
                 return {'option': question_data.get('initial')}
+            elif question.field_type == question.MULTIPLE_OPTIONS:
+                return {'option': question_data.get('initial')}
             elif question.field_type == question.DATE:
                 return {'date': question_data.get('initial')}
 

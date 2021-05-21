@@ -1,10 +1,6 @@
 from django import forms
 from django.forms import fields
-
-try:
-    from tinymce.widgets import TinyMCE
-except ModuleNotFoundError:
-    pass
+from tinymce.widgets import TinyMCE
 
 from .models import Answer
 
@@ -20,7 +16,7 @@ class WizardForm(forms.Form):
             if self.question.field_type == self.question.SINGLE_OPTION:
                 self.fields['option'] = fields.ChoiceField(
                     choices=self.options.items(),
-                    widget=forms.RadioSelect,
+                    widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
                     required=True,
                     label=self.question.text,
                     help_text=self.question.help_text
@@ -35,13 +31,14 @@ class WizardForm(forms.Form):
                 )
             elif self.question.field_type == self.question.SINGLE_LINE:
                 self.fields['text'] = fields.CharField(
+                    widget=forms.TextInput(attrs={'class': 'form-control'}),
                     required=True,
                     label=self.question.text,
                     help_text=self.question.help_text
                 )
             elif self.question.field_type == self.question.TEXT:
                 self.fields['text'] = fields.CharField(
-                    widget=forms.Textarea,
+                    widget=forms.Textarea(attrs={'class': 'form-control'}),
                     required=True,
                     label=self.question.text,
                     help_text=self.question.help_text
@@ -51,7 +48,8 @@ class WizardForm(forms.Form):
                     required=True,
                     label=self.question.text,
                     help_text=self.question.help_text,
-                    widget=forms.DateTimeInput(attrs={'type': 'date'})
+                    widget=forms.DateTimeInput(attrs={'type': 'date',
+                                                      'class': 'form-control'})
                 )
             self.fields['question'] = fields.CharField(
                 initial=self.question.id,
