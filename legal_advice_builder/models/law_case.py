@@ -25,6 +25,14 @@ class LawCase(models.Model):
     def get_first_questionaire(self):
         return self.questionaire_set.first()
 
+    def get_index_of_questionaire(self, questionaire):
+        questionaire_ids = list(self.questionaire_set.values_list('id', flat=True))
+        if questionaire.id in questionaire_ids:
+            return questionaire_ids.index(questionaire.id)
+
+    def questionaire_count(self):
+        return self.questionaire_set.count()
+
     def get_rendered_template(self, answers):
         template = get_template(
             'legal_advice_builder/law_case_base_template.html')

@@ -79,7 +79,10 @@ class FormWizardView(TemplateView,
             'allow_download': self.allow_download,
             'save_answers_enabled': self.save_answers,
             'law_case': self.get_lawcase(),
-            'question': self.get_current_question()
+            'question': self.get_current_question(),
+            'current_step': self.law_case.get_index_of_questionaire(
+                self.get_current_question().questionaire),
+            'step_count': self.law_case.questionaire_count()
         })
         return context
 
