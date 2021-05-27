@@ -5,8 +5,10 @@ from treebeard.forms import movenodeform_factory
 from .models import Answer
 from .models import LawCase
 from .models import LawCaseTemplate
+from .models import Lawsuit
 from .models import Question
 from .models import Questionaire
+from .models import Template
 
 
 class QuestionAdmin(TreeAdmin):
@@ -23,3 +25,5 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer)
 admin.site.register(LawCase)
 admin.site.register(LawCaseTemplate)
+admin.site.register(Template)
+admin.site.register(Lawsuit)

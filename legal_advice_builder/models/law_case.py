@@ -6,6 +6,7 @@ from django.template.loader import get_template
 from legal_advice_builder.utils import generate_answers_dict_for_template
 
 from .template import LawCaseTemplate
+from .template import Template as TemplateModel
 
 
 class LawCase(models.Model):
@@ -18,6 +19,10 @@ class LawCase(models.Model):
                                           null=True,
                                           blank=True,
                                           on_delete=models.SET_NULL)
+    template = models.ForeignKey(TemplateModel,
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title
