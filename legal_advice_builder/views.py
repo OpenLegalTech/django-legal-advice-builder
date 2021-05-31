@@ -1,8 +1,11 @@
+from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
-from .forms import DocumentForm
+from .forms import DocumentFieldForm
+from .forms import PrepareDocumentForm
+from .forms import RenderedDocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
@@ -19,7 +22,7 @@ class FormWizardView(TemplateView,
     template_name = 'legal_advice_builder/form_wizard.html'
     download_template_name = 'legal_advice_builder/pdf_download.html'
     wizard_form_class = WizardForm
-    document_form_class = DocumentForm
+    document_form_class = RenderedDocumentForm
 
     def get_lawcase(self):
         raise NotImplementedError
@@ -83,6 +86,46 @@ class FormWizardView(TemplateView,
             'current_step': self.law_case.get_index_of_questionaire(
                 self.get_current_question().questionaire),
             'step_count': self.law_case.questionaire_count()
+        })
+        return context
+
+
+class DocumentFormView(TemplateView):
+    template_name = 'legal_advice_builder/document_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.document = self.get_document()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_document(self):
+        return
+
+    def post(self, *args, **kwargs):
+        document_form = self.get_form(data=self.request.POST)
+        document_form_set = self.get_form_set(data=self.request.POST)
+        if document_form.is_valid():
+            self.document = document_form.save()
+        if document_form_set and document_form_set.is_valid():
+            for form in document_form_set:
+                form.save()
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def get_form_set(self, data=None):
+        if self.document:
+            DocumentFieldFormSet = formset_factory(DocumentFieldForm, extra=0)
+            formset = DocumentFieldFormSet(data=data,
+                                           initial=self.document.get_initial_dict())
+            return formset
+
+    def get_form(self, data=None):
+        return PrepareDocumentForm(document=self.document, data=data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'form': self.get_form(),
+            'formset': self.get_form_set()
         })
         return context
 
