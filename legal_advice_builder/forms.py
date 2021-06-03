@@ -80,7 +80,12 @@ class RenderedDocumentForm(forms.ModelForm):
 class DocumentFieldForm(forms.Form):
     field_type = fields.CharField(widget=forms.HiddenInput)
     document = fields.CharField(widget=forms.HiddenInput)
-    content = fields.CharField(widget=forms.Textarea, required=False)
+    content = fields.CharField(widget=TinyMCE(mce_attrs={
+        'mode': 'textareas',
+        'force_br_newlines': False,
+        'force_p_newlines': False,
+        'forced_root_block': ''}),
+        required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

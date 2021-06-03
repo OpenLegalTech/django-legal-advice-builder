@@ -5,6 +5,7 @@ from django.template.loader import get_template
 
 from legal_advice_builder.utils import generate_answers_dict_for_template
 
+from .document import Document
 from .template import LawCaseTemplate
 
 
@@ -18,6 +19,10 @@ class LawCase(models.Model):
                                           null=True,
                                           blank=True,
                                           on_delete=models.SET_NULL)
+    document = models.OneToOneField(Document,
+                                    null=True,
+                                    blank=True,
+                                    on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title
@@ -43,3 +48,12 @@ class LawCase(models.Model):
             {'answers': generate_answers_dict_for_template(answers)}
         ))
         return result
+
+    @property
+    def variables_for_template(self):
+        from .question import Question
+        variables = {}
+        questions = Question.objects.filter(questionaire__law_case=self)
+        for question in questions:
+            variables[question.get_dict_key()[0]] = question.text
+        return variables

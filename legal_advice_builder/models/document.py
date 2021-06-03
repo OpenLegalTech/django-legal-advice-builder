@@ -1,10 +1,24 @@
 from django.db import models
+from django.template import Context
+from django.template import Template
+from django.template.defaultfilters import slugify
+from django.utils.safestring import mark_safe
+
+from legal_advice_builder.utils import generate_answers_dict_for_template
 
 
 class Document(models.Model):
     name = models.CharField(max_length=200)
     document_type = models.ForeignKey('legal_advice_builder.DocumentType',
                                       on_delete=models.CASCADE)
+
+    recipient = models.TextField(blank=True)
+    sender = models.TextField(blank=True)
+    date = models.CharField(blank=True, max_length=50)
+    subject = models.CharField(blank=True, max_length=200)
+    signature = models.TextField(blank=True)
+
+    sample_answers = models.JSONField(null=True, default=dict, blank=True)
 
     def __str__(self):
         return self.name
@@ -27,6 +41,32 @@ class Document(models.Model):
             )
         return initial_data
 
+    def fields_for_context(self):
+        context = {}
+        for field in self.fields.all():
+            dict_key = field.field_type.slug
+            context[dict_key] = mark_safe(field.content)
+        return context
+
+    @property
+    def template(self):
+        template = Template(self.document_type.document_template)
+        context = self.fields_for_context()
+        return template.render(Context(
+            context
+        ))
+
+    @property
+    def template_with_sample_answers(self):
+        template = Template(mark_safe(self.document_type.document_template))
+        context = self.fields_for_context()
+        base_template = template.render(Context(context))
+        result_template = Template(mark_safe(base_template))
+        result = result_template.render(Context(
+            {'answers': generate_answers_dict_for_template(self.sample_answers)}
+        ))
+        return result
+
 
 class DocumentType(models.Model):
     name = models.CharField(max_length=200)
@@ -42,11 +82,17 @@ class DocumentFieldType(models.Model):
                                       on_delete=models.CASCADE)
 
     name = models.CharField(max_length=200)
+    slug = models.SlugField(blank=True)
     help_text = models.CharField(max_length=500, blank=True)
     required = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class DocumentField(models.Model):
