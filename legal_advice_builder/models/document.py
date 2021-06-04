@@ -29,7 +29,7 @@ class Document(models.Model):
         except DocumentField.DoesNotExist:
             return ''
 
-    def get_initial_dict(self):
+    def get_initial_fields_dict(self):
         initial_data = []
         for field_type in self.document_type.field_types.all():
             initial_data.append(
@@ -39,6 +39,29 @@ class Document(models.Model):
                     'content': self.get_value_for_field(field_type)
                 }
             )
+        return initial_data
+
+    def get_initial_questions_dict(self):
+        from legal_advice_builder.models import Question
+        initial_data = []
+        lawcase = self.lawcase
+        questions = Question.objects.filter(questionaire__law_case=lawcase)
+
+        answers_questions = [int(answer.get('question')) for answer in self.sample_answers]
+
+        for question in questions:
+            if question.id not in answers_questions:
+                initial_data.append(
+                    {
+                        'question': question.id
+                    }
+                )
+            else:
+                index = answers_questions.index(question.id)
+                initial_data.append(
+                    self.sample_answers[index]
+                )
+
         return initial_data
 
     def fields_for_context(self):
@@ -91,7 +114,7 @@ class DocumentFieldType(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name).replace("-", "_")
         super().save(*args, **kwargs)
 
 

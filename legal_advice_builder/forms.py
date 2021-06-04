@@ -8,9 +8,53 @@ from .models import Document
 from .models import DocumentField
 from .models import DocumentFieldType
 from .models import DocumentType
+from .models import Question
 
 
-class WizardForm(forms.Form):
+class DispatchQuestionFieldTypeMixin:
+
+    def get_field_for_question_type(self, question, options, form_fields):
+        if question.field_type == question.SINGLE_OPTION:
+            form_fields['option'] = fields.ChoiceField(
+                choices=options.items(),
+                widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+                required=True,
+                label=question.text,
+                help_text=question.help_text
+            )
+        elif question.field_type == question.MULTIPLE_OPTIONS:
+            form_fields['option'] = fields.MultipleChoiceField(
+                choices=options.items(),
+                widget=forms.CheckboxSelectMultiple,
+                required=True,
+                label=question.text,
+                help_text=question.help_text
+            )
+        elif question.field_type == question.SINGLE_LINE:
+            form_fields['text'] = fields.CharField(
+                widget=forms.TextInput(attrs={'class': 'form-control'}),
+                required=True,
+                label=question.text,
+                help_text=question.help_text
+            )
+        elif question.field_type == question.TEXT:
+            form_fields['text'] = fields.CharField(
+                widget=forms.Textarea(attrs={'class': 'form-control'}),
+                required=True,
+                label=question.text,
+                help_text=question.help_text
+            )
+        elif question.field_type == question.DATE:
+            form_fields['date'] = fields.DateField(
+                required=True,
+                label=question.text,
+                help_text=question.help_text,
+                widget=forms.DateTimeInput(attrs={'type': 'date',
+                                                  'class': 'form-control'})
+            )
+
+
+class WizardForm(forms.Form, DispatchQuestionFieldTypeMixin):
 
     def __init__(self, *args, **kwargs):
         self.question = kwargs.pop('question')
@@ -18,44 +62,7 @@ class WizardForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         if self.question:
-            if self.question.field_type == self.question.SINGLE_OPTION:
-                self.fields['option'] = fields.ChoiceField(
-                    choices=self.options.items(),
-                    widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-                    required=True,
-                    label=self.question.text,
-                    help_text=self.question.help_text
-                )
-            elif self.question.field_type == self.question.MULTIPLE_OPTIONS:
-                self.fields['option'] = fields.MultipleChoiceField(
-                    choices=self.options.items(),
-                    widget=forms.CheckboxSelectMultiple,
-                    required=True,
-                    label=self.question.text,
-                    help_text=self.question.help_text
-                )
-            elif self.question.field_type == self.question.SINGLE_LINE:
-                self.fields['text'] = fields.CharField(
-                    widget=forms.TextInput(attrs={'class': 'form-control'}),
-                    required=True,
-                    label=self.question.text,
-                    help_text=self.question.help_text
-                )
-            elif self.question.field_type == self.question.TEXT:
-                self.fields['text'] = fields.CharField(
-                    widget=forms.Textarea(attrs={'class': 'form-control'}),
-                    required=True,
-                    label=self.question.text,
-                    help_text=self.question.help_text
-                )
-            elif self.question.field_type == self.question.DATE:
-                self.fields['date'] = fields.DateField(
-                    required=True,
-                    label=self.question.text,
-                    help_text=self.question.help_text,
-                    widget=forms.DateTimeInput(attrs={'type': 'date',
-                                                      'class': 'form-control'})
-                )
+            self.get_field_for_question_type(self.question, self.options, self.fields)
             self.fields['question'] = fields.CharField(
                 initial=self.question.id,
                 widget=forms.HiddenInput()
@@ -136,3 +143,12 @@ class PrepareDocumentForm(forms.Form):
             self.document.name = name
             self.document.save()
             return self.document
+
+
+class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
+    question = fields.CharField(widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        question = Question.objects.get(id=self.initial.get('question'))
+        self.get_field_for_question_type(question, question.options, self.fields)

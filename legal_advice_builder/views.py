@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 
 from .forms import DocumentFieldForm
 from .forms import PrepareDocumentForm
+from .forms import QuestionForm
 from .forms import RenderedDocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
@@ -111,11 +112,18 @@ class DocumentFormView(TemplateView):
         context = self.get_context_data()
         return self.render_to_response(context)
 
-    def get_form_set(self, data=None):
+    def get_document_field_formset(self, data=None):
         if self.document:
-            DocumentFieldFormSet = formset_factory(DocumentFieldForm, extra=0)
-            formset = DocumentFieldFormSet(data=data,
-                                           initial=self.document.get_initial_dict())
+            DocumentFieldFormset = formset_factory(DocumentFieldForm, extra=0)
+            formset = DocumentFieldFormset(data=data,
+                                           initial=self.document.get_initial_fields_dict())
+            return formset
+
+    def get_questions_formset(self, data=None):
+        if self.document:
+            QuestionFormset = formset_factory(QuestionForm, extra=0)
+            formset = QuestionFormset(data=data,
+                                      initial=self.document.get_initial_questions_dict())
             return formset
 
     def get_form(self, data=None):
@@ -129,9 +137,10 @@ class DocumentFormView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'form': self.get_form(),
-            'formset': self.get_form_set(),
+            'document_field_formset': self.get_document_field_formset(),
             'variables': self.get_variables(),
-            'document': self.document
+            'document': self.document,
+            'questions_formset': self.get_questions_formset()
         })
         return context
 
