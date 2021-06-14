@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import fields
 from django.forms.models import model_to_dict
+from django.utils import dateformat
 from tinymce.widgets import TinyMCE
 
 from .models import Answer
@@ -13,12 +14,12 @@ from .models import Question
 
 class DispatchQuestionFieldTypeMixin:
 
-    def get_field_for_question_type(self, question, options, form_fields):
+    def get_field_for_question_type(self, question, options, form_fields, required=True):
         if question.field_type == question.SINGLE_OPTION:
             form_fields['option'] = fields.ChoiceField(
                 choices=options.items(),
                 widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-                required=True,
+                required=required,
                 label=question.text,
                 help_text=question.help_text
             )
@@ -26,27 +27,27 @@ class DispatchQuestionFieldTypeMixin:
             form_fields['option'] = fields.MultipleChoiceField(
                 choices=options.items(),
                 widget=forms.CheckboxSelectMultiple,
-                required=True,
+                required=required,
                 label=question.text,
                 help_text=question.help_text
             )
         elif question.field_type == question.SINGLE_LINE:
             form_fields['text'] = fields.CharField(
                 widget=forms.TextInput(attrs={'class': 'form-control'}),
-                required=True,
+                required=required,
                 label=question.text,
                 help_text=question.help_text
             )
         elif question.field_type == question.TEXT:
             form_fields['text'] = fields.CharField(
                 widget=forms.Textarea(attrs={'class': 'form-control'}),
-                required=True,
+                required=required,
                 label=question.text,
                 help_text=question.help_text
             )
         elif question.field_type == question.DATE:
             form_fields['date'] = fields.DateField(
-                required=True,
+                required=required,
                 label=question.text,
                 help_text=question.help_text,
                 widget=forms.DateTimeInput(attrs={'type': 'date',
@@ -88,7 +89,7 @@ class DocumentFieldForm(forms.Form):
     field_type = fields.CharField(widget=forms.HiddenInput)
     document = fields.CharField(widget=forms.HiddenInput)
     content = fields.CharField(widget=TinyMCE(mce_attrs={
-        'mode': 'textareas',
+        'menubar': '',
         'force_br_newlines': False,
         'force_p_newlines': False,
         'forced_root_block': ''}),
@@ -150,5 +151,10 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        question = Question.objects.get(id=self.initial.get('question'))
-        self.get_field_for_question_type(question, question.options, self.fields)
+        self.question = Question.objects.get(id=self.initial.get('question'))
+        self.get_field_for_question_type(self.question, self.question.options, self.fields, False)
+
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+        if date:
+            return dateformat.format(date, "Y-m-d")

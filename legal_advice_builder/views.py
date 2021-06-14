@@ -102,13 +102,18 @@ class DocumentFormView(TemplateView):
         return
 
     def post(self, *args, **kwargs):
-        document_form = self.get_form(data=self.request.POST)
-        document_form_set = self.get_form_set(data=self.request.POST)
+        data = self.request.POST
+        document_form = self.get_form(data=data)
+        document_form_set = self.get_document_field_formset(data=data)
+        question_form_set = self.get_questions_formset(data=data)
         if document_form.is_valid():
             self.document = document_form.save()
         if document_form_set and document_form_set.is_valid():
             for form in document_form_set:
                 form.save()
+        if question_form_set and question_form_set.is_valid():
+            self.document.sample_answers = question_form_set.cleaned_data
+            self.document.save()
         context = self.get_context_data()
         return self.render_to_response(context)
 
