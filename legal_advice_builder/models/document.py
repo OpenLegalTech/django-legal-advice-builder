@@ -4,6 +4,7 @@ from django.template import Template
 from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
 
+from legal_advice_builder.utils import clean_html_field
 from legal_advice_builder.utils import generate_answers_dict_for_template
 
 
@@ -128,3 +129,7 @@ class DocumentField(models.Model):
 
     def __str__(self):
         return self.content
+
+    def save(self, *args, **kwargs):
+        self.content = clean_html_field(self.content)
+        return super().save(*args, **kwargs)
