@@ -91,6 +91,41 @@ class FormWizardView(TemplateView,
         return context
 
 
+class DocumentPreviewView(TemplateView):
+    template_name = 'legal_advice_builder/document_preview.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.document = self.get_document()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'document': self.document,
+            'questions_formset': self.get_questions_formset()
+        })
+        return context
+
+    def get_document(self):
+        return
+
+    def get_questions_formset(self, data=None):
+        if self.document:
+            QuestionFormset = formset_factory(QuestionForm, extra=0)
+            formset = QuestionFormset(data=data,
+                                      initial=self.document.get_initial_questions_dict())
+            return formset
+
+    def post(self, *args, **kwargs):
+        data = self.request.POST
+        question_form_set = self.get_questions_formset(data=data)
+        if question_form_set and question_form_set.is_valid():
+            self.document.sample_answers = question_form_set.cleaned_data
+            self.document.save()
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+
 class DocumentFormView(TemplateView):
     template_name = 'legal_advice_builder/document_form.html'
 
@@ -105,15 +140,11 @@ class DocumentFormView(TemplateView):
         data = self.request.POST
         document_form = self.get_form(data=data)
         document_form_set = self.get_document_field_formset(data=data)
-        question_form_set = self.get_questions_formset(data=data)
         if document_form.is_valid():
             self.document = document_form.save()
         if document_form_set and document_form_set.is_valid():
             for form in document_form_set:
                 form.save()
-        if question_form_set and question_form_set.is_valid():
-            self.document.sample_answers = question_form_set.cleaned_data
-            self.document.save()
         context = self.get_context_data()
         return self.render_to_response(context)
 
@@ -144,8 +175,7 @@ class DocumentFormView(TemplateView):
             'form': self.get_form(),
             'document_field_formset': self.get_document_field_formset(),
             'variables': self.get_variables(),
-            'document': self.document,
-            'questions_formset': self.get_questions_formset()
+            'document': self.document
         })
         return context
 

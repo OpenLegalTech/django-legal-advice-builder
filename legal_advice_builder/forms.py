@@ -157,4 +157,4 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
     def clean_date(self):
         date = self.cleaned_data.get('date')
         if date:
-            return dateformat.format(date, "Y-m-d")
+            return dateformat.format(date, "m.d.Y")
