@@ -1,0 +1,29 @@
+{% extends 'legal_advice_builder/admin/base.html' %}
+{% load i18n%}
+
+{% block content %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">{{ lawcase.title }} </li>
+    </ol>
+</nav>
+{% endblock %}
+
+<div class="row">
+    <div class="col-2">
+        {% block navigation %}
+            <ul class="list-group">
+                {% for qn in lawcase.questionaire_set.all %}
+                    <a class="list-group-item {% if questionaire == qn %}active{% endif %}" href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
+                {% endfor %}
+                <li class="list-group-item">{% trans 'Template' %}</li>
+            </ul>
+        {% endblock %}
+    </div>
+    <div class="col-10">
+        {% block main_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

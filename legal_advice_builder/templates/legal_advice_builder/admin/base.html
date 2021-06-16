@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Legal Advice Demo</title>
+    <link rel="stylesheet" href="{% static 'legal_advice_builder.css' %}">
+    <script src="{% static 'legal_advice_builder.js' %}"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-house"></i></a>
+        </div>
+    </nav>
+    <div class="container-fluid mt-3">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

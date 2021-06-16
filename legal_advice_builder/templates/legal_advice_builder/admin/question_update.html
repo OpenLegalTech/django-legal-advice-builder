@@ -1,0 +1,23 @@
+{% extends 'legal_advice_builder/admin/questionaire_detail.html' %}
+{% load crispy_forms_tags i18n %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'legal_advice_builder:law-case-detail' lawcase.id %}">{{ lawcase.title }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}">{{ questionaire }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ question.text }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+
+{% block current_form %}
+<form method="post">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <div class="text-end mt-3">
+        <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+    </div>
+</form>
+{% endblock %}

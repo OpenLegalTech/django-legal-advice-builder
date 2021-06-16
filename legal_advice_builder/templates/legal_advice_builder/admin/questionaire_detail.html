@@ -1,0 +1,43 @@
+{% extends 'legal_advice_builder/admin/law_case_detail.html' %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'legal_advice_builder:law-case-detail' lawcase.id %}">{{ lawcase.title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ questionaire }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block main_content %}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button"
+            role="tab" aria-controls="questions" aria-selected="true">{% trans 'questions' %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="strucuture-tab" data-bs-toggle="tab" data-bs-target="#structure" type="button"
+            role="tab" aria-controls="structure" aria-selected="false">{% trans 'logic structure' %}</button>
+    </li>
+
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+        <div class="row mt-3">
+            <div class="col">
+                <ul class="list-group">
+                    {% for question in questionaire.questions %}
+                    <a href="{% url 'legal_advice_builder:question-update' question.id %}" class="list-group-item list-group-item-action {% if object == question %}active{% endif %}">{{ question.text }}</a>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col">
+                {% block current_form %}{% endblock %}
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="structure" role="tabpanel" aria-labelledby="structure-tab">...</div>
+</div>
+{% endblock %}

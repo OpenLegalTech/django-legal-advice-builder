@@ -158,3 +158,24 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
         date = self.cleaned_data.get('date')
         if date:
             return dateformat.format(date, "m.d.Y")
+
+
+class QuestionUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ('text', 'options', 'field_type', 'help_text',
+                  'information', 'success_message', 'failure_message', 'unsure_message')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.fields['help_text'].widget = forms.Textarea()
+        question = self.instance
+        if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
+            del self.fields['options']
+        if not question.success_conditions:
+            del self.fields['success_message']
+        if not question.failure_conditions:
+            del self.fields['failure_message']
+        if not question.unsure_options:
+            del self.fields['unsure_message']

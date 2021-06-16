@@ -1,0 +1,24 @@
+{% extends 'legal_advice_builder/admin/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-8">
+        {% for law_case in object_list %}
+        <div class="card">
+            <div class="card-header text-end">
+                {{ law_case.document.document_type }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ law_case.title }}</h5>
+                <p class="card-text">{{ law_case.description }}</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'law-case-detail' law_case.id %}" class="btn btn-sm btn-danger me-md-2" type="button">{% trans 'delete lawcase' %}</a>
+                    <a href="{% url 'legal_advice_builder:law-case-detail' law_case.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'edit lawcase' %}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

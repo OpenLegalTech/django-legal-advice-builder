@@ -1,18 +1,25 @@
 from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.views.generic import DetailView
+from django.views.generic import ListView
 from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 
 from .forms import DocumentFieldForm
 from .forms import PrepareDocumentForm
 from .forms import QuestionForm
+from .forms import QuestionUpdateForm
 from .forms import RenderedDocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
+from .models import LawCase
 from .models import Question
+from .models import Questionaire
 from .storage import SessionStorage
 
 
@@ -198,3 +205,45 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
     def get(self, request, *args, **kwargs):
         html_string = self.get_html_string()
         return self.generate_pdf_download(html_string)
+
+
+class LawCaseList(ListView):
+    template_name = 'legal_advice_builder/admin/law_case_list.html'
+
+    model = LawCase
+
+
+class LawCaseDetail(DetailView):
+    template_name = 'legal_advice_builder/admin/law_case_detail.html'
+
+    model = LawCase
+
+
+class QuestionaireDetail(DetailView):
+    template_name = 'legal_advice_builder/admin/questionaire_detail.html'
+
+    model = Questionaire
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'lawcase': self.object.law_case
+        })
+        return context
+
+
+class QuestionUpdate(UpdateView):
+    template_name = 'legal_advice_builder/admin/question_update.html'
+    model = Question
+    form_class = QuestionUpdateForm
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:question-update', args=[self.object.id])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'lawcase': self.object.questionaire.law_case,
+            'questionaire': self.object.questionaire
+        })
+        return context
