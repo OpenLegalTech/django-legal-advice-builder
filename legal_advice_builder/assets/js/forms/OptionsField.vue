@@ -8,9 +8,11 @@
 
 <script>
 export default {
-  created: function () {
-    debugger
+  name: 'options-field',
+  props: {
+    initial: Object,
+    inputtype: String,
+    name: String
   }
 }
-
 </script>
