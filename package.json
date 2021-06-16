@@ -14,10 +14,14 @@
   "author": "",
   "license": "AGPL-3.0",
   "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.5",
+    "babel-loader": "^8.2.2",
     "bootstrap": "^5.0.1",
     "bootstrap-icons": "^1.5.0",
     "constants-browserify": "^1.0.0",
     "copy-webpack-plugin": "^9.0.0",
+    "core-js": "^3.14.0",
     "crypto-browserify": "^3.12.0",
     "css-loader": "^5.2.6",
     "dns": "^0.2.2",
@@ -29,9 +33,18 @@
     "process": "^0.11.10",
     "sass-loader": "^12.1.0",
     "stream": "^0.0.2",
+    "vue": "^2.6.14",
+    "vue-loader": "^15.9.7",
+    "vue-router": "^3.5.1",
+    "vue-template-compiler": "^2.6.14",
     "webpack": "^5.39.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

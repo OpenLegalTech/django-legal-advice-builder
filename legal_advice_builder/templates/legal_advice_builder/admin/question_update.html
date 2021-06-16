@@ -16,6 +16,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form | crispy }}
+    {{ form.media }}
     <div class="text-end mt-3">
         <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
     </div>

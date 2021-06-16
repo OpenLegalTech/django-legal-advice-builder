@@ -10,6 +10,7 @@ from .models import DocumentField
 from .models import DocumentFieldType
 from .models import DocumentType
 from .models import Question
+from .widgets import OptionsWidget
 
 
 class DispatchQuestionFieldTypeMixin:
@@ -170,6 +171,7 @@ class QuestionUpdateForm(forms.ModelForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['help_text'].widget = forms.Textarea()
+        self.fields['options'].widget = OptionsWidget()
         question = self.instance
         if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
