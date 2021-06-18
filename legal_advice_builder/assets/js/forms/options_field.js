@@ -5,6 +5,4 @@ Vue.component(
   require("./OptionsField.vue").default
 );
 
-let vue = new Vue({
-  //
-}).$mount("#options");
+let vue = new Vue({}).$mount("#options");

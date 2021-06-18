@@ -1,17 +1,15 @@
 {% extends 'legal_advice_builder/admin/base.html' %}
 {% load i18n%}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">{{ lawcase.title }} </li>
-    </ol>
+{% block navbar %}
+<nav>
+    <h1><a href="{% url 'legal_advice_builder:law-case-list' %}"><i class="bi bi-arrow-left"></i></a>{{ lawcase.title }}</h1>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-2">
+    <div class="col-2 bg-light">
         {% block navigation %}
             <ul class="list-group">
                 {% for qn in lawcase.questionaire_set.all %}
@@ -21,8 +19,9 @@
             </ul>
         {% endblock %}
     </div>
-    <div class="col-10">
+    <div class="col-9 mt-3">
         {% block main_content %}{% endblock %}
     </div>
+    <div class="col-1 bg-light vh-100"></div>
 </div>
 {% endblock %}

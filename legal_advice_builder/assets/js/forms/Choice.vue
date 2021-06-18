@@ -1,6 +1,13 @@
 <template>
-  <div class="form-group">
-    <input type="text" class="form-control" v-model="value" @change="updateChoice"/>
+  <div class="row row-cols-lg-2 g-3 align-items-center">
+    <div class="col-12">
+      <div class="form-group my-3">
+        <input type="text" class="form-control" v-model="value" @change="updateChoice"/>
+      </div>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-danger" @click="deleteChoice">Delete</button>
+    </div>
   </div>
 </template>
 
@@ -17,10 +24,15 @@ export default {
     };
   },
   methods: {
-    updateChoice: function (event) {
-      debugger
-      this.$emit("choiceUpdated", this.optionValue, this.value);
+    updateChoice (event) {
+      let newValue = {};
+      newValue[this.optionKey] = event.target.value;
+      this.$emit('choiceUpdated', newValue);
     },
-  },
+    deleteChoice (event) {
+      event.preventDefault();
+      this.$emit('choiceDeleted', this.optionKey)
+    }
+  }
 };
 </script>

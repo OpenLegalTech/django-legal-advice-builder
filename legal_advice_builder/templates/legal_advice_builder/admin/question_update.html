@@ -1,19 +1,8 @@
 {% extends 'legal_advice_builder/admin/questionaire_detail.html' %}
 {% load crispy_forms_tags i18n %}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'legal_advice_builder:law-case-detail' lawcase.id %}">{{ lawcase.title }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}">{{ questionaire }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ question.text }}</li>
-    </ol>
-</nav>
-{% endblock %}
-
-
 {% block current_form %}
-<form method="post">
+<form class=" p-3 border border-primary border-5" method="post">
     {% csrf_token %}
     {{ form | crispy }}
     {{ form.media }}
