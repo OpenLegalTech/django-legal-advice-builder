@@ -17,7 +17,18 @@ var options_field;
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue/dist/vue.js */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0__);\n// import Vue from \"vue\";\n// import OptionsField from \"./OptionsField.vue\";\n// new Vue({\n//   render: (h) => h(OptionsField),\n// }).$mount(\"#options\");\n//import Vue from \"vue\";\n// import components\n\nvue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default().component(\"options-field\", __webpack_require__(/*! ./OptionsField.vue */ \"./legal_advice_builder/assets/js/forms/OptionsField.vue\").default);\nvar vue = new (vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default())({//\n}).$mount(\"#options\");\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/options_field.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue/dist/vue.js */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0__);\n\nvue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default().component(\"options-field\", __webpack_require__(/*! ./OptionsField.vue */ \"./legal_advice_builder/assets/js/forms/OptionsField.vue\").default);\nvar vue = new (vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_0___default())({//\n}).$mount(\"#options\");\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/options_field.js?");
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"fieldOption\",\n  props: {\n    optionKey: String,\n    optionValue: String\n  },\n  data: function data() {\n    return {\n      value: this.optionValue\n    };\n  },\n  methods: {\n    updateChoice: function updateChoice(event) {\n      debugger;\n      this.$emit(\"choiceUpdated\", this.optionValue, this.value);\n    }\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Choice.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 
@@ -28,7 +39,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: 'options-field',\n  props: {\n    initial: Object,\n    inputtype: String,\n    name: String\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/OptionsField.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Choice_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Choice.vue */ \"./legal_advice_builder/assets/js/forms/Choice.vue\");\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    Choice: _Choice_vue__WEBPACK_IMPORTED_MODULE_0__.default\n  },\n  name: 'options-field',\n  props: {\n    initial: Object,\n    inputtype: String,\n    name: String\n  },\n  methods: {\n    choiceUpdated: function choiceUpdated(event, key, value) {\n      debugger;\n    }\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/OptionsField.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+
+/***/ }),
+
+/***/ "./legal_advice_builder/assets/js/forms/Choice.vue":
+/*!*********************************************************!*\
+  !*** ./legal_advice_builder/assets/js/forms/Choice.vue ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Choice.vue?vue&type=template&id=6ee15c12& */ \"./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12&\");\n/* harmony import */ var _Choice_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Choice.vue?vue&type=script&lang=js& */ \"./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js&\");\n/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n;\nvar component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(\n  _Choice_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,\n  _Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__.render,\n  _Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"legal_advice_builder/assets/js/forms/Choice.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Choice.vue?");
 
 /***/ }),
 
@@ -43,6 +65,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Opt
 
 /***/ }),
 
+/***/ "./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Choice_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Choice.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=script&lang=js&\");\n /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Choice_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); \n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Choice.vue?");
+
+/***/ }),
+
 /***/ "./legal_advice_builder/assets/js/forms/OptionsField.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************!*\
   !*** ./legal_advice_builder/assets/js/forms/OptionsField.vue?vue&type=script&lang=js& ***!
@@ -51,6 +84,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Opt
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_OptionsField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OptionsField.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/OptionsField.vue?vue&type=script&lang=js&\");\n /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_OptionsField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); \n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/OptionsField.vue?");
+
+/***/ }),
+
+/***/ "./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12&":
+/*!****************************************************************************************!*\
+  !*** ./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12& ***!
+  \****************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__.render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }\n/* harmony export */ });\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Choice_vue_vue_type_template_id_6ee15c12___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Choice.vue?vue&type=template&id=6ee15c12& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12&\");\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Choice.vue?");
 
 /***/ }),
 
@@ -65,6 +109,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/Choice.vue?vue&type=template&id=6ee15c12& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"form-group\" }, [\n    _c(\"input\", {\n      directives: [\n        {\n          name: \"model\",\n          rawName: \"v-model\",\n          value: _vm.value,\n          expression: \"value\"\n        }\n      ],\n      staticClass: \"form-control\",\n      attrs: { type: \"text\" },\n      domProps: { value: _vm.value },\n      on: {\n        change: _vm.updateChoice,\n        input: function($event) {\n          if ($event.target.composing) {\n            return\n          }\n          _vm.value = $event.target.value\n        }\n      }\n    })\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Choice.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/OptionsField.vue?vue&type=template&id=7565e1a6&":
 /*!*************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./legal_advice_builder/assets/js/forms/OptionsField.vue?vue&type=template&id=7565e1a6& ***!
@@ -72,7 +127,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _vm._m(0)\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"div\", [\n      _c(\"div\", { staticClass: \"nav\" }, [_c(\"h1\", [_vm._v(\"Hallo\")])])\n    ])\n  }\n]\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/OptionsField.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", [\n    _c(\n      \"div\",\n      _vm._l(_vm.initial, function(value, name, index) {\n        return _c(\"Choice\", {\n          key: name + \"-\" + index,\n          attrs: { optionKey: \"\" + name, optionValue: \"\" + value },\n          on: { choiceUpdated: _vm.choiceUpdated }\n        })\n      }),\n      1\n    )\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/OptionsField.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 
