@@ -165,7 +165,7 @@ class QuestionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'options', 'field_type', 'help_text',
+        fields = ('text', 'field_type', 'options', 'help_text',
                   'information', 'success_message', 'failure_message', 'unsure_message')
 
     def __init__(self, **kwargs):

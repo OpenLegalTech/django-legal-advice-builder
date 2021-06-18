@@ -2,12 +2,33 @@
 {% load crispy_forms_tags i18n %}
 
 {% block current_form %}
-<form class=" p-3 border border-primary border-5" method="post">
-    {% csrf_token %}
-    {{ form | crispy }}
-    {{ form.media }}
-    <div class="text-end mt-3">
-        <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+<ul class="nav nav-tabs" id="question" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button"
+            role="tab" aria-controls="content" aria-selected="true">{% trans 'content' %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button"
+            role="tab" aria-controls="logic" aria-selected="false">{% trans 'logic' %}</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="questionContent">
+    <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="contetn-tab">
+        <form class=" p-3 border border-primary border-5" method="post">
+            {% csrf_token %}
+            {{ form | crispy }}
+            {{ form.media }}
+            <div class="text-end mt-3">
+                <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+            </div>
+        </form>
     </div>
-</form>
+    <div class="tab-pane fade" id="logic" role="tabpanel" aria-labelledby="logic-tab">
+        <form class=" p-3 border border-primary border-5" method="post"></form>
+    </div>
+</div>
+
+
+
 {% endblock %}
