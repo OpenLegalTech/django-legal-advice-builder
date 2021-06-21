@@ -99,7 +99,7 @@ class FormWizardView(TemplateView,
 
 
 class DocumentPreviewView(TemplateView):
-    template_name = 'legal_advice_builder/document_preview.html'
+    template_name = 'legal_advice_builder/admin/document_preview.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.document = self.get_document()
@@ -109,12 +109,15 @@ class DocumentPreviewView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'document': self.document,
-            'questions_formset': self.get_questions_formset()
+            'questions_formset': self.get_questions_formset(),
+            'lawcase': self.document.lawcase
         })
         return context
 
     def get_document(self):
-        return
+        if 'pk' in self.kwargs:
+            pk = self.kwargs.get('pk')
+            return LawCase.objects.get(pk=pk).document
 
     def get_questions_formset(self, data=None):
         if self.document:
@@ -134,14 +137,16 @@ class DocumentPreviewView(TemplateView):
 
 
 class DocumentFormView(TemplateView):
-    template_name = 'legal_advice_builder/document_form.html'
+    template_name = 'legal_advice_builder/admin/document_form.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.document = self.get_document()
         return super().dispatch(request, *args, **kwargs)
 
     def get_document(self):
-        return
+        if 'pk' in self.kwargs:
+            pk = self.kwargs.get('pk')
+            return LawCase.objects.get(pk=pk).document
 
     def post(self, *args, **kwargs):
         data = self.request.POST
@@ -182,7 +187,8 @@ class DocumentFormView(TemplateView):
             'form': self.get_form(),
             'document_field_formset': self.get_document_field_formset(),
             'variables': self.get_variables(),
-            'document': self.document
+            'document': self.document,
+            'lawcase': self.document.lawcase
         })
         return context
 

@@ -9,19 +9,19 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-2 bg-light">
+    <div class="col-2 bg-light min-vh-100">
         {% block navigation %}
             <ul class="list-group">
                 {% for qn in lawcase.questionaire_set.all %}
                     <a class="list-group-item {% if questionaire == qn %}active{% endif %}" href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
                 {% endfor %}
-                <li class="list-group-item">{% trans 'Template' %}</li>
+                <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item">{% trans 'Template' %}</a>
             </ul>
         {% endblock %}
     </div>
     <div class="col-9 mt-3">
         {% block main_content %}{% endblock %}
     </div>
-    <div class="col-1 bg-light vh-100"></div>
+    <div class="col-1 bg-light min-vh-100"></div>
 </div>
 {% endblock %}

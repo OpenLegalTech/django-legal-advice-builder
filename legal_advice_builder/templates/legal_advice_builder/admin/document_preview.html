@@ -1,0 +1,36 @@
+{% extends 'legal_advice_builder/admin/law_case_detail.html' %}
+{% load i18n crispy_forms_tags %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
+            <a href="{% url  'legal_advice_builder:document-update' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'edit document template' %}</a>
+        </div>
+        <div class="border p-3">
+            {% autoescape off %}
+            {{ document.template_with_sample_answers }}
+            {% endautoescape %}
+        </div>
+    </div>
+
+
+    <div class="col">
+        <form method="post" class="clearfix">
+            {% csrf_token %}
+            {{ questions_formset.management_form }}
+            {% for form in questions_formset %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    {{ form|crispy }}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="text-end mt-3">
+                <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
