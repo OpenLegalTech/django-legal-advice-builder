@@ -9,6 +9,7 @@ from django.views.generic import UpdateView
 
 from .forms import DocumentFieldForm
 from .forms import PrepareDocumentForm
+from .forms import QuestionConditionForm
 from .forms import QuestionForm
 from .forms import QuestionUpdateForm
 from .forms import RenderedDocumentForm
@@ -250,6 +251,7 @@ class QuestionUpdate(UpdateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'lawcase': self.object.questionaire.law_case,
-            'questionaire': self.object.questionaire
+            'questionaire': self.object.questionaire,
+            'condition_form': QuestionConditionForm(instance=self.object)
         })
         return context

@@ -13,7 +13,8 @@
         {% block navigation %}
             <ul class="list-group">
                 {% for qn in lawcase.questionaire_set.all %}
-                    <a class="list-group-item {% if questionaire == qn %}active{% endif %}" href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
+                    <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
+                       href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
                 {% endfor %}
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item">{% trans 'Template' %}</a>
             </ul>

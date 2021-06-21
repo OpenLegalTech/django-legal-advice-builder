@@ -25,7 +25,11 @@
         </form>
     </div>
     <div class="tab-pane fade" id="logic" role="tabpanel" aria-labelledby="logic-tab">
-        <form class=" p-3 border border-primary border-5" method="post"></form>
+        <form class=" p-3 border border-primary border-5" method="post">
+            {% csrf_token %}
+            {{ condition_form | crispy }}
+            {{ condition_form.media }}
+        </form>
     </div>
 </div>
 {% endblock %}

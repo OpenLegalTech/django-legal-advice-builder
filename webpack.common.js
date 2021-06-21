@@ -11,8 +11,11 @@ module.exports = {
       'bootstrap',
       'bootstrap-icons/font/bootstrap-icons.css'
     ],
-    options_field: [
-      './legal_advice_builder/assets/js/forms/options_field.js'
+    choice_field: [
+      './legal_advice_builder/assets/js/forms/choice_field.js'
+    ],
+    conditions_field: [
+      '/legal_advice_builder/assets/js/forms/conditions_field.js'
     ]
   },
   resolve: {

@@ -1,16 +1,10 @@
 <input type="hidden" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
 
 <div id="{{ widget.name }}">
-  <options-field
+  <choice-field
     inputtype="{{ widget.type }}"
     name="{{ widget.name }}"
     :initial="{{ widget.value }}"
   >
-  </options-field>
+  </choice-field>
 </div>
-
-
-
-
-
-

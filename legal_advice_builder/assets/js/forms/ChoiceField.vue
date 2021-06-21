@@ -1,23 +1,21 @@
 <template>
-  <div>
-    <div>
-      <Choice v-for="(value, name, index) in choices"
-        :key="`${ name }-${ index }`"
-        :optionKey="`${ name }`"
-        :optionValue="`${ value }`"
-        @choiceUpdated="choiceUpdated"
-        @choiceDeleted="choiceDeleted"
-      >
-      </Choice>
-      <div class="row row-cols-lg-2 g-3 align-items-center">
-        <div class="col-12">
-          <div class="form-group my-3">
-            <input type="text" class="form-control" v-model="newChoice"/>
-          </div>
+  <div class="border p-3">
+    <Choice v-for="(value, name, index) in choices"
+      :key="`${ name }-${ index }`"
+      :choiceKey="`${ name }`"
+      :choiceValue="`${ value }`"
+      @choiceUpdated="choiceUpdated"
+      @choiceDeleted="choiceDeleted"
+    >
+    </Choice>
+    <div class="row row-cols-lg-2 g-3 align-items-center">
+      <div class="col-12">
+        <div class="form-group my-3">
+          <input type="text" class="form-control" v-model="newChoice"/>
         </div>
-        <div class="col-12">
-          <button class="btn btn-primary" @click.prevent="addChoice">Add</button>
-        </div>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" @click.prevent="addChoice">Add</button>
       </div>
     </div>
   </div>
@@ -27,7 +25,7 @@
 import Choice from './Choice.vue'
 export default {
   components: { Choice },
-  name: 'options-field',
+  name: 'choice-field',
   props: {
     initial: Object,
     inputtype: String,

@@ -13,25 +13,25 @@
 
 <script>
 export default {
-  name: "fieldOption",
+  name: "choice",
   props: {
-    optionKey: String,
-    optionValue: String,
+    choiceKey: String,
+    choiceValue: String,
   },
   data: function () {
     return {
-      value: this.optionValue,
+      value: this.choiceValue,
     };
   },
   methods: {
     updateChoice (event) {
       let newValue = {};
-      newValue[this.optionKey] = event.target.value;
+      newValue[this.choiceKey] = event.target.value;
       this.$emit('choiceUpdated', newValue);
     },
     deleteChoice (event) {
       event.preventDefault();
-      this.$emit('choiceDeleted', this.optionKey)
+      this.$emit('choiceDeleted', this.choiceKey)
     }
   }
 };

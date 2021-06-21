@@ -10,7 +10,8 @@ from .models import DocumentField
 from .models import DocumentFieldType
 from .models import DocumentType
 from .models import Question
-from .widgets import OptionsWidget
+from .widgets import ChoiceWidget
+from .widgets import ConditionsWidget
 
 
 class DispatchQuestionFieldTypeMixin:
@@ -161,23 +162,35 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
             return dateformat.format(date, "m.d.Y")
 
 
+class QuestionConditionForm(forms.ModelForm):
+    conditions = forms.CharField()
+
+    class Meta:
+        model = Question
+        fields = ('conditions', 'success_message',
+                  'failure_message')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
+        question = self.instance
+        if not question.success_conditions:
+            del self.fields['success_message']
+        if not question.failure_conditions:
+            del self.fields['failure_message']
+
+
 class QuestionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Question
         fields = ('text', 'field_type', 'options', 'help_text',
-                  'information', 'success_message', 'failure_message', 'unsure_message')
+                  'information')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['help_text'].widget = forms.Textarea()
-        self.fields['options'].widget = OptionsWidget()
+        self.fields['options'].widget = ChoiceWidget()
         question = self.instance
         if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
-        if not question.success_conditions:
-            del self.fields['success_message']
-        if not question.failure_conditions:
-            del self.fields['failure_message']
-        if not question.unsure_options:
-            del self.fields['unsure_message']

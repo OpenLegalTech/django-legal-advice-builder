@@ -1,8 +1,8 @@
 import Vue from 'vue/dist/vue.js';
 
 Vue.component(
-  "options-field",
-  require("./OptionsField.vue").default
+  "choice-field",
+  require("./ChoiceField.vue").default
 );
 
 let vue = new Vue({}).$mount("#options");
