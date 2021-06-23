@@ -20,7 +20,7 @@
             {{ form | crispy }}
             {{ form.media }}
             <div class="text-end mt-3">
-                <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+                <input class="btn btn-primary btn-lg pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
             </div>
         </form>
     </div>
@@ -29,6 +29,9 @@
             {% csrf_token %}
             {{ condition_form | crispy }}
             {{ condition_form.media }}
+            <div class="text-end mt-3">
+                <input class="btn btn-primary btn-lg pull-right" type="submit" name="logic" value="{% trans 'Save' %}" />
+            </div>
         </form>
     </div>
 </div>

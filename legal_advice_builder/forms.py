@@ -1,3 +1,5 @@
+import json
+
 from django import forms
 from django.forms import fields
 from django.forms.models import model_to_dict
@@ -167,17 +169,26 @@ class QuestionConditionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('conditions', 'success_message',
-                  'failure_message')
+        fields = ('conditions', 'failure_message')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
         question = self.instance
-        if not question.success_conditions:
-            del self.fields['success_message']
         if not question.failure_conditions:
             del self.fields['failure_message']
+
+    def clean_conditions(self):
+        conditions = json.loads(self.cleaned_data.pop('conditions'))
+        self.cleaned_data['success_conditions'] = conditions.get('success')
+        self.cleaned_data['failure_conditions'] = conditions.get('failure')
+        return self.cleaned_data
+
+    def save(self, commit=True):
+        self.instance.success_conditions = self.cleaned_data['success_conditions']
+        self.instance.failure_conditions = self.cleaned_data['failure_conditions']
+        self.instance.save()
+        return self.instance
 
 
 class QuestionUpdateForm(forms.ModelForm):

@@ -8,8 +8,12 @@
 
     <div class="row justify-content-start">
       <div class="col-6">
-          <select class="form-select">
-              <option v-for="option, key, index in options.options" :key="`${ index }`" :selected="selectedOption === key">{{option}}</option>
+          <select class="form-select" v-model="newOption" @change="onChange">
+              <option
+                v-for="optionValue, optionKey, index in options.options"
+                :value="optionKey"
+                :key="`${ index }`"
+              >{{optionValue}}</option>
           </select>
       </div>
     </div>
@@ -22,8 +26,12 @@
 
     <div class="row justify-content-start">
         <div class="col-6">
-            <select class="form-select">
-              <option v-for="option, index in thenOptions" :key="`${ index }`" :selected="option === value">{{option}}</option>
+            <select class="form-select" v-model="newValue" @change="onChange">
+              <option
+                v-for="optionValue, optionKey, index in thenOptions"
+                :key="`${ index }`"
+                :value="optionKey"
+            >{{optionValue}}</option>
           </select>
         </div>
     </div>
@@ -42,7 +50,19 @@ export default {
   },
   data () {
     return {
-      thenOptions: ['success', 'failure']
+      newOption: this.selectedOption,
+      newValue: this.value,
+      thenOptions: {'success': 'Erfolg: Springe zum nächsten Fragebogen.',
+                    'failure': 'Kein Erfolg: Zeige Abbruchnachricht'}
+    }
+  },
+  methods: {
+    onChange () {
+      let newValue = {
+        'status': this.newValue,
+        'option': this.newOption
+      }
+      this.$emit('conditionUpdated', newValue)
     }
   }
 };

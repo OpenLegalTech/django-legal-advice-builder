@@ -1,5 +1,6 @@
 from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import DetailView
@@ -246,6 +247,15 @@ class QuestionUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('legal_advice_builder:question-update', args=[self.object.id])
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('logic'):
+            condition_form = QuestionConditionForm(instance=self.get_object(),
+                                                   data=request.POST)
+            if condition_form.is_valid():
+                self.object = condition_form.save()
+                return HttpResponseRedirect(self.get_success_url())
+        return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
