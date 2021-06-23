@@ -76,9 +76,9 @@ class Question(MP_Node):
                 if condition_type == 'deadline_running':
                     return date_to_validate >= now
             elif self.field_type == self.SINGLE_OPTION and option:
-                options = condition.get('options')
-                if options:
-                    return option in options
+                return self.condition_set.filter(if_option='is',
+                                                 if_value=option,
+                                                 then_value='success').exists()
         return False
 
     def is_failure_by_conditions(self, option=None, date=None):
@@ -97,9 +97,9 @@ class Question(MP_Node):
                 if condition_type == 'deadline_running':
                     return date_to_validate <= now
             elif self.field_type == self.SINGLE_OPTION and option:
-                options = condition.get('options')
-                if options:
-                    return option in options
+                return self.condition_set.filter(if_option='is',
+                                                 if_value=option,
+                                                 then_value='failure').exists()
         return False
 
     def get_status(self, option=None, text=None, date=None):

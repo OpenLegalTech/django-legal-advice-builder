@@ -28,7 +28,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"condition\",\n  props: {\n    selectedOption: String,\n    value: String,\n    textIf: String,\n    textThen: String,\n    options: Object\n  },\n  data: function data() {\n    return {\n      newOption: this.selectedOption,\n      newValue: this.value,\n      thenOptions: {\n        'success': 'Erfolg: Springe zum nächsten Fragebogen.',\n        'failure': 'Kein Erfolg: Zeige Abbruchnachricht'\n      }\n    };\n  },\n  methods: {\n    onChange: function onChange() {\n      var newValue = {\n        'status': this.newValue,\n        'option': this.newOption\n      };\n      this.$emit('conditionUpdated', newValue);\n    }\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Condition.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var core_js_modules_es_number_constructor_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.constructor.js */ \"./node_modules/core-js/modules/es.number.constructor.js\");\n/* harmony import */ var core_js_modules_es_number_constructor_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_constructor_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each.js */ \"./node_modules/core-js/modules/web.dom-collections.for-each.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1__);\n\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: \"condition\",\n  props: {\n    condition: Object,\n    textIf: String,\n    textThen: String,\n    options: Object,\n    usedOptions: Array,\n    listIndex: Number\n  },\n  data: function data() {\n    return {\n      newOption: this.condition.if_value,\n      newValue: this.condition.then_value,\n      thenOptions: {\n        'success': 'Erfolg: Springe zum nächsten Fragebogen.',\n        'failure': 'Kein Erfolg: Zeige Abbruchnachricht'\n      },\n      newCondition: this.condition\n    };\n  },\n  computed: {\n    availableOptions: function availableOptions() {\n      var _this = this;\n\n      var options = JSON.parse(JSON.stringify(this.options));\n      this.usedOptions.forEach(function (option) {\n        if (option !== _this.condition.if_value) {\n          delete options[option];\n        }\n      });\n      return options;\n    }\n  },\n  methods: {\n    onChange: function onChange() {\n      this.newCondition['if_value'] = this.newOption;\n      this.newCondition['then_value'] = this.newValue;\n      this.$emit('conditionUpdated', this.newCondition, this.listIndex);\n    }\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Condition.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 
@@ -39,17 +39,27 @@ eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ \"./node_modules/core-js/modules/es.function.name.js\");\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.includes.js */ \"./node_modules/core-js/modules/es.array.includes.js\");\n/* harmony import */ var core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_string_includes_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.string.includes.js */ \"./node_modules/core-js/modules/es.string.includes.js\");\n/* harmony import */ var core_js_modules_es_string_includes_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_includes_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.array.splice.js */ \"./node_modules/core-js/modules/es.array.splice.js\");\n/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _Condition_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Condition.vue */ \"./legal_advice_builder/assets/js/forms/Condition.vue\");\n\n\n\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    Condition: _Condition_vue__WEBPACK_IMPORTED_MODULE_4__.default\n  },\n  name: \"conditions-field\",\n  props: {\n    initial: Object,\n    options: Object,\n    text: Object,\n    name: String\n  },\n  data: function data() {\n    var data = {\n      failureString: \"failure\",\n      successString: \"success\",\n      textIf: this.text.if,\n      textThen: this.text.then,\n      formData: this.initial\n    };\n    return data;\n  },\n  computed: {\n    success: function success() {\n      if (this.formData.success[0] !== undefined) {\n        return this.formData.success[0].options;\n      }\n\n      return [];\n    },\n    failure: function failure() {\n      if (this.formData.failure[0] !== undefined) {\n        return this.formData.failure[0].options;\n      }\n\n      return [];\n    }\n  },\n  methods: {\n    updateFormField: function updateFormField() {\n      document.getElementsByName(this.name)[0].value = JSON.stringify(this.formData);\n    },\n    conditionUpdated: function conditionUpdated(newValue) {\n      var status = newValue.status;\n      var option = newValue.option;\n      var newSuccessOptions = JSON.parse(JSON.stringify(this.success));\n      var newFailureOptions = JSON.parse(JSON.stringify(this.failure));\n\n      if (status == 'success') {\n        if (!newSuccessOptions.includes(option)) {\n          newSuccessOptions.push(option);\n        }\n\n        if (newFailureOptions.includes(option)) {\n          var index = newFailureOptions.indexOf(option);\n          newFailureOptions.splice(index, 1);\n        }\n      }\n\n      if (status == 'failure') {\n        if (!newFailureOptions.includes(option)) {\n          newFailureOptions.push(option);\n        }\n\n        if (newSuccessOptions.includes(option)) {\n          var _index = newSuccessOptions.indexOf(option);\n\n          newSuccessOptions.splice(_index, 1);\n        }\n      }\n\n      this.formData = {\n        'success': [{\n          'options': newSuccessOptions\n        }],\n        'failure': [{\n          'options': newFailureOptions\n        }]\n      };\n      this.updateFormField();\n      this.$forceUpdate();\n    }\n  },\n  mounted: function mounted() {}\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/ConditionsField.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.map.js */ \"./node_modules/core-js/modules/es.array.map.js\");\n/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ \"./node_modules/core-js/modules/es.function.name.js\");\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.splice.js */ \"./node_modules/core-js/modules/es.array.splice.js\");\n/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _Condition_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Condition.vue */ \"./legal_advice_builder/assets/js/forms/Condition.vue\");\n\n\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    Condition: _Condition_vue__WEBPACK_IMPORTED_MODULE_3__.default\n  },\n  name: \"conditions-field\",\n  props: {\n    initial: Array,\n    options: Object,\n    text: Object,\n    name: String\n  },\n  data: function data() {\n    var data = {\n      textIf: this.text.if,\n      textThen: this.text.then,\n      formData: this.initial\n    };\n    return data;\n  },\n  computed: {\n    usedOptions: function usedOptions() {\n      var usedOptions = [];\n      this.formData.map(function (condition, index) {\n        usedOptions.push(condition.if_value);\n      });\n      return usedOptions;\n    }\n  },\n  methods: {\n    updateFormField: function updateFormField() {\n      document.getElementsByName(this.name)[0].value = JSON.stringify(this.formData);\n    },\n    conditionUpdated: function conditionUpdated(newValue, listIndex) {\n      this.formData.splice(listIndex, 1, newValue);\n      this.updateFormField();\n      this.$forceUpdate();\n    }\n  }\n});\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/ConditionsField.vue?./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 
-/***/ "./node_modules/core-js/internals/add-to-unscopables.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/core-js/internals/add-to-unscopables.js ***!
-  \**************************************************************/
+/***/ "./node_modules/core-js/internals/a-function.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/internals/a-function.js ***!
+  \******************************************************/
+/***/ (function(module) {
+
+eval("module.exports = function (it) {\n  if (typeof it != 'function') {\n    throw TypeError(String(it) + ' is not a function');\n  } return it;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/a-function.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/a-possible-prototype.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/core-js/internals/a-possible-prototype.js ***!
+  \****************************************************************/
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-eval("var wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ \"./node_modules/core-js/internals/well-known-symbol.js\");\nvar create = __webpack_require__(/*! ../internals/object-create */ \"./node_modules/core-js/internals/object-create.js\");\nvar definePropertyModule = __webpack_require__(/*! ../internals/object-define-property */ \"./node_modules/core-js/internals/object-define-property.js\");\n\nvar UNSCOPABLES = wellKnownSymbol('unscopables');\nvar ArrayPrototype = Array.prototype;\n\n// Array.prototype[@@unscopables]\n// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables\nif (ArrayPrototype[UNSCOPABLES] == undefined) {\n  definePropertyModule.f(ArrayPrototype, UNSCOPABLES, {\n    configurable: true,\n    value: create(null)\n  });\n}\n\n// add a key to Array.prototype[@@unscopables]\nmodule.exports = function (key) {\n  ArrayPrototype[UNSCOPABLES][key] = true;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/add-to-unscopables.js?");
+eval("var isObject = __webpack_require__(/*! ../internals/is-object */ \"./node_modules/core-js/internals/is-object.js\");\n\nmodule.exports = function (it) {\n  if (!isObject(it) && it !== null) {\n    throw TypeError(\"Can't set \" + String(it) + ' as a prototype');\n  } return it;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/a-possible-prototype.js?");
 
 /***/ }),
 
@@ -63,6 +73,17 @@ eval("var isObject = __webpack_require__(/*! ../internals/is-object */ \"./node_
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/array-for-each.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/internals/array-for-each.js ***!
+  \**********************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar $forEach = __webpack_require__(/*! ../internals/array-iteration */ \"./node_modules/core-js/internals/array-iteration.js\").forEach;\nvar arrayMethodIsStrict = __webpack_require__(/*! ../internals/array-method-is-strict */ \"./node_modules/core-js/internals/array-method-is-strict.js\");\n\nvar STRICT_METHOD = arrayMethodIsStrict('forEach');\n\n// `Array.prototype.forEach` method implementation\n// https://tc39.es/ecma262/#sec-array.prototype.foreach\nmodule.exports = !STRICT_METHOD ? function forEach(callbackfn /* , thisArg */) {\n  return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);\n// eslint-disable-next-line es/no-array-prototype-foreach -- safe\n} : [].forEach;\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/array-for-each.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/array-includes.js":
 /*!**********************************************************!*\
   !*** ./node_modules/core-js/internals/array-includes.js ***!
@@ -73,6 +94,16 @@ eval("var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-obje
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/array-iteration.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/core-js/internals/array-iteration.js ***!
+  \***********************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("var bind = __webpack_require__(/*! ../internals/function-bind-context */ \"./node_modules/core-js/internals/function-bind-context.js\");\nvar IndexedObject = __webpack_require__(/*! ../internals/indexed-object */ \"./node_modules/core-js/internals/indexed-object.js\");\nvar toObject = __webpack_require__(/*! ../internals/to-object */ \"./node_modules/core-js/internals/to-object.js\");\nvar toLength = __webpack_require__(/*! ../internals/to-length */ \"./node_modules/core-js/internals/to-length.js\");\nvar arraySpeciesCreate = __webpack_require__(/*! ../internals/array-species-create */ \"./node_modules/core-js/internals/array-species-create.js\");\n\nvar push = [].push;\n\n// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterOut }` methods implementation\nvar createMethod = function (TYPE) {\n  var IS_MAP = TYPE == 1;\n  var IS_FILTER = TYPE == 2;\n  var IS_SOME = TYPE == 3;\n  var IS_EVERY = TYPE == 4;\n  var IS_FIND_INDEX = TYPE == 6;\n  var IS_FILTER_OUT = TYPE == 7;\n  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;\n  return function ($this, callbackfn, that, specificCreate) {\n    var O = toObject($this);\n    var self = IndexedObject(O);\n    var boundFunction = bind(callbackfn, that, 3);\n    var length = toLength(self.length);\n    var index = 0;\n    var create = specificCreate || arraySpeciesCreate;\n    var target = IS_MAP ? create($this, length) : IS_FILTER || IS_FILTER_OUT ? create($this, 0) : undefined;\n    var value, result;\n    for (;length > index; index++) if (NO_HOLES || index in self) {\n      value = self[index];\n      result = boundFunction(value, index, O);\n      if (TYPE) {\n        if (IS_MAP) target[index] = result; // map\n        else if (result) switch (TYPE) {\n          case 3: return true;              // some\n          case 5: return value;             // find\n          case 6: return index;             // findIndex\n          case 2: push.call(target, value); // filter\n        } else switch (TYPE) {\n          case 4: return false;             // every\n          case 7: push.call(target, value); // filterOut\n        }\n      }\n    }\n    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;\n  };\n};\n\nmodule.exports = {\n  // `Array.prototype.forEach` method\n  // https://tc39.es/ecma262/#sec-array.prototype.foreach\n  forEach: createMethod(0),\n  // `Array.prototype.map` method\n  // https://tc39.es/ecma262/#sec-array.prototype.map\n  map: createMethod(1),\n  // `Array.prototype.filter` method\n  // https://tc39.es/ecma262/#sec-array.prototype.filter\n  filter: createMethod(2),\n  // `Array.prototype.some` method\n  // https://tc39.es/ecma262/#sec-array.prototype.some\n  some: createMethod(3),\n  // `Array.prototype.every` method\n  // https://tc39.es/ecma262/#sec-array.prototype.every\n  every: createMethod(4),\n  // `Array.prototype.find` method\n  // https://tc39.es/ecma262/#sec-array.prototype.find\n  find: createMethod(5),\n  // `Array.prototype.findIndex` method\n  // https://tc39.es/ecma262/#sec-array.prototype.findIndex\n  findIndex: createMethod(6),\n  // `Array.prototype.filterOut` method\n  // https://github.com/tc39/proposal-array-filtering\n  filterOut: createMethod(7)\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/array-iteration.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/array-method-has-species-support.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/core-js/internals/array-method-has-species-support.js ***!
@@ -80,6 +111,17 @@ eval("var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-obje
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 eval("var fails = __webpack_require__(/*! ../internals/fails */ \"./node_modules/core-js/internals/fails.js\");\nvar wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ \"./node_modules/core-js/internals/well-known-symbol.js\");\nvar V8_VERSION = __webpack_require__(/*! ../internals/engine-v8-version */ \"./node_modules/core-js/internals/engine-v8-version.js\");\n\nvar SPECIES = wellKnownSymbol('species');\n\nmodule.exports = function (METHOD_NAME) {\n  // We can't use this feature detection in V8 since it causes\n  // deoptimization and serious performance degradation\n  // https://github.com/zloirock/core-js/issues/677\n  return V8_VERSION >= 51 || !fails(function () {\n    var array = [];\n    var constructor = array.constructor = {};\n    constructor[SPECIES] = function () {\n      return { foo: 1 };\n    };\n    return array[METHOD_NAME](Boolean).foo !== 1;\n  });\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/array-method-has-species-support.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/array-method-is-strict.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/core-js/internals/array-method-is-strict.js ***!
+  \******************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar fails = __webpack_require__(/*! ../internals/fails */ \"./node_modules/core-js/internals/fails.js\");\n\nmodule.exports = function (METHOD_NAME, argument) {\n  var method = [][METHOD_NAME];\n  return !!method && fails(function () {\n    // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing\n    method.call(null, argument || function () { throw 1; }, 1);\n  });\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/array-method-is-strict.js?");
 
 /***/ }),
 
@@ -110,16 +152,6 @@ eval("var toString = {}.toString;\n\nmodule.exports = function (it) {\n  return 
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 eval("var has = __webpack_require__(/*! ../internals/has */ \"./node_modules/core-js/internals/has.js\");\nvar ownKeys = __webpack_require__(/*! ../internals/own-keys */ \"./node_modules/core-js/internals/own-keys.js\");\nvar getOwnPropertyDescriptorModule = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ \"./node_modules/core-js/internals/object-get-own-property-descriptor.js\");\nvar definePropertyModule = __webpack_require__(/*! ../internals/object-define-property */ \"./node_modules/core-js/internals/object-define-property.js\");\n\nmodule.exports = function (target, source) {\n  var keys = ownKeys(source);\n  var defineProperty = definePropertyModule.f;\n  var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;\n  for (var i = 0; i < keys.length; i++) {\n    var key = keys[i];\n    if (!has(target, key)) defineProperty(target, key, getOwnPropertyDescriptor(source, key));\n  }\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/copy-constructor-properties.js?");
-
-/***/ }),
-
-/***/ "./node_modules/core-js/internals/correct-is-regexp-logic.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/core-js/internals/correct-is-regexp-logic.js ***!
-  \*******************************************************************/
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-eval("var wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ \"./node_modules/core-js/internals/well-known-symbol.js\");\n\nvar MATCH = wellKnownSymbol('match');\n\nmodule.exports = function (METHOD_NAME) {\n  var regexp = /./;\n  try {\n    '/./'[METHOD_NAME](regexp);\n  } catch (error1) {\n    try {\n      regexp[MATCH] = false;\n      return '/./'[METHOD_NAME](regexp);\n    } catch (error2) { /* empty */ }\n  } return false;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/correct-is-regexp-logic.js?");
 
 /***/ }),
 
@@ -174,6 +206,16 @@ eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modul
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/dom-iterables.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/internals/dom-iterables.js ***!
+  \*********************************************************/
+/***/ (function(module) {
+
+eval("// iterable DOM collections\n// flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods\nmodule.exports = {\n  CSSRuleList: 0,\n  CSSStyleDeclaration: 0,\n  CSSValueList: 0,\n  ClientRectList: 0,\n  DOMRectList: 0,\n  DOMStringList: 0,\n  DOMTokenList: 1,\n  DataTransferItemList: 0,\n  FileList: 0,\n  HTMLAllCollection: 0,\n  HTMLCollection: 0,\n  HTMLFormElement: 0,\n  HTMLSelectElement: 0,\n  MediaList: 0,\n  MimeTypeArray: 0,\n  NamedNodeMap: 0,\n  NodeList: 1,\n  PaintRequestList: 0,\n  Plugin: 0,\n  PluginArray: 0,\n  SVGLengthList: 0,\n  SVGNumberList: 0,\n  SVGPathSegList: 0,\n  SVGPointList: 0,\n  SVGStringList: 0,\n  SVGTransformList: 0,\n  SourceBufferList: 0,\n  StyleSheetList: 0,\n  TextTrackCueList: 0,\n  TextTrackList: 0,\n  TouchList: 0\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/dom-iterables.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/engine-user-agent.js":
 /*!*************************************************************!*\
   !*** ./node_modules/core-js/internals/engine-user-agent.js ***!
@@ -221,6 +263,16 @@ eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modul
 /***/ (function(module) {
 
 eval("module.exports = function (exec) {\n  try {\n    return !!exec();\n  } catch (error) {\n    return true;\n  }\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/fails.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/function-bind-context.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/core-js/internals/function-bind-context.js ***!
+  \*****************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("var aFunction = __webpack_require__(/*! ../internals/a-function */ \"./node_modules/core-js/internals/a-function.js\");\n\n// optional / simple context binding\nmodule.exports = function (fn, that, length) {\n  aFunction(fn);\n  if (that === undefined) return fn;\n  switch (length) {\n    case 0: return function () {\n      return fn.call(that);\n    };\n    case 1: return function (a) {\n      return fn.call(that, a);\n    };\n    case 2: return function (a, b) {\n      return fn.call(that, a, b);\n    };\n    case 3: return function (a, b, c) {\n      return fn.call(that, a, b, c);\n    };\n  }\n  return function (/* ...args */) {\n    return fn.apply(that, arguments);\n  };\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/function-bind-context.js?");
 
 /***/ }),
 
@@ -294,6 +346,16 @@ eval("var fails = __webpack_require__(/*! ../internals/fails */ \"./node_modules
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/inherit-if-required.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/internals/inherit-if-required.js ***!
+  \***************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("var isObject = __webpack_require__(/*! ../internals/is-object */ \"./node_modules/core-js/internals/is-object.js\");\nvar setPrototypeOf = __webpack_require__(/*! ../internals/object-set-prototype-of */ \"./node_modules/core-js/internals/object-set-prototype-of.js\");\n\n// makes subclassing work correct for wrapped built-ins\nmodule.exports = function ($this, dummy, Wrapper) {\n  var NewTarget, NewTargetPrototype;\n  if (\n    // it can work only with native `setPrototypeOf`\n    setPrototypeOf &&\n    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this\n    typeof (NewTarget = dummy.constructor) == 'function' &&\n    NewTarget !== Wrapper &&\n    isObject(NewTargetPrototype = NewTarget.prototype) &&\n    NewTargetPrototype !== Wrapper.prototype\n  ) setPrototypeOf($this, NewTargetPrototype);\n  return $this;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/inherit-if-required.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/inspect-source.js":
 /*!**********************************************************!*\
   !*** ./node_modules/core-js/internals/inspect-source.js ***!
@@ -354,16 +416,6 @@ eval("module.exports = false;\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_mod
 
 /***/ }),
 
-/***/ "./node_modules/core-js/internals/is-regexp.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/core-js/internals/is-regexp.js ***!
-  \*****************************************************/
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-eval("var isObject = __webpack_require__(/*! ../internals/is-object */ \"./node_modules/core-js/internals/is-object.js\");\nvar classof = __webpack_require__(/*! ../internals/classof-raw */ \"./node_modules/core-js/internals/classof-raw.js\");\nvar wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ \"./node_modules/core-js/internals/well-known-symbol.js\");\n\nvar MATCH = wellKnownSymbol('match');\n\n// `IsRegExp` abstract operation\n// https://tc39.es/ecma262/#sec-isregexp\nmodule.exports = function (it) {\n  var isRegExp;\n  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classof(it) == 'RegExp');\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/is-regexp.js?");
-
-/***/ }),
-
 /***/ "./node_modules/core-js/internals/native-symbol.js":
 /*!*********************************************************!*\
   !*** ./node_modules/core-js/internals/native-symbol.js ***!
@@ -381,16 +433,6 @@ eval("/* eslint-disable es/no-symbol -- required for testing */\nvar V8_VERSION 
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modules/core-js/internals/global.js\");\nvar inspectSource = __webpack_require__(/*! ../internals/inspect-source */ \"./node_modules/core-js/internals/inspect-source.js\");\n\nvar WeakMap = global.WeakMap;\n\nmodule.exports = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/native-weak-map.js?");
-
-/***/ }),
-
-/***/ "./node_modules/core-js/internals/not-a-regexp.js":
-/*!********************************************************!*\
-  !*** ./node_modules/core-js/internals/not-a-regexp.js ***!
-  \********************************************************/
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-eval("var isRegExp = __webpack_require__(/*! ../internals/is-regexp */ \"./node_modules/core-js/internals/is-regexp.js\");\n\nmodule.exports = function (it) {\n  if (isRegExp(it)) {\n    throw TypeError(\"The method doesn't accept regular expressions\");\n  } return it;\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/not-a-regexp.js?");
 
 /***/ }),
 
@@ -485,6 +527,16 @@ eval("\nvar $propertyIsEnumerable = {}.propertyIsEnumerable;\n// eslint-disable-
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/object-set-prototype-of.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/core-js/internals/object-set-prototype-of.js ***!
+  \*******************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("/* eslint-disable no-proto -- safe */\nvar anObject = __webpack_require__(/*! ../internals/an-object */ \"./node_modules/core-js/internals/an-object.js\");\nvar aPossiblePrototype = __webpack_require__(/*! ../internals/a-possible-prototype */ \"./node_modules/core-js/internals/a-possible-prototype.js\");\n\n// `Object.setPrototypeOf` method\n// https://tc39.es/ecma262/#sec-object.setprototypeof\n// Works with __proto__ only. Old v8 can't work with null proto objects.\n// eslint-disable-next-line es/no-object-setprototypeof -- safe\nmodule.exports = Object.setPrototypeOf || ('__proto__' in {} ? function () {\n  var CORRECT_SETTER = false;\n  var test = {};\n  var setter;\n  try {\n    // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe\n    setter = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;\n    setter.call(test, []);\n    CORRECT_SETTER = test instanceof Array;\n  } catch (error) { /* empty */ }\n  return function setPrototypeOf(O, proto) {\n    anObject(O);\n    aPossiblePrototype(proto);\n    if (CORRECT_SETTER) setter.call(O, proto);\n    else O.__proto__ = proto;\n    return O;\n  };\n}() : undefined);\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/object-set-prototype-of.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/own-keys.js":
 /*!****************************************************!*\
   !*** ./node_modules/core-js/internals/own-keys.js ***!
@@ -562,6 +614,16 @@ eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modul
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 eval("var IS_PURE = __webpack_require__(/*! ../internals/is-pure */ \"./node_modules/core-js/internals/is-pure.js\");\nvar store = __webpack_require__(/*! ../internals/shared-store */ \"./node_modules/core-js/internals/shared-store.js\");\n\n(module.exports = function (key, value) {\n  return store[key] || (store[key] = value !== undefined ? value : {});\n})('versions', []).push({\n  version: '3.14.0',\n  mode: IS_PURE ? 'pure' : 'global',\n  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'\n});\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/shared.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/string-trim.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/internals/string-trim.js ***!
+  \*******************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("var requireObjectCoercible = __webpack_require__(/*! ../internals/require-object-coercible */ \"./node_modules/core-js/internals/require-object-coercible.js\");\nvar whitespaces = __webpack_require__(/*! ../internals/whitespaces */ \"./node_modules/core-js/internals/whitespaces.js\");\n\nvar whitespace = '[' + whitespaces + ']';\nvar ltrim = RegExp('^' + whitespace + whitespace + '*');\nvar rtrim = RegExp(whitespace + whitespace + '*$');\n\n// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation\nvar createMethod = function (TYPE) {\n  return function ($this) {\n    var string = String(requireObjectCoercible($this));\n    if (TYPE & 1) string = string.replace(ltrim, '');\n    if (TYPE & 2) string = string.replace(rtrim, '');\n    return string;\n  };\n};\n\nmodule.exports = {\n  // `String.prototype.{ trimLeft, trimStart }` methods\n  // https://tc39.es/ecma262/#sec-string.prototype.trimstart\n  start: createMethod(1),\n  // `String.prototype.{ trimRight, trimEnd }` methods\n  // https://tc39.es/ecma262/#sec-string.prototype.trimend\n  end: createMethod(2),\n  // `String.prototype.trim` method\n  // https://tc39.es/ecma262/#sec-string.prototype.trim\n  trim: createMethod(3)\n};\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/string-trim.js?");
 
 /***/ }),
 
@@ -655,14 +717,24 @@ eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modul
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/es.array.includes.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/core-js/modules/es.array.includes.js ***!
-  \***********************************************************/
+/***/ "./node_modules/core-js/internals/whitespaces.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/internals/whitespaces.js ***!
+  \*******************************************************/
+/***/ (function(module) {
+
+eval("// a string of all valid unicode whitespaces\nmodule.exports = '\\u0009\\u000A\\u000B\\u000C\\u000D\\u0020\\u00A0\\u1680\\u2000\\u2001\\u2002' +\n  '\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029\\uFEFF';\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/internals/whitespaces.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.array.map.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/es.array.map.js ***!
+  \******************************************************/
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar $ = __webpack_require__(/*! ../internals/export */ \"./node_modules/core-js/internals/export.js\");\nvar $includes = __webpack_require__(/*! ../internals/array-includes */ \"./node_modules/core-js/internals/array-includes.js\").includes;\nvar addToUnscopables = __webpack_require__(/*! ../internals/add-to-unscopables */ \"./node_modules/core-js/internals/add-to-unscopables.js\");\n\n// `Array.prototype.includes` method\n// https://tc39.es/ecma262/#sec-array.prototype.includes\n$({ target: 'Array', proto: true }, {\n  includes: function includes(el /* , fromIndex = 0 */) {\n    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);\n  }\n});\n\n// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables\naddToUnscopables('includes');\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/modules/es.array.includes.js?");
+eval("\nvar $ = __webpack_require__(/*! ../internals/export */ \"./node_modules/core-js/internals/export.js\");\nvar $map = __webpack_require__(/*! ../internals/array-iteration */ \"./node_modules/core-js/internals/array-iteration.js\").map;\nvar arrayMethodHasSpeciesSupport = __webpack_require__(/*! ../internals/array-method-has-species-support */ \"./node_modules/core-js/internals/array-method-has-species-support.js\");\n\nvar HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('map');\n\n// `Array.prototype.map` method\n// https://tc39.es/ecma262/#sec-array.prototype.map\n// with adding support of @@species\n$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {\n  map: function map(callbackfn /* , thisArg */) {\n    return $map(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);\n  }\n});\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/modules/es.array.map.js?");
 
 /***/ }),
 
@@ -687,14 +759,24 @@ eval("var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ \"./
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/es.string.includes.js":
-/*!************************************************************!*\
-  !*** ./node_modules/core-js/modules/es.string.includes.js ***!
-  \************************************************************/
+/***/ "./node_modules/core-js/modules/es.number.constructor.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/es.number.constructor.js ***!
+  \***************************************************************/
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar $ = __webpack_require__(/*! ../internals/export */ \"./node_modules/core-js/internals/export.js\");\nvar notARegExp = __webpack_require__(/*! ../internals/not-a-regexp */ \"./node_modules/core-js/internals/not-a-regexp.js\");\nvar requireObjectCoercible = __webpack_require__(/*! ../internals/require-object-coercible */ \"./node_modules/core-js/internals/require-object-coercible.js\");\nvar correctIsRegExpLogic = __webpack_require__(/*! ../internals/correct-is-regexp-logic */ \"./node_modules/core-js/internals/correct-is-regexp-logic.js\");\n\n// `String.prototype.includes` method\n// https://tc39.es/ecma262/#sec-string.prototype.includes\n$({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {\n  includes: function includes(searchString /* , position = 0 */) {\n    return !!~String(requireObjectCoercible(this))\n      .indexOf(notARegExp(searchString), arguments.length > 1 ? arguments[1] : undefined);\n  }\n});\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/modules/es.string.includes.js?");
+eval("\nvar DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ \"./node_modules/core-js/internals/descriptors.js\");\nvar global = __webpack_require__(/*! ../internals/global */ \"./node_modules/core-js/internals/global.js\");\nvar isForced = __webpack_require__(/*! ../internals/is-forced */ \"./node_modules/core-js/internals/is-forced.js\");\nvar redefine = __webpack_require__(/*! ../internals/redefine */ \"./node_modules/core-js/internals/redefine.js\");\nvar has = __webpack_require__(/*! ../internals/has */ \"./node_modules/core-js/internals/has.js\");\nvar classof = __webpack_require__(/*! ../internals/classof-raw */ \"./node_modules/core-js/internals/classof-raw.js\");\nvar inheritIfRequired = __webpack_require__(/*! ../internals/inherit-if-required */ \"./node_modules/core-js/internals/inherit-if-required.js\");\nvar toPrimitive = __webpack_require__(/*! ../internals/to-primitive */ \"./node_modules/core-js/internals/to-primitive.js\");\nvar fails = __webpack_require__(/*! ../internals/fails */ \"./node_modules/core-js/internals/fails.js\");\nvar create = __webpack_require__(/*! ../internals/object-create */ \"./node_modules/core-js/internals/object-create.js\");\nvar getOwnPropertyNames = __webpack_require__(/*! ../internals/object-get-own-property-names */ \"./node_modules/core-js/internals/object-get-own-property-names.js\").f;\nvar getOwnPropertyDescriptor = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ \"./node_modules/core-js/internals/object-get-own-property-descriptor.js\").f;\nvar defineProperty = __webpack_require__(/*! ../internals/object-define-property */ \"./node_modules/core-js/internals/object-define-property.js\").f;\nvar trim = __webpack_require__(/*! ../internals/string-trim */ \"./node_modules/core-js/internals/string-trim.js\").trim;\n\nvar NUMBER = 'Number';\nvar NativeNumber = global[NUMBER];\nvar NumberPrototype = NativeNumber.prototype;\n\n// Opera ~12 has broken Object#toString\nvar BROKEN_CLASSOF = classof(create(NumberPrototype)) == NUMBER;\n\n// `ToNumber` abstract operation\n// https://tc39.es/ecma262/#sec-tonumber\nvar toNumber = function (argument) {\n  var it = toPrimitive(argument, false);\n  var first, third, radix, maxCode, digits, length, index, code;\n  if (typeof it == 'string' && it.length > 2) {\n    it = trim(it);\n    first = it.charCodeAt(0);\n    if (first === 43 || first === 45) {\n      third = it.charCodeAt(2);\n      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix\n    } else if (first === 48) {\n      switch (it.charCodeAt(1)) {\n        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i\n        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i\n        default: return +it;\n      }\n      digits = it.slice(2);\n      length = digits.length;\n      for (index = 0; index < length; index++) {\n        code = digits.charCodeAt(index);\n        // parseInt parses a string to a first unavailable symbol\n        // but ToNumber should return NaN if a string contains unavailable symbols\n        if (code < 48 || code > maxCode) return NaN;\n      } return parseInt(digits, radix);\n    }\n  } return +it;\n};\n\n// `Number` constructor\n// https://tc39.es/ecma262/#sec-number-constructor\nif (isForced(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {\n  var NumberWrapper = function Number(value) {\n    var it = arguments.length < 1 ? 0 : value;\n    var dummy = this;\n    return dummy instanceof NumberWrapper\n      // check on 1..constructor(foo) case\n      && (BROKEN_CLASSOF ? fails(function () { NumberPrototype.valueOf.call(dummy); }) : classof(dummy) != NUMBER)\n        ? inheritIfRequired(new NativeNumber(toNumber(it)), dummy, NumberWrapper) : toNumber(it);\n  };\n  for (var keys = DESCRIPTORS ? getOwnPropertyNames(NativeNumber) : (\n    // ES3:\n    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +\n    // ES2015 (in case, if modules with ES2015 Number statics required before):\n    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +\n    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger,' +\n    // ESNext\n    'fromString,range'\n  ).split(','), j = 0, key; keys.length > j; j++) {\n    if (has(NativeNumber, key = keys[j]) && !has(NumberWrapper, key)) {\n      defineProperty(NumberWrapper, key, getOwnPropertyDescriptor(NativeNumber, key));\n    }\n  }\n  NumberWrapper.prototype = NumberPrototype;\n  NumberPrototype.constructor = NumberWrapper;\n  redefine(global, NUMBER, NumberWrapper);\n}\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/modules/es.number.constructor.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/web.dom-collections.for-each.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/core-js/modules/web.dom-collections.for-each.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modules/core-js/internals/global.js\");\nvar DOMIterables = __webpack_require__(/*! ../internals/dom-iterables */ \"./node_modules/core-js/internals/dom-iterables.js\");\nvar forEach = __webpack_require__(/*! ../internals/array-for-each */ \"./node_modules/core-js/internals/array-for-each.js\");\nvar createNonEnumerableProperty = __webpack_require__(/*! ../internals/create-non-enumerable-property */ \"./node_modules/core-js/internals/create-non-enumerable-property.js\");\n\nfor (var COLLECTION_NAME in DOMIterables) {\n  var Collection = global[COLLECTION_NAME];\n  var CollectionPrototype = Collection && Collection.prototype;\n  // some Chrome versions have non-configurable methods on DOMTokenList\n  if (CollectionPrototype && CollectionPrototype.forEach !== forEach) try {\n    createNonEnumerableProperty(CollectionPrototype, 'forEach', forEach);\n  } catch (error) {\n    CollectionPrototype.forEach = forEach;\n  }\n}\n\n\n//# sourceURL=webpack://%5Bname%5D/./node_modules/core-js/modules/web.dom-collections.for-each.js?");
 
 /***/ }),
 
@@ -771,7 +853,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    {\n      class: {\n        \"alert p-3 mb-3 alert-success\": this.value == \"success\",\n        \"alert p-3 mb-3 alert-danger\": this.value == \"failure\"\n      }\n    },\n    [\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-4\" }, [\n          _vm._v(\"\\n        \" + _vm._s(_vm.textIf) + \"\\n    \")\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-6\" }, [\n          _c(\n            \"select\",\n            {\n              directives: [\n                {\n                  name: \"model\",\n                  rawName: \"v-model\",\n                  value: _vm.newOption,\n                  expression: \"newOption\"\n                }\n              ],\n              staticClass: \"form-select\",\n              on: {\n                change: [\n                  function($event) {\n                    var $$selectedVal = Array.prototype.filter\n                      .call($event.target.options, function(o) {\n                        return o.selected\n                      })\n                      .map(function(o) {\n                        var val = \"_value\" in o ? o._value : o.value\n                        return val\n                      })\n                    _vm.newOption = $event.target.multiple\n                      ? $$selectedVal\n                      : $$selectedVal[0]\n                  },\n                  _vm.onChange\n                ]\n              }\n            },\n            _vm._l(_vm.options.options, function(\n              optionValue,\n              optionKey,\n              index\n            ) {\n              return _c(\n                \"option\",\n                { key: \"\" + index, domProps: { value: optionKey } },\n                [_vm._v(_vm._s(optionValue))]\n              )\n            }),\n            0\n          )\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-4\" }, [\n          _vm._v(\"\\n        \" + _vm._s(_vm.textThen) + \"\\n    \")\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-6\" }, [\n          _c(\n            \"select\",\n            {\n              directives: [\n                {\n                  name: \"model\",\n                  rawName: \"v-model\",\n                  value: _vm.newValue,\n                  expression: \"newValue\"\n                }\n              ],\n              staticClass: \"form-select\",\n              on: {\n                change: [\n                  function($event) {\n                    var $$selectedVal = Array.prototype.filter\n                      .call($event.target.options, function(o) {\n                        return o.selected\n                      })\n                      .map(function(o) {\n                        var val = \"_value\" in o ? o._value : o.value\n                        return val\n                      })\n                    _vm.newValue = $event.target.multiple\n                      ? $$selectedVal\n                      : $$selectedVal[0]\n                  },\n                  _vm.onChange\n                ]\n              }\n            },\n            _vm._l(_vm.thenOptions, function(optionValue, optionKey, index) {\n              return _c(\n                \"option\",\n                { key: \"\" + index, domProps: { value: optionKey } },\n                [_vm._v(_vm._s(optionValue))]\n              )\n            }),\n            0\n          )\n        ])\n      ])\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Condition.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    {\n      class: {\n        \"alert p-3 mb-3 alert-success\": this.condition.then_value == \"success\",\n        \"alert p-3 mb-3 alert-danger\": this.condition.then_value == \"failure\"\n      }\n    },\n    [\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-4\" }, [\n          _vm._v(\"\\n        \" + _vm._s(_vm.textIf) + \"\\n    \")\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-6\" }, [\n          _c(\n            \"select\",\n            {\n              directives: [\n                {\n                  name: \"model\",\n                  rawName: \"v-model\",\n                  value: _vm.newOption,\n                  expression: \"newOption\"\n                }\n              ],\n              staticClass: \"form-select\",\n              on: {\n                change: [\n                  function($event) {\n                    var $$selectedVal = Array.prototype.filter\n                      .call($event.target.options, function(o) {\n                        return o.selected\n                      })\n                      .map(function(o) {\n                        var val = \"_value\" in o ? o._value : o.value\n                        return val\n                      })\n                    _vm.newOption = $event.target.multiple\n                      ? $$selectedVal\n                      : $$selectedVal[0]\n                  },\n                  _vm.onChange\n                ]\n              }\n            },\n            _vm._l(_vm.availableOptions, function(\n              optionValue,\n              optionKey,\n              index\n            ) {\n              return _c(\n                \"option\",\n                { key: \"\" + index, domProps: { value: optionKey } },\n                [_vm._v(_vm._s(optionValue))]\n              )\n            }),\n            0\n          )\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-4\" }, [\n          _vm._v(\"\\n        \" + _vm._s(_vm.textThen) + \"\\n    \")\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"div\", { staticClass: \"row justify-content-start\" }, [\n        _c(\"div\", { staticClass: \"col-6\" }, [\n          _c(\n            \"select\",\n            {\n              directives: [\n                {\n                  name: \"model\",\n                  rawName: \"v-model\",\n                  value: _vm.newValue,\n                  expression: \"newValue\"\n                }\n              ],\n              staticClass: \"form-select\",\n              on: {\n                change: [\n                  function($event) {\n                    var $$selectedVal = Array.prototype.filter\n                      .call($event.target.options, function(o) {\n                        return o.selected\n                      })\n                      .map(function(o) {\n                        var val = \"_value\" in o ? o._value : o.value\n                        return val\n                      })\n                    _vm.newValue = $event.target.multiple\n                      ? $$selectedVal\n                      : $$selectedVal[0]\n                  },\n                  _vm.onChange\n                ]\n              }\n            },\n            _vm._l(_vm.thenOptions, function(optionValue, optionKey, index) {\n              return _c(\n                \"option\",\n                { key: \"\" + index, domProps: { value: optionKey } },\n                [_vm._v(_vm._s(optionValue))]\n              )\n            }),\n            0\n          )\n        ])\n      ])\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/Condition.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 
@@ -782,7 +864,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", [\n    { success: _vm.success }\n      ? _c(\n          \"div\",\n          _vm._l(_vm.success, function(option, index) {\n            return _c(\"Condition\", {\n              key: \"success_\" + index,\n              attrs: {\n                selectedOption: \"\" + option,\n                value: \"\" + _vm.successString,\n                options: { options: _vm.options },\n                textIf: \"\" + _vm.textIf,\n                textThen: \"\" + _vm.textThen\n              },\n              on: { conditionUpdated: _vm.conditionUpdated }\n            })\n          }),\n          1\n        )\n      : _vm._e(),\n    _vm._v(\" \"),\n    { failure: _vm.failure }\n      ? _c(\n          \"div\",\n          _vm._l(_vm.failure, function(option, index) {\n            return _c(\"Condition\", {\n              key: \"failure_\" + index,\n              attrs: {\n                selectedOption: \"\" + option,\n                value: \"\" + _vm.failureString,\n                options: { options: _vm.options },\n                textIf: \"\" + _vm.textIf,\n                textThen: \"\" + _vm.textThen\n              },\n              on: { conditionUpdated: _vm.conditionUpdated }\n            })\n          }),\n          1\n        )\n      : _vm._e()\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/ConditionsField.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    _vm._l(_vm.formData, function(condition, index) {\n      return _c(\"Condition\", {\n        key: index,\n        attrs: {\n          listIndex: index,\n          condition: condition,\n          options: _vm.options,\n          textIf: \"\" + _vm.textIf,\n          textThen: \"\" + _vm.textThen,\n          usedOptions: _vm.usedOptions\n        },\n        on: { conditionUpdated: _vm.conditionUpdated }\n      })\n    }),\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://%5Bname%5D/./legal_advice_builder/assets/js/forms/ConditionsField.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options");
 
 /***/ }),
 

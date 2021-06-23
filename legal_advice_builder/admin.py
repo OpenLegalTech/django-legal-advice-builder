@@ -3,6 +3,7 @@ from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
 from .models import Answer
+from .models import Condition
 from .models import Document
 from .models import DocumentField
 from .models import DocumentFieldType
@@ -13,9 +14,17 @@ from .models import Question
 from .models import Questionaire
 
 
+class ConditionInline(admin.TabularInline):
+    model = Condition
+
+
 class QuestionAdmin(TreeAdmin):
     form = movenodeform_factory(Question)
     list_filter = ('questionaire__law_case', 'questionaire')
+
+    inlines = [
+        ConditionInline,
+    ]
 
 
 class QuestionaireAdmin(admin.ModelAdmin):

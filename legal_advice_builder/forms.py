@@ -7,6 +7,7 @@ from django.utils import dateformat
 from tinymce.widgets import TinyMCE
 
 from .models import Answer
+from .models import Condition
 from .models import Document
 from .models import DocumentField
 from .models import DocumentFieldType
@@ -175,19 +176,14 @@ class QuestionConditionForm(forms.ModelForm):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
         question = self.instance
-        if not question.failure_conditions:
+        if not question.condition_set.filter(then_value='failure'):
             del self.fields['failure_message']
 
-    def clean_conditions(self):
-        conditions = json.loads(self.cleaned_data.pop('conditions'))
-        self.cleaned_data['success_conditions'] = conditions.get('success')
-        self.cleaned_data['failure_conditions'] = conditions.get('failure')
-        return self.cleaned_data
-
     def save(self, commit=True):
-        self.instance.success_conditions = self.cleaned_data['success_conditions']
-        self.instance.failure_conditions = self.cleaned_data['failure_conditions']
-        self.instance.save()
+        conditions = json.loads(self.cleaned_data['conditions'])
+        for condition in conditions:
+            condition_id = condition.pop('id')
+            Condition.objects.filter(id=condition_id).update(**condition)
         return self.instance
 
 
@@ -195,12 +191,10 @@ class QuestionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'field_type', 'options', 'help_text',
-                  'information')
+        fields = ('text', 'field_type', 'options')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.fields['help_text'].widget = forms.Textarea()
         self.fields['options'].widget = ChoiceWidget()
         question = self.instance
         if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
