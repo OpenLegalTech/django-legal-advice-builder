@@ -82,24 +82,25 @@ class Question(MP_Node):
         return False
 
     def is_failure_by_conditions(self, option=None, date=None):
-        conditions = self.failure_conditions
-        for condition in conditions:
-            if self.field_type == self.DATE and date:
-                condition_type = condition.get('type')
-                period = condition.get('period')
-                unit = condition.get('unit')
-                now = timezone.now().date()
-                kwargs = {}
-                kwargs[unit] = int(period)
-                date_to_validate = date + relativedelta(**kwargs)
-                if condition_type == 'deadline_expired':
-                    return date_to_validate >= now
-                if condition_type == 'deadline_running':
-                    return date_to_validate <= now
-            elif self.field_type == self.SINGLE_OPTION and option:
-                return self.condition_set.filter(if_option='is',
-                                                 if_value=option,
-                                                 then_value='failure').exists()
+        if self.field_type == self.SINGLE_OPTION and option:
+            return self.condition_set.filter(if_option='is',
+                                             if_value=option,
+                                             then_value='failure').exists()
+        else:
+            conditions = self.failure_conditions
+            for condition in conditions:
+                if self.field_type == self.DATE and date:
+                    condition_type = condition.get('type')
+                    period = condition.get('period')
+                    unit = condition.get('unit')
+                    now = timezone.now().date()
+                    kwargs = {}
+                    kwargs[unit] = int(period)
+                    date_to_validate = date + relativedelta(**kwargs)
+                    if condition_type == 'deadline_expired':
+                        return date_to_validate >= now
+                    if condition_type == 'deadline_running':
+                        return date_to_validate <= now
         return False
 
     def get_status(self, option=None, text=None, date=None):
@@ -115,7 +116,7 @@ class Question(MP_Node):
                     'failure': True,
                     'message': self.get_failure_message(),
                 }
-            elif option in self.unsure_options:
+            elif self.unsure_options and option in self.unsure_options:
                 return {
                     'unsure': True,
                     'message': self.get_unsure_message(),

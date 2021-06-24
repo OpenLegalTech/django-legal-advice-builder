@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import DetailView
+from django.views.generic import FormView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
@@ -11,6 +12,7 @@ from django.views.generic import UpdateView
 from .forms import DocumentFieldForm
 from .forms import PrepareDocumentForm
 from .forms import QuestionConditionForm
+from .forms import QuestionCreateForm
 from .forms import QuestionForm
 from .forms import QuestionUpdateForm
 from .forms import RenderedDocumentForm
@@ -227,12 +229,25 @@ class LawCaseDetail(DetailView):
     model = LawCase
 
 
-class QuestionaireDetail(DetailView):
+class QuestionaireDetail(DetailView, FormView):
     template_name = 'legal_advice_builder/admin/questionaire_detail.html'
-
+    form_class = QuestionCreateForm
     model = Questionaire
 
+    def form_valid(self, form):
+        data = form.cleaned_data
+        data['questionaire'] = self.get_object()
+        last_question = self.get_object().get_last_question()
+        if last_question:
+            question = last_question.add_child(**data)
+        else:
+            question = Question.add_root(**data)
+        return HttpResponseRedirect(reverse('legal_advice_builder:question-update',
+                                    args=[question.id]))
+
     def get_context_data(self, **kwargs):
+        if 'form' not in kwargs:
+            kwargs['question_create_form'] = self.get_form()
         context = super().get_context_data(**kwargs)
         context.update({
             'lawcase': self.object.law_case
@@ -262,6 +277,7 @@ class QuestionUpdate(UpdateView):
         context.update({
             'lawcase': self.object.questionaire.law_case,
             'questionaire': self.object.questionaire,
-            'condition_form': QuestionConditionForm(instance=self.object)
+            'condition_form': QuestionConditionForm(instance=self.object),
+            'question_create_form': QuestionCreateForm()
         })
         return context

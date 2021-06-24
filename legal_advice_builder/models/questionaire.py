@@ -22,6 +22,9 @@ class Questionaire(models.Model):
     def get_first_question(self):
         return self.questions.first()
 
+    def get_last_question(self):
+        return self.questions.last()
+
     def next(self):
         return Questionaire.objects.filter(
             law_case=self.law_case, order__gt=self.order).first()

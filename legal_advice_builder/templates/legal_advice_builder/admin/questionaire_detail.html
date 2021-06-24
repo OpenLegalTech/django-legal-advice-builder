@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/law_case_detail.html' %}
-{% load i18n %}
+{% load crispy_forms_tags i18n %}
 
 {% block main_content %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -18,8 +18,12 @@
             <div class="col-3 pe-0">
                 <ul class="list-group">
                     {% for question in questionaire.questions %}
-                    <a href="{% url 'legal_advice_builder:question-update' question.id %}" class="list-group-item list-group-item-action {% if object == question %}active{% endif %}">{{ question.text }}</a>
+                        <a href="{% url 'legal_advice_builder:question-update' question.id %}"
+                           class="list-group-item list-group-item-action {% if object == question %}active{% endif %}"
+                           style="padding-left: {{ question.depth }}0px;"
+                        >{% if not question.depth == 1 %}<i class="bi bi-arrow-return-right"></i>{% endif %} {{ question.text }}</a>
                     {% endfor %}
+                    <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm">{% trans 'Add question' %}</button>
                 </ul>
             </div>
             <div class="col ps-0 mb-3">
@@ -29,4 +33,25 @@
     </div>
     <div class="tab-pane fade" id="structure" role="tabpanel" aria-labelledby="structure-tab">...</div>
 </div>
+
+<div class="modal fade" id="newQuestionForm" tabindex="-1" aria-labelledby="newQuestionFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}" method="post">
+            <div class="modal-body">
+            {% csrf_token %}
+            {{ question_create_form | crispy }}
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+            <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}

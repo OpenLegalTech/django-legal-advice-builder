@@ -9,7 +9,7 @@
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button"
-            role="tab" aria-controls="logic" aria-selected="false">{% trans 'logic' %}</button>
+            role="tab" aria-controls="logic" aria-selected="false">{% trans 'logic' %} {% if question.condition_set.count > 0 %}( {{question.condition_set.count}}){% endif %}</button>
     </li>
 </ul>
 

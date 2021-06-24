@@ -180,10 +180,14 @@ class QuestionConditionForm(forms.ModelForm):
             del self.fields['failure_message']
 
     def save(self, commit=True):
+        self.instance.condition_set.all().delete()
         conditions = json.loads(self.cleaned_data['conditions'])
         for condition in conditions:
-            condition_id = condition.pop('id')
-            Condition.objects.filter(id=condition_id).update(**condition)
+            if 'id' in condition:
+                condition.pop('id')
+            condition['question'] = self.instance
+            condition = Condition.objects.create(**condition)
+            condition.update_questions()
         return self.instance
 
 
@@ -199,3 +203,10 @@ class QuestionUpdateForm(forms.ModelForm):
         question = self.instance
         if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
+
+
+class QuestionCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ('text', 'field_type')

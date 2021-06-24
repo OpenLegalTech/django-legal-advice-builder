@@ -9,6 +9,7 @@
         :textIf="`${textIf}`"
         :textThen="`${textThen}`"
         :usedOptions="usedOptions"
+        :questions="questions"
         @conditionUpdated="conditionUpdated"
       ></Condition>
   </div>
@@ -23,7 +24,9 @@ export default {
     initial: Array,
     options: Object,
     text: Object,
-    name: String
+    name: String,
+    questions: Array,
+    question: String
   },
   data() {
     let data = {
@@ -40,6 +43,17 @@ export default {
         usedOptions.push(condition.if_value)
       })
       return usedOptions
+    }
+  },
+  mounted() {
+    const emptyCondition = {
+        if_option: 'is',
+        question: this.question,
+        if_value: '',
+        then_value: '',
+      }
+    if (this.initial.length < Object.keys(this.options).length) {
+      this.formData.push(emptyCondition)
     }
   },
   methods: {

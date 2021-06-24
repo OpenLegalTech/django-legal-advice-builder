@@ -22,6 +22,12 @@ class ConditionsWidget(forms.TextInput):
         self.question = question
         return super().__init__(attrs=attrs)
 
+    def get_other_questions(self):
+        questions = self.question.questionaire.questions.exclude(
+            id=self.question.id)
+        return [{'id': question.id,
+                 'text': question.text} for question in questions]
+
     def create_conditions_dict(self):
         conditions = [
             model_to_dict(condition) for condition in self.question.condition_set.all()
@@ -32,6 +38,8 @@ class ConditionsWidget(forms.TextInput):
         context = super().get_context(name, value, attrs)
         context.update({
             'conditions': json.dumps(self.create_conditions_dict()),
+            'questions': json.dumps(self.get_other_questions()),
+            'question_id': str(self.question.id),
             'options': self.question.options,
             'text': {
                 'if': _('If the answer to this question is:'),

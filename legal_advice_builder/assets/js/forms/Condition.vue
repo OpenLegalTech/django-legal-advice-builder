@@ -1,5 +1,7 @@
 <template>
-  <div :class="{'alert p-3 mb-3 alert-success': this.condition.then_value=='success', 'alert p-3 mb-3 alert-danger': this.condition.then_value=='failure'}">
+  <div class="alert p-3 mb-3 " :class="{'alert-dark': this.condition.then_value=='' || this.condition.then_value=='question',
+                                        'alert-success': this.condition.then_value=='success',
+                                        'alert-danger': this.condition.then_value=='failure'}">
     <div class="row justify-content-start">
       <div class="col-4">
           {{ textIf }}
@@ -35,7 +37,22 @@
           </select>
         </div>
     </div>
+
+    <div v-if="newValue == 'question'" class="row justify-content-start">
+        <div class="col-6">
+            <select class="form-select" v-model="jumpToQuestion" @change="onChange">
+              <option
+                v-for="question, index in questions"
+                :key="`${ index }`"
+                :value="question.id"
+            >{{ question.text }}</option>
+          </select>
+        </div>
+    </div>
+
   </div>
+
+
 </template>
 
 <script>
@@ -46,6 +63,7 @@ export default {
     textIf: String,
     textThen: String,
     options: Object,
+    questions: Array,
     usedOptions: Array,
     listIndex: Number
   },
@@ -54,8 +72,10 @@ export default {
       newOption: this.condition.if_value,
       newValue: this.condition.then_value,
       thenOptions: {'success': 'Erfolg: Springe zum nächsten Fragebogen.',
-                    'failure': 'Kein Erfolg: Zeige Abbruchnachricht'},
-      newCondition: this.condition
+                    'failure': 'Kein Erfolg: Zeige Abbruchnachricht',
+                    'question': 'Springe zu Frage:'},
+      newCondition: this.condition,
+      jumpToQuestion: ''
     }
   },
   computed: {
@@ -72,7 +92,11 @@ export default {
   methods: {
     onChange () {
       this.newCondition['if_value'] = this.newOption
-      this.newCondition['then_value'] = this.newValue
+      if(this.newValue == 'question') {
+        this.newCondition['then_value'] = `${this.newValue}_${this.jumpToQuestion}`
+      } else {
+        this.newCondition['then_value'] = this.newValue
+      }
       this.$emit('conditionUpdated', this.newCondition, this.listIndex)
     }
   }

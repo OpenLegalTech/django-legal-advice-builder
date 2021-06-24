@@ -1,5 +1,7 @@
 from django.db import models
 
+from .question import Question
+
 
 class Condition(models.Model):
     question = models.ForeignKey('legal_advice_builder.Question',
@@ -15,3 +17,13 @@ class Condition(models.Model):
         return 'if answer {} "{}" then {}'.format(self.if_option,
                                                   self.if_value,
                                                   self.then_value)
+
+    def update_questions(self):
+        if self.question.options and 'question_' in self.then_value:
+            question_id = self.then_value.split('_')[1]
+            question = Question.objects.filter(id=question_id).first()
+            if question:
+                question.move(self.question, pos='last-child')
+                question.refresh_from_db()
+                question.parent_option = self.if_value
+                question.save()

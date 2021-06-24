@@ -2,9 +2,11 @@
 
 <div id="conditions">
     <conditions-field
+        question="{{ question_id }}"
         name="{{ widget.name }}"
         :initial="{{ conditions }}"
         :options="{{ options }}"
         :text="{{ text }}"
+        :questions="{{ questions }}"
     ></conditions-field>
 </div>
