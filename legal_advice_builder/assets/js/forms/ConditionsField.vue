@@ -46,14 +46,16 @@ export default {
     }
   },
   mounted() {
-    const emptyCondition = {
-        if_option: 'is',
-        question: this.question,
-        if_value: '',
-        then_value: '',
+    for (const [key, value] of Object.entries(this.options)) {
+      if(!this.usedOptions.includes(key)) {
+        const emptyCondition = {
+          if_option: 'is',
+          question: this.questions,
+          if_value: key,
+          then_value: ''
+        }
+        this.formData.push(emptyCondition)
       }
-    if (this.initial.length < Object.keys(this.options).length) {
-      this.formData.push(emptyCondition)
     }
   },
   methods: {

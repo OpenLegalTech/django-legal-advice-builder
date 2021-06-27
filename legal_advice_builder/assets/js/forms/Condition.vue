@@ -1,7 +1,8 @@
 <template>
-  <div class="alert p-3 mb-3 " :class="{'alert-dark': this.condition.then_value=='' || this.condition.then_value=='question',
-                                        'alert-success': this.condition.then_value=='success',
-                                        'alert-danger': this.condition.then_value=='failure'}">
+  <div class="alert p-3 mb-3 " :class="{'alert-dark': this.newValue=='',
+                                        'alert-info': this.newValue=='question',
+                                        'alert-success': this.newValue=='success',
+                                        'alert-danger': this.newValue=='failure'}">
     <div class="row justify-content-start">
       <div class="col-4">
           {{ textIf }}
@@ -68,14 +69,16 @@ export default {
     listIndex: Number
   },
   data () {
+    const jumpToQuestion = this.condition.then_value.includes('question') ? this.condition.then_value.split('_')[1] : ''
+    const newValue = this.condition.then_value.includes('question') ? 'question' : this.condition.then_value
     return {
       newOption: this.condition.if_value,
-      newValue: this.condition.then_value,
+      newValue: newValue,
       thenOptions: {'success': 'Erfolg: Springe zum nächsten Fragebogen.',
                     'failure': 'Kein Erfolg: Zeige Abbruchnachricht',
                     'question': 'Springe zu Frage:'},
       newCondition: this.condition,
-      jumpToQuestion: ''
+      jumpToQuestion: jumpToQuestion
     }
   },
   computed: {

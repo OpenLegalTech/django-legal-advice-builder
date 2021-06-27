@@ -186,8 +186,9 @@ class QuestionConditionForm(forms.ModelForm):
             if 'id' in condition:
                 condition.pop('id')
             condition['question'] = self.instance
-            condition = Condition.objects.create(**condition)
-            condition.update_questions()
+            if condition.get('then_value'):
+                condition = Condition.objects.create(**condition)
+                condition.update_questions()
         return self.instance
 
 
