@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-2 bg-light min-vh-100">
+    <div class="col-3 col-xxl-2 bg-light min-vh-100">
         {% block navigation %}
         <div class="card">
             <div class="card-header">
@@ -33,7 +33,7 @@
         </div>
         {% endblock %}
     </div>
-    <div class="col-9 mt-3">
+    <div class="col-8 col-xxl-9 mt-3">
         {% block main_content %}
         <form action="" method="post">
             {% csrf_token %}
