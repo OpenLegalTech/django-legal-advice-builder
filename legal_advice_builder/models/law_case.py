@@ -2,6 +2,7 @@ from django.db import models
 from django.template import Context
 from django.template import Template
 from django.template.loader import get_template
+from django.utils.translation import gettext_lazy as _
 
 from legal_advice_builder.utils import generate_answers_dict_for_template
 
@@ -37,6 +38,16 @@ class LawCase(models.Model):
 
     def questionaire_count(self):
         return self.questionaire_set.count()
+
+    def generate_default_questionaires(self):
+        from .questionaire import Questionaire
+        questionaire_list = [{'title': _('verify')}, {'title': _('personal data')}]
+        for index, questionaire in enumerate(questionaire_list):
+            Questionaire.objects.create(
+                law_case=self,
+                title=questionaire.get('title'),
+                order=index
+            )
 
     def get_rendered_template(self, answers):
         template = get_template(

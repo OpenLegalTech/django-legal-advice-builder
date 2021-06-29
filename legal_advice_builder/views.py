@@ -10,6 +10,7 @@ from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
 from .forms import DocumentFieldForm
+from .forms import LawCaseForm
 from .forms import PrepareDocumentForm
 from .forms import QuestionConditionForm
 from .forms import QuestionCreateForm
@@ -21,6 +22,7 @@ from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
+from .models import Document
 from .models import LawCase
 from .models import Question
 from .models import Questionaire
@@ -217,14 +219,35 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
         return self.generate_pdf_download(html_string)
 
 
-class LawCaseList(ListView):
+class LawCaseList(ListView, FormView):
     template_name = 'legal_advice_builder/admin/law_case_list.html'
+    form_class = LawCaseForm
 
     model = LawCase
 
+    def form_valid(self, form):
+        document_type = form.cleaned_data.pop('document_type')
+        title = form.cleaned_data.get('title')
+        document = Document.objects.create(
+            document_type=document_type,
+            name=title
+        )
+        law_case = LawCase.objects.create(
+            title=title,
+            document=document
+        )
+        law_case.generate_default_questionaires()
+        return HttpResponseRedirect(reverse('legal_advice_builder:law-case-detail',
+                                    args=[law_case.id]))
 
-class LawCaseDetail(DetailView):
+
+class LawCaseDetail(UpdateView):
     template_name = 'legal_advice_builder/admin/law_case_detail.html'
+    fields = ('title', 'description', 'extra_help',
+              'allow_download', 'save_answers')
+
+    def get_success_url(self):
+        return self.request.path
 
     model = LawCase
 

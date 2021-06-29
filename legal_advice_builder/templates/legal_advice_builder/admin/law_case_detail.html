@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/base.html' %}
-{% load i18n%}
+{% load i18n crispy_forms_tags %}
 
 {% block navbar %}
 <nav>
@@ -11,17 +11,38 @@
 <div class="row">
     <div class="col-2 bg-light min-vh-100">
         {% block navigation %}
-            <ul class="list-group">
+        <div class="card">
+            <div class="card-header">
+                {% trans 'Questionaires' %}
+            </div>
+            <ul class="list-group list-group-flush">
                 {% for qn in lawcase.questionaire_set.all %}
                     <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
                        href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
                 {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card mt-3 ">
+            <div class="card-header">
+                {% trans 'Document' %}
+            </div>
+            <ul class="list-group list-group-flush">
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item">{% trans 'Template' %}</a>
             </ul>
+        </div>
         {% endblock %}
     </div>
     <div class="col-9 mt-3">
-        {% block main_content %}{% endblock %}
+        {% block main_content %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <div class="text-end mt-3">
+                <input class="btn btn-primary btn-lg pull-right" type="submit" name="logic" value="{% trans 'Save' %}" />
+            </div>
+        </form>
+        {% endblock %}
     </div>
     <div class="col-1 bg-light min-vh-100"></div>
 </div>

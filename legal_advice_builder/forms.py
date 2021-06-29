@@ -12,6 +12,7 @@ from .models import Document
 from .models import DocumentField
 from .models import DocumentFieldType
 from .models import DocumentType
+from .models import LawCase
 from .models import Question
 from .widgets import ChoiceWidget
 from .widgets import ConditionsWidget
@@ -211,3 +212,11 @@ class QuestionCreateForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ('text', 'field_type')
+
+
+class LawCaseForm(forms.ModelForm):
+    document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all())
+
+    class Meta:
+        model = LawCase
+        fields = ('title', 'document_type')

@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/base.html' %}
-{% load i18n %}
+{% load i18n crispy_forms_tags %}
 
 {% block content %}
 <div class="row justify-content-center mt-5">
@@ -19,6 +19,28 @@
             </div>
         </div>
         {% endfor %}
+        <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newLawCaseForm">{% trans 'Add new process' %}</button>
     </div>
 </div>
+
+<div class="modal fade" id="newLawCaseForm" tabindex="-1" aria-labelledby="newLawCaseForm" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+            <div class="modal-body">
+            {% csrf_token %}
+            {{ form | crispy }}
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+            <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}
