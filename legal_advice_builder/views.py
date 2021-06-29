@@ -1,7 +1,9 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.views.generic import DetailView
 from django.views.generic import FormView
@@ -237,14 +239,16 @@ class LawCaseList(ListView, FormView):
             document=document
         )
         law_case.generate_default_questionaires()
-        return HttpResponseRedirect(reverse('legal_advice_builder:law-case-detail',
+        return HttpResponseRedirect(reverse(
+            'legal_advice_builder:law-case-detail',
                                     args=[law_case.id]))
 
 
-class LawCaseDetail(UpdateView):
+class LawCaseDetail(SuccessMessageMixin, UpdateView):
     template_name = 'legal_advice_builder/admin/law_case_detail.html'
     fields = ('title', 'description', 'extra_help',
               'allow_download', 'save_answers')
+    success_message = _('Lawcase updated')
 
     def get_success_url(self):
         return self.request.path
@@ -265,7 +269,8 @@ class QuestionaireDetail(DetailView, FormView):
             question = last_question.add_child(**data)
         else:
             question = Question.add_root(**data)
-        return HttpResponseRedirect(reverse('legal_advice_builder:question-update',
+        return HttpResponseRedirect(reverse(
+            'legal_advice_builder:question-update',
                                     args=[question.id]))
 
     def get_context_data(self, **kwargs):
@@ -278,13 +283,15 @@ class QuestionaireDetail(DetailView, FormView):
         return context
 
 
-class QuestionUpdate(UpdateView):
+class QuestionUpdate(SuccessMessageMixin, UpdateView):
     template_name = 'legal_advice_builder/admin/question_update.html'
     model = Question
     form_class = QuestionUpdateForm
+    success_message = _('Question geupdated')
 
     def get_success_url(self):
-        return reverse('legal_advice_builder:question-update', args=[self.object.id])
+        return reverse(
+            'legal_advice_builder:question-update', args=[self.object.id])
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('logic'):
