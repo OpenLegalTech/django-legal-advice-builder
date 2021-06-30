@@ -3,13 +3,17 @@
 
 {% block navbar %}
 <nav>
-    <h1><a href="{% url 'legal_advice_builder:law-case-list' %}"><i class="bi bi-arrow-left"></i></a>{{ lawcase.title }}</h1>
+    <span>
+        <h1><a href="{% url 'legal_advice_builder:law-case-list' %}"><i class="bi bi-arrow-left"></i></a>{{ lawcase.title }}
+        </h1>
+    </span>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-3 col-xxl-2 bg-light min-vh-100">
+
         {% block navigation %}
         <div class="card">
             <div class="card-header">
@@ -17,8 +21,8 @@
             </div>
             <ul class="list-group list-group-flush">
                 {% for qn in lawcase.questionaire_set.all %}
-                    <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
-                       href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
+                <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
+                    href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
                 {% endfor %}
             </ul>
         </div>
@@ -32,17 +36,11 @@
             </ul>
         </div>
         {% endblock %}
+
     </div>
+
     <div class="col-8 col-xxl-9 mt-3">
-        {% block main_content %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <div class="text-end mt-3">
-                <input class="btn btn-primary btn-lg pull-right" type="submit" name="logic" value="{% trans 'Save' %}" />
-            </div>
-        </form>
-        {% endblock %}
+        {% block main_content %}{% endblock %}
     </div>
     <div class="col-1 bg-light min-vh-100"></div>
 </div>

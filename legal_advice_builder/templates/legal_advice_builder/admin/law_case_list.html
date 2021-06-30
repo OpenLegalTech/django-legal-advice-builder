@@ -3,44 +3,107 @@
 
 {% block content %}
 <div class="row justify-content-center mt-5">
-    <div class="col-8">
-        {% for law_case in object_list %}
-        <div class="card mt-3">
-            <div class="card-header text-end">
-                {{ law_case.document.document_type }}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ law_case.title }}</h5>
-                <p class="card-text">{{ law_case.description }}</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{% url 'law-case-detail' law_case.id %}" class="btn btn-sm btn-danger me-md-2" type="button">{% trans 'delete lawcase' %}</a>
-                    <a href="{% url 'legal_advice_builder:law-case-detail' law_case.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'edit lawcase' %}</a>
+    <div class="col-10">
+        <div class="row row-cols-sm-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 bg-primary">
+                    <button class="btn w-100 h-100 text-white text-uppercase fw-bolder fs-5"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#newLawCaseForm">
+                            <i class="bi bi-plus"></i> {% trans 'Add new' %}
+                    </button>
                 </div>
             </div>
+            {% for law_case in object_list %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <a href="{% url 'legal_advice_builder:questionaire-detail' law_case.first_questionaire.id %}"
+                            class="text-decoration-none text-body">
+                            <h5 class="card-title">{{ law_case.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{% trans 'type'%}: {{ law_case.document.document_type }}</h6>
+                            <p class="card-text">{{ law_case.description }}</p>
+                        </a>
+                    </div>
+                    <div class="card-footer bg-white pe-0 py-0">
+                        <div class="row justify-content-between me-0">
+                            <div class="col d-flex align-items-center">
+                                <small class="text-muted">
+                                    {% blocktranslate count counter=law_case.answer_set.count %}
+                                    One answer
+                                    {% plural %}
+                                    {{ counter }} answers
+                                    {% endblocktranslate %}
+                                </small>
+                            </div>
+                            <div class="col pe-0">
+                                <div class="btn-group float-end">
+                                    <button type="button" class="btn btn-link border-start" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" target="_blank" href="{% url 'law-case-detail' law_case.id %}"><i class="bi bi-box-arrow-up-right"></i> {% trans 'view' %}</a></li>
+                                        <li class="dropdown-item" href="#">
+                                            <button type="button" class="btn btn-link p-0 text-decoration-none text-body w-100 text-start" data-bs-toggle="modal" data-bs-target="#lawcaseModal{{ law_case.id }}">
+                                            {% trans 'edit' %}
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="#">{% trans 'delete' %}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newLawCaseForm">{% trans 'Add new process' %}</button>
     </div>
 </div>
 
-<div class="modal fade" id="newLawCaseForm" tabindex="-1" aria-labelledby="newLawCaseForm" aria-hidden="true">
+{% for law_case_form in update_forms %}
+<div class="modal fade" id="lawcaseModal{{ law_case_form.0 }}" tabindex="-1" aria-labelledby="lawcaseModal{{ law_case_form.0 }}lLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
+          <h5 class="modal-title" id="lawcaseModal{{ law_case.id }}Label">{{ law_case.title }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="" method="post">
+        <form action="{% url 'legal_advice_builder:law-case-edit' law_case_form.0 %}" method="post">
             <div class="modal-body">
-            {% csrf_token %}
-            {{ form | crispy }}
+                {% csrf_token %}
+                {{ law_case_form.1 | crispy }}
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
-            <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'close' %}</button>
+            <button type="submit" class="btn btn-primary">{% trans 'save' %}</button>
             </div>
-        </form>
       </div>
+    </form>
     </div>
-  </div>
+</div>
+{% endfor %}
+
+<div class="modal fade" id="newLawCaseForm" tabindex="-1" aria-labelledby="newLawCaseForm" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

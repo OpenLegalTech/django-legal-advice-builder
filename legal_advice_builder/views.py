@@ -3,8 +3,8 @@ from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic import FormView
 from django.views.generic import ListView
@@ -12,8 +12,10 @@ from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
 from .forms import DocumentFieldForm
-from .forms import LawCaseForm
+from .forms import LawCaseCreateForm
+from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
+from .forms import QuestionaireForm
 from .forms import QuestionConditionForm
 from .forms import QuestionCreateForm
 from .forms import QuestionForm
@@ -223,7 +225,7 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
 
 class LawCaseList(ListView, FormView):
     template_name = 'legal_advice_builder/admin/law_case_list.html'
-    form_class = LawCaseForm
+    form_class = LawCaseCreateForm
 
     model = LawCase
 
@@ -240,44 +242,65 @@ class LawCaseList(ListView, FormView):
         )
         law_case.generate_default_questionaires()
         return HttpResponseRedirect(reverse(
-            'legal_advice_builder:law-case-detail',
-                                    args=[law_case.id]))
+            'legal_advice_builder:questionaire-detail',
+                                    args=[law_case.first_questionaire.id]))
 
-
-class LawCaseDetail(SuccessMessageMixin, UpdateView):
-    template_name = 'legal_advice_builder/admin/law_case_detail.html'
-    fields = ('title', 'description', 'extra_help',
-              'allow_download', 'save_answers')
-    success_message = _('Lawcase updated')
-
-    def get_success_url(self):
-        return self.request.path
-
-    model = LawCase
-
-
-class QuestionaireDetail(DetailView, FormView):
-    template_name = 'legal_advice_builder/admin/questionaire_detail.html'
-    form_class = QuestionCreateForm
-    model = Questionaire
-
-    def form_valid(self, form):
-        data = form.cleaned_data
-        data['questionaire'] = self.get_object()
-        last_question = self.get_object().get_last_question()
-        if last_question:
-            question = last_question.add_child(**data)
-        else:
-            question = Question.add_root(**data)
-        return HttpResponseRedirect(reverse(
-            'legal_advice_builder:question-update',
-                                    args=[question.id]))
+    def get_update_forms(self):
+        update_forms = []
+        for law_case in self.get_queryset():
+            update_forms.append(
+                (law_case.id, LawCaseUpdateForm(instance=law_case))
+            )
+        return update_forms
 
     def get_context_data(self, **kwargs):
-        if 'form' not in kwargs:
-            kwargs['question_create_form'] = self.get_form()
         context = super().get_context_data(**kwargs)
         context.update({
+            'update_forms': self.get_update_forms()
+        })
+        return context
+
+
+class LawCaseEdit(UpdateView):
+    model = LawCase
+    form_class = LawCaseUpdateForm
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:law-case-list')
+
+
+class QuestionaireDetail(DetailView):
+    template_name = 'legal_advice_builder/admin/questionaire_detail.html'
+    model = Questionaire
+
+    def post(self, *args, **kwargs):
+        if 'question_create' in self.request.POST:
+            form = QuestionCreateForm(data=self.request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                data['questionaire'] = self.get_object()
+                last_question = self.get_object().get_last_question()
+                if last_question:
+                    question = last_question.add_child(**data)
+                else:
+                    question = Question.add_root(**data)
+                return HttpResponseRedirect(reverse(
+                    'legal_advice_builder:question-update',
+                    args=[question.id]))
+        elif 'questionaire_update' in self.request.POST:
+            form = QuestionaireForm(instance=self.get_object(),
+                                    data=self.request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse(
+                    'legal_advice_builder:questionaire-detail',
+                    args=[self.get_object().id]))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'question_create_form': QuestionCreateForm(),
+            'questionaire_update_form': QuestionaireForm(instance=self.get_object()),
             'lawcase': self.object.law_case
         })
         return context
@@ -291,7 +314,7 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
 
     def get_success_url(self):
         return reverse(
-            'legal_advice_builder:question-update', args=[self.object.id])
+            'legal_advice_builder:question-update', args=[self.get_object().id])
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('logic'):
@@ -300,6 +323,15 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
             if condition_form.is_valid():
                 self.object = condition_form.save()
                 return HttpResponseRedirect(self.get_success_url())
+        elif 'questionaire_update' in self.request.POST:
+            form = QuestionaireForm(instance=self.get_object().questionaire,
+                                    data=self.request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse(
+                    'legal_advice_builder:questionaire-detail',
+                    args=[self.get_object().questionaire.id]))
+
         return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -308,6 +340,7 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
             'lawcase': self.object.questionaire.law_case,
             'questionaire': self.object.questionaire,
             'condition_form': QuestionConditionForm(instance=self.object),
-            'question_create_form': QuestionCreateForm()
+            'question_create_form': QuestionCreateForm(),
+            'questionaire_update_form': QuestionaireForm(instance=self.get_object().questionaire),
         })
         return context

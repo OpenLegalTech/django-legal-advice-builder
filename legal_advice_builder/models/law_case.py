@@ -31,6 +31,10 @@ class LawCase(models.Model):
     def get_first_questionaire(self):
         return self.questionaire_set.first()
 
+    @property
+    def first_questionaire(self):
+        return self.get_first_questionaire()
+
     def get_index_of_questionaire(self, questionaire):
         questionaire_ids = list(self.questionaire_set.values_list('id', flat=True))
         if questionaire.id in questionaire_ids:
