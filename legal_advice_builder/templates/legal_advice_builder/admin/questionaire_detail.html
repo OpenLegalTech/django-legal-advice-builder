@@ -28,7 +28,7 @@
                         {% for question in questionaire.questions %}
                             <a href="{% url 'legal_advice_builder:question-update' question.id %}"
                             class="list-group-item list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
-                            >{{ question.text }}</a>
+                            ><i class="{{ question.icon }}"></i> {{ question.text }}</a>
                         {% endfor %}
                         <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm">{% trans 'Add question' %}</button>
                     </ul>

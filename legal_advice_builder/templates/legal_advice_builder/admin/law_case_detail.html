@@ -31,7 +31,7 @@
             <ul class="list-group list-group-flush">
                 {% for qn in lawcase.questionaire_set.all %}
                 <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
-                    href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">{{ qn }}</a>
+                    href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}"><i class="bi bi-list-task"></i> {{ qn }}</a>
                 {% endfor %}
             </ul>
         </div>
@@ -41,7 +41,7 @@
                 {% trans 'Document' %}
             </div>
             <ul class="list-group list-group-flush">
-                <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item">{% trans 'Template' %}</a>
+                <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item"><i class="bi bi-file-earmark-text"></i> {% trans 'Template' %}</a>
             </ul>
         </div>
         {% endblock %}

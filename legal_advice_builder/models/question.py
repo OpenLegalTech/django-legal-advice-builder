@@ -25,6 +25,15 @@ class Question(MP_Node):
         (DATE, _('Date'))
     ]
 
+    FIELD_ICONS = {
+        TEXT: 'bi bi-blockquote-right',
+        SINGLE_OPTION: 'bi bi-check2-square',
+        MULTIPLE_OPTIONS: 'bi bi-ui-checks',
+        SINGLE_LINE: 'bi bi-cursor-text',
+        FILE_UPLOAD: 'bi bi-file-arrow-up',
+        DATE: 'bi bi-calendar-event'
+    }
+
     questionaire = models.ForeignKey(Questionaire,
                                      null=True,
                                      on_delete=models.CASCADE)
@@ -128,6 +137,10 @@ class Question(MP_Node):
             'ongoing': True,
             'next': self.next(option, text)
         }
+
+    @property
+    def icon(self):
+        return self.FIELD_ICONS.get(self.field_type)
 
     def get_success_message(self):
         if self.success_message:
