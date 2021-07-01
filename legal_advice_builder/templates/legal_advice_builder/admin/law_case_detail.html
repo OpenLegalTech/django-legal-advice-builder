@@ -2,18 +2,27 @@
 {% load i18n crispy_forms_tags %}
 
 {% block navbar %}
-<nav>
-    <span>
-        <h1><a href="{% url 'legal_advice_builder:law-case-list' %}"><i class="bi bi-arrow-left"></i></a>{{ lawcase.title }}
-        </h1>
-    </span>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{% url 'legal_advice_builder:law-case-list' %}">{% trans 'All processes' %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#"> {{ lawcase.title }}</a>
+            </li>
+        </ul>
+    </div>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-3 col-xxl-2 bg-light min-vh-100">
-
+    <div class="col-3 col-xxl-2 border-end border-light min-vh-100">
+        <div class="pt-3">
         {% block navigation %}
         <div class="card">
             <div class="card-header">
@@ -36,7 +45,7 @@
             </ul>
         </div>
         {% endblock %}
-
+        </div>
     </div>
 
     <div class="col-8 col-xxl-9 mt-3">

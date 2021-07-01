@@ -228,7 +228,7 @@ class LawCaseUpdateForm(forms.ModelForm):
     class Meta:
         model = LawCase
         fields = ('title', 'description',
-                  'extra_help', 'allow_download',
+                  'allow_download',
                   'save_answers')
 
 
