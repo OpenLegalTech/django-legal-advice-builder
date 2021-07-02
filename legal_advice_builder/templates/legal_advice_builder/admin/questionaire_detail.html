@@ -2,40 +2,50 @@
 {% load crispy_forms_tags i18n %}
 
 {% block main_content %}
-<ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link {% if object == questionaire %} active {% endif %}" id="strucuture-tab" data-bs-toggle="tab" data-bs-target="#structure" type="button"
-            role="tab" aria-controls="structure" aria-selected="false">{% trans 'questionaire details' %}</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link {% if object == question %} active {% endif %}" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button"
-            role="tab" aria-controls="questions" aria-selected="true">{% trans 'questions' %}</button>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade {% if object == questionaire %} show active {% endif %}" id="structure" role="tabpanel" aria-labelledby="structure-tab">
-        <form class="border-start border-end border-bottom p-3" action="" method="post">
-            {% csrf_token %}
-            {{ questionaire_update_form | crispy }}
-            <button type="submit" name="questionaire_update" class="btn btn-primary">{% trans 'Save' %}</button>
-        </form>
+
+<div class="w-100 h-100 border">
+    <div class="bg-light p-3 mb-3 border-bottom">
+        <small>{% trans 'Questionaire' %}</small>
+        <h1 class="fs-3">{{ questionaire.title }}</h1>
+        <div class="mt-3">
+            <div class="row">
+                <div class="col border m-2 p-2">
+                    <small>{% trans 'This message is shown if you marked a specific answer to a question as successfull.' %}</small>
+                    <div class="my-2">
+                        {{ questionaire.success_message }}
+                    </div>
+                </div>
+                <div class="col border m-2 p-2">
+                    <small>{% trans 'This message is shown if you marked a specific answer to a question as failure.' %}</small>
+                    <div class="my-2">
+                    {{ questionaire.failure_message }}
+                    </div>
+                </div>
+                <div class="col border m-2 p-2">
+                    <small>{% trans 'This message is shown if you marked a specific answer to a question as unsure.' %}</small>
+                    <div class="my-2">
+                    {{ questionaire.unsure_message }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="tab-pane fade {% if object == question %} show active {% endif %}" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-        <div class="border-start border-end border-bottom p-3">
-            <div class="row mt-3">
-                <div class="col-4 pe-0" style="margin-top: 2.5rem;">
-                    <ul class="list-group">
-                        {% for question in questionaire.questions %}
-                            <a href="{% url 'legal_advice_builder:question-update' question.id %}"
-                            class="list-group-item list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
-                            ><i class="{{ question.icon }}"></i> {{ question.text }}</a>
-                        {% endfor %}
-                        <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm">{% trans 'Add question' %}</button>
-                    </ul>
-                </div>
-                <div class="col ps-0 mb-3">
-                    {% block current_form %}{% endblock %}
-                </div>
+    <div class="p-3">
+        <h2 class="fs-3">{% trans 'Questions' %}</h2>
+        <div class="row">
+            <div class="col-4 pe-0" style="margin-top: 2.5rem;">
+                <ul class="list-group">
+                    {% for question in questionaire.questions %}
+                        <a href="{% url 'legal_advice_builder:question-update' question.id %}"
+                        class="list-group-item list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
+                        ><i class="{{ question.icon }}"></i> {{ question.text }}</a>
+                    {% endfor %}
+                    <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm">{% trans 'Add question' %}</button>
+                </ul>
+            </div>
+            <div class="col ps-0 mb-3">
+                {% block current_form %}{% endblock %}
             </div>
         </div>
     </div>
