@@ -25,6 +25,15 @@ class Question(MP_Node):
         (DATE, _('Date'))
     ]
 
+    FIELD_ICONS = {
+        TEXT: 'bi bi-blockquote-right',
+        SINGLE_OPTION: 'bi bi-check2-square',
+        MULTIPLE_OPTIONS: 'bi bi-ui-checks',
+        SINGLE_LINE: 'bi bi-cursor-text',
+        FILE_UPLOAD: 'bi bi-file-arrow-up',
+        DATE: 'bi bi-calendar-event'
+    }
+
     questionaire = models.ForeignKey(Questionaire,
                                      null=True,
                                      on_delete=models.CASCADE)
@@ -50,56 +59,60 @@ class Question(MP_Node):
 
     def next(self, option=None, text=None, date=None):
         if option or date:
+            if self.is_success_by_conditions(option, date):
+                if self.questionaire.next():
+                    return self.questionaire.next().get_first_question()
+                else:
+                    return None
             try:
                 return self.get_children().get(parent_option=option)
             except Question.DoesNotExist:
-                if self.is_success_by_conditions(option, date):
-                    if self.questionaire.next():
-                        return self.questionaire.next().get_first_question()
-                    else:
-                        return None
+                return None
         return self.get_children().first()
 
     def is_success_by_conditions(self, option=None, date=None):
-        conditions = self.success_conditions
-        for condition in conditions:
-            if self.field_type == self.DATE and date:
-                condition_type = condition.get('type')
-                period = condition.get('period')
-                unit = condition.get('unit')
-                now = timezone.now().date()
-                kwargs = {}
-                kwargs[unit] = int(period)
-                date_to_validate = date + relativedelta(**kwargs)
-                if condition_type == 'deadline_expired':
-                    return date_to_validate <= now
-                if condition_type == 'deadline_running':
-                    return date_to_validate >= now
-            elif self.field_type == self.SINGLE_OPTION and option:
-                options = condition.get('options')
-                if options:
-                    return option in options
+        if self.field_type == self.SINGLE_OPTION and option:
+            return self.condition_set.filter(if_option='is',
+                                             if_value=option,
+                                             then_value='success').exists()
+        else:
+            conditions = self.success_conditions
+            for condition in conditions:
+                if self.field_type == self.DATE and date:
+                    condition_type = condition.get('type')
+                    period = condition.get('period')
+                    unit = condition.get('unit')
+                    now = timezone.now().date()
+                    kwargs = {}
+                    kwargs[unit] = int(period)
+                    date_to_validate = date + relativedelta(**kwargs)
+                    if condition_type == 'deadline_expired':
+                        return date_to_validate <= now
+                    if condition_type == 'deadline_running':
+                        return date_to_validate >= now
+
         return False
 
     def is_failure_by_conditions(self, option=None, date=None):
-        conditions = self.failure_conditions
-        for condition in conditions:
-            if self.field_type == self.DATE and date:
-                condition_type = condition.get('type')
-                period = condition.get('period')
-                unit = condition.get('unit')
-                now = timezone.now().date()
-                kwargs = {}
-                kwargs[unit] = int(period)
-                date_to_validate = date + relativedelta(**kwargs)
-                if condition_type == 'deadline_expired':
-                    return date_to_validate >= now
-                if condition_type == 'deadline_running':
-                    return date_to_validate <= now
-            elif self.field_type == self.SINGLE_OPTION and option:
-                options = condition.get('options')
-                if options:
-                    return option in options
+        if self.field_type == self.SINGLE_OPTION and option:
+            return self.condition_set.filter(if_option='is',
+                                             if_value=option,
+                                             then_value='failure').exists()
+        else:
+            conditions = self.failure_conditions
+            for condition in conditions:
+                if self.field_type == self.DATE and date:
+                    condition_type = condition.get('type')
+                    period = condition.get('period')
+                    unit = condition.get('unit')
+                    now = timezone.now().date()
+                    kwargs = {}
+                    kwargs[unit] = int(period)
+                    date_to_validate = date + relativedelta(**kwargs)
+                    if condition_type == 'deadline_expired':
+                        return date_to_validate >= now
+                    if condition_type == 'deadline_running':
+                        return date_to_validate <= now
         return False
 
     def get_status(self, option=None, text=None, date=None):
@@ -115,7 +128,7 @@ class Question(MP_Node):
                     'failure': True,
                     'message': self.get_failure_message(),
                 }
-            elif option in self.unsure_options:
+            elif self.unsure_options and option in self.unsure_options:
                 return {
                     'unsure': True,
                     'message': self.get_unsure_message(),
@@ -124,6 +137,10 @@ class Question(MP_Node):
             'ongoing': True,
             'next': self.next(option, text)
         }
+
+    @property
+    def icon(self):
+        return self.FIELD_ICONS.get(self.field_type)
 
     def get_success_message(self):
         if self.success_message:

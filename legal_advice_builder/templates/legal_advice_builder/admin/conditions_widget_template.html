@@ -1,0 +1,12 @@
+<input type="hidden" name="{{ widget.name }}"{% if conditions != None %} value="{{ conditions|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
+
+<div id="conditions">
+    <conditions-field
+        question="{{ question_id }}"
+        name="{{ widget.name }}"
+        :initial="{{ conditions }}"
+        :options="{{ options }}"
+        :text="{{ text }}"
+        :questions="{{ questions }}"
+    ></conditions-field>
+</div>

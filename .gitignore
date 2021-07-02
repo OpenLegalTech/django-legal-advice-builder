@@ -12,3 +12,4 @@ __pycache__/
 /.DS_Store
 /Legal_Advice_Builder.egg-info/*
 /Django_Legal_Advice_Builder.egg-info/*
+/node_modules/

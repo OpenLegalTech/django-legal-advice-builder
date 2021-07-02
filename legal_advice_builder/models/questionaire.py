@@ -8,9 +8,9 @@ class Questionaire(models.Model):
                                  on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     short_title = models.CharField(max_length=50, blank=True)
-    success_message = models.TextField()
-    failure_message = models.TextField()
-    unsure_message = models.TextField()
+    success_message = models.TextField(blank=True)
+    failure_message = models.TextField(blank=True)
+    unsure_message = models.TextField(blank=True)
     order = models.IntegerField()
 
     def __str__(self):
@@ -21,6 +21,9 @@ class Questionaire(models.Model):
 
     def get_first_question(self):
         return self.questions.first()
+
+    def get_last_question(self):
+        return self.questions.last()
 
     def next(self):
         return Questionaire.objects.filter(
