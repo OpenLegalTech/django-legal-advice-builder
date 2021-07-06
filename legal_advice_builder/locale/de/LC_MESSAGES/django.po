@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-06 11:28+0200\n"
+"POT-Creation-Date: 2021-07-06 12:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgstr "Vorschau ansehen"
 
 #: templates/legal_advice_builder/admin/document_form.html:36
 #: templates/legal_advice_builder/admin/document_preview.html:30
-#: templates/legal_advice_builder/admin/law_case_list.html:124
+#: templates/legal_advice_builder/admin/law_case_list.html:154
 #: templates/legal_advice_builder/admin/question_update.html:23
 #: templates/legal_advice_builder/admin/question_update.html:33
 #: templates/legal_advice_builder/admin/questionaire_detail.html:68
@@ -130,24 +130,34 @@ msgstr "ansehen"
 msgid "edit"
 msgstr "bearbeiten"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:73
+#: templates/legal_advice_builder/admin/law_case_list.html:78
+#: templates/legal_advice_builder/admin/law_case_list.html:106
 msgid "delete"
 msgstr "Löschen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:101
+#: templates/legal_advice_builder/admin/law_case_list.html:99
+#, python-format
+msgid " Do you want to delete \"%(title)s\"? "
+msgstr " Wollen Sie \"%(title)s\" löschen? "
+
+#: templates/legal_advice_builder/admin/law_case_list.html:103
+msgid "cancel"
+msgstr "abbrechen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:131
 msgid "close"
 msgstr "Schließen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:102
+#: templates/legal_advice_builder/admin/law_case_list.html:132
 msgid "save"
 msgstr "Speichern"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:114
+#: templates/legal_advice_builder/admin/law_case_list.html:144
 #: templates/legal_advice_builder/admin/questionaire_detail.html:58
 msgid "Add new question"
 msgstr "Neue Frage anlegen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:123
+#: templates/legal_advice_builder/admin/law_case_list.html:153
 #: templates/legal_advice_builder/admin/questionaire_detail.html:67
 msgid "Close"
 msgstr "Schließen"
@@ -204,7 +214,11 @@ msgstr "Weiter"
 msgid "Download"
 msgstr "Herunterladen"
 
-#: views.py:313
+#: views.py:276
+msgid "Lawcase \"%(title)s\" was removed successfully"
+msgstr "Beratungsprozess \"%(title)s\" wurde erfolgreich gelöscht."
+
+#: views.py:331
 msgid "Question geupdated"
 msgstr "Frage aktualisiert"
 
@@ -216,6 +230,7 @@ msgstr "Erfolg: Springe zum nächsten Fragenkatalog."
 msgid "failure: show failure message"
 msgstr "Kein Erfolg: Zeige Abbruchnachricht."
 
+#: widgets.py:41
 msgid "jump to question:"
 msgstr "Springe zu Frage:"
 

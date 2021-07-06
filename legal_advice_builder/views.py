@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
@@ -5,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import FormView
 from django.views.generic import ListView
@@ -267,6 +269,22 @@ class LawCaseEdit(UpdateView):
 
     def get_success_url(self):
         return reverse('legal_advice_builder:law-case-list')
+
+
+class LawCaseDelete(DeleteView):
+    model = LawCase
+    success_message = _('Lawcase "%(title)s" was removed successfully')
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:law-case-list')
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        messages.success(self.request, self.success_message % obj.__dict__)
+        return super().delete(request, *args, **kwargs)
 
 
 class QuestionaireDetail(DetailView):
