@@ -1,14 +1,27 @@
 {% extends 'legal_advice_builder/admin/law_case_detail.html' %}
-{% load crispy_forms_tags i18n %}
+{% load static crispy_forms_tags i18n %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/snippets/toggle_form.js' %}"></script>
+{% endblock %}
 
 {% block main_content %}
-
 <div class="w-100 h-100 border">
     <div class="bg-light p-3 mb-3 border-bottom">
-        <small>{% trans 'Questionaire' %}</small>
-        <h1 class="fs-3">{{ questionaire.title }}</h1>
+        <div class="row">
+            <div class="col">
+                <small>{% trans 'Questionaire' %}</small>
+                <h1 class="fs-3">{{ questionaire.title }}</h1>
+            </div>
+            <div class="col">
+                <div class="text-end mt-3">
+                    <button class="btn btn-light border btn pull-right" id="showDetailButton" style="display: none;" onclick="showDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
+                    <button class="btn btn-light border btn pull-right" id="showFormButton" onclick="showForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                </div>
+            </div>
+        </div>
         <div class="mt-3">
-            <div class="row">
+            <div class="row" id="questionaire_detail">
                 <div class="col border m-2 p-2">
                     <small>{% trans 'This message is shown if you marked a specific answer to a question as successfull.' %}</small>
                     <div class="my-2">
@@ -28,7 +41,39 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row" id="questionaire_form" style="display: none;">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col m-2 p-2">
+                            {{ questionaire_update_form.title | as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col border m-2 p-2">
+                            <small>{% trans 'This message is shown if you marked a specific answer to a question as successfull.' %}</small>
+                            <div class="my-2">
+                                {{ questionaire_update_form.success_message | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col border m-2 p-2">
+                            <small>{% trans 'This message is shown if you marked a specific answer to a question as failure.' %}</small>
+                            <div class="my-2">
+                            {{ questionaire_update_form.failure_message  | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col border m-2 p-2">
+                            <small>{% trans 'This message is shown if you marked a specific answer to a question as unsure.' %}</small>
+                            <div class="my-2">
+                            {{ questionaire_update_form.unsure_message  | as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <input class="btn btn-primary btn pull-right" type="submit" name="questionaire_update" value="{% trans 'Save' %}" />
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <div class="p-3">

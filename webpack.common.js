@@ -87,6 +87,12 @@ module.exports = {
       filename: '[name].css',
       chunkFilename: '[name].css'
     }),
+    new CopyWebpackPlugin({
+      patterns: [{
+        from: './legal_advice_builder/assets/js/snippets/**/*',
+        to: 'js/snippets/[name][ext]'
+      }]
+    }),
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
         process: 'process/browser.js',
