@@ -220,7 +220,7 @@ class LawCaseCreateForm(forms.ModelForm):
 
     class Meta:
         model = LawCase
-        fields = ('title', 'document_type')
+        fields = ('title', 'document_type', 'description')
 
 
 class LawCaseUpdateForm(forms.ModelForm):
