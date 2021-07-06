@@ -29,7 +29,8 @@ export default {
   props: {
     initial: Object,
     inputtype: String,
-    name: String
+    name: String,
+    thenOptions: Object
   },
   data: function () {
     return {

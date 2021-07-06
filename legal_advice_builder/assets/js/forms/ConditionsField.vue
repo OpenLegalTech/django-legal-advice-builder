@@ -10,6 +10,7 @@
         :textThen="`${textThen}`"
         :usedOptions="usedOptions"
         :questions="questions"
+        :thenoptions="thenoptions"
         @conditionUpdated="conditionUpdated"
       ></Condition>
   </div>
@@ -26,7 +27,8 @@ export default {
     text: Object,
     name: String,
     questions: Array,
-    question: String
+    question: String,
+    thenoptions: Object
   },
   data() {
     let data = {

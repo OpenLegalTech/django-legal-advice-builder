@@ -31,7 +31,7 @@
         <div class="col-6">
             <select class="form-select" v-model="newValue" @change="onChange">
               <option
-                v-for="optionValue, optionKey, index in thenOptions"
+                v-for="optionValue, optionKey, index in thenoptions"
                 :key="`${ index }`"
                 :value="optionKey"
             >{{optionValue}}</option>
@@ -66,7 +66,8 @@ export default {
     options: Object,
     questions: Array,
     usedOptions: Array,
-    listIndex: Number
+    listIndex: Number,
+    thenoptions: Object
   },
   data () {
     const jumpToQuestion = this.condition.then_value.includes('question') ? this.condition.then_value.split('_')[1] : ''
@@ -74,9 +75,6 @@ export default {
     return {
       newOption: this.condition.if_value,
       newValue: newValue,
-      thenOptions: {'success': 'Erfolg: Springe zum nächsten Fragebogen.',
-                    'failure': 'Kein Erfolg: Zeige Abbruchnachricht',
-                    'question': 'Springe zu Frage:'},
       newCondition: this.condition,
       jumpToQuestion: jumpToQuestion
     }

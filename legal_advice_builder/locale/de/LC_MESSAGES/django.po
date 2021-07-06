@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 13:26+0200\n"
+"POT-Creation-Date: 2021-07-06 11:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,217 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: models.py:58
+#: models/answer.py:16
+msgid "Rendered Document"
+msgstr "Fertiges Dokument"
+
+#: models/law_case.py:48
+msgid "verify"
+msgstr "Berechtigung Prüfen"
+
+#: models/law_case.py:48
+msgid "personal data"
+msgstr "Personendaten"
+
+#: models/question.py:20
 msgid "Long multiline Text input"
-msgstr ""
+msgstr "Langer mehrzeiliger Text"
 
-#: models.py:59
+#: models/question.py:21
 msgid "Pick one of multiple options"
-msgstr ""
+msgstr "Eine von mehreren Optionen wählen"
 
-#: models.py:60
+#: models/question.py:22
+msgid "Pick several of multiple options"
+msgstr "Viele von mehreren Optionen wählen"
+
+#: models/question.py:23
 msgid "Short single line text input"
-msgstr ""
+msgstr "Kurze, einzeilige Texteingabe"
 
-#: models.py:61
+#: models/question.py:24
 msgid "File Upload"
-msgstr ""
+msgstr "Datei-Upload"
 
-#: templates/olt_form_builder/olt_form_wizard.html:16
+#: models/question.py:25
+msgid "Date"
+msgstr "Datum"
+
+#: templates/legal_advice_builder/admin/document_form.html:10
+msgid "view preview"
+msgstr "Vorschau ansehen"
+
+#: templates/legal_advice_builder/admin/document_form.html:36
+#: templates/legal_advice_builder/admin/document_preview.html:30
+#: templates/legal_advice_builder/admin/law_case_list.html:124
+#: templates/legal_advice_builder/admin/question_update.html:23
+#: templates/legal_advice_builder/admin/question_update.html:33
+#: templates/legal_advice_builder/admin/questionaire_detail.html:68
+msgid "Save"
+msgstr "Speichern"
+
+#: templates/legal_advice_builder/admin/document_form.html:48
+msgid "Question"
+msgstr "Frage"
+
+#: templates/legal_advice_builder/admin/document_form.html:49
+msgid "Placeholder"
+msgstr "Platzhalter"
+
+#: templates/legal_advice_builder/admin/document_preview.html:8
+msgid "edit document template"
+msgstr "Dokumentvorlage bearbeiten"
+
+#: templates/legal_advice_builder/admin/law_case_detail.html:9
+#: templates/legal_advice_builder/admin/law_case_list.html:9
+msgid "All processes"
+msgstr "Alle Prozesse"
+
+#: templates/legal_advice_builder/admin/law_case_detail.html:29
+msgid "Questionaires"
+msgstr "Fragenkataloge"
+
+#: templates/legal_advice_builder/admin/law_case_detail.html:41
+msgid "Document"
+msgstr "Dokument"
+
+#: templates/legal_advice_builder/admin/law_case_detail.html:44
+msgid "Template"
+msgstr "Vorlage"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:25
+msgid "Add new"
+msgstr "Neu anlegen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:36
+msgid "type"
+msgstr "Typ"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:44
+#, python-format
+msgid ""
+"\n"
+"                                        One answer\n"
+"                                        "
+msgid_plural ""
+"\n"
+"                                        %(counter)s answers\n"
+"                                        "
+msgstr[0] ""
+"\n"
+"                                        Eine Antwort\n"
+"                                        "
+msgstr[1] ""
+"\n"
+"                                        %(counter)s Antworten\n"
+"                                        "
+
+#: templates/legal_advice_builder/admin/law_case_list.html:60
+msgid "view"
+msgstr "ansehen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:67
+msgid "edit"
+msgstr "bearbeiten"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:73
+msgid "delete"
+msgstr "Löschen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:101
+msgid "close"
+msgstr "Schließen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:102
+msgid "save"
+msgstr "Speichern"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:114
+#: templates/legal_advice_builder/admin/questionaire_detail.html:58
+msgid "Add new question"
+msgstr "Neue Frage anlegen"
+
+#: templates/legal_advice_builder/admin/law_case_list.html:123
+#: templates/legal_advice_builder/admin/questionaire_detail.html:67
+msgid "Close"
+msgstr "Schließen"
+
+#: templates/legal_advice_builder/admin/question_update.html:8
+msgid "content"
+msgstr "Inhalte"
+
+#: templates/legal_advice_builder/admin/question_update.html:12
+msgid "logic"
+msgstr "Logik"
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:8
+msgid "Questionaire"
+msgstr "Fragenkatalog"
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:13
+msgid ""
+"This message is shown if you marked a specific answer to a question as "
+"successfull."
+msgstr ""
+"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
+"als erfolgreich markiert haben."
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:19
+msgid ""
+"This message is shown if you marked a specific answer to a question as "
+"failure."
+msgstr ""
+"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
+"als Abbruchbedingung definiert haben."
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:25
+msgid ""
+"This message is shown if you marked a specific answer to a question as "
+"unsure."
+msgstr ""
+"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
+"als unklar definiert haben."
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:35
+msgid "Questions"
+msgstr "Fragen"
+
+#: templates/legal_advice_builder/admin/questionaire_detail.html:44
+msgid "Add question"
+msgstr "Frage anlegen"
+
+#: templates/legal_advice_builder/form_wizard.html:16
 msgid "Next"
 msgstr "Weiter"
+
+#: templates/legal_advice_builder/form_wizard.html:31
+msgid "Download"
+msgstr "Herunterladen"
+
+#: views.py:313
+msgid "Question geupdated"
+msgstr "Frage aktualisiert"
+
+#: widgets.py:39
+msgid "success: Jump to next questionaire."
+msgstr "Erfolg: Springe zum nächsten Fragenkatalog."
+
+#: widgets.py:40
+msgid "failure: show failure message"
+msgstr "Kein Erfolg: Zeige Abbruchnachricht."
+
+msgid "jump to question:"
+msgstr "Springe zu Frage:"
+
+#: widgets.py:53
+msgid "If the answer to this question is:"
+msgstr "Wenn die Antwort auf diese Frage lautet:"
+
+#: widgets.py:54
+msgid "then"
+msgstr "dann"
+
+#~ msgid "One answer"
+#~ msgid_plural "%(counter)s answers"
+#~ msgstr[0] "Eine Antwort"
+#~ msgstr[1] "%(counter)s Antworten"

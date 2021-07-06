@@ -34,6 +34,13 @@ class ConditionsWidget(forms.TextInput):
         ]
         return conditions
 
+    def get_then_options(self):
+        return {
+            'success': str(_('success: Jump to next questionaire.')),
+            'failure': str(_('failure: show failure message')),
+            'question': str(_('jump to question:'))
+        }
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.update({
@@ -41,6 +48,7 @@ class ConditionsWidget(forms.TextInput):
             'questions': json.dumps(self.get_other_questions()),
             'question_id': str(self.question.id),
             'options': self.question.options,
+            'then_options': json.dumps(self.get_then_options()),
             'text': {
                 'if': _('If the answer to this question is:'),
                 'then': _('then')
