@@ -9,7 +9,34 @@
       </div>
     </div>
 
-    <div class="row justify-content-start">
+    <div v-if="questiontype == 'DT'" class="row justify-content-start">
+      <div class="col-3">
+          <input type="number" min="1" max="365" @change="onChange" class="textinput textInput form-control" v-model="period">
+      </div>
+      <div class="col-3">
+          <select class="form-select" v-model="unit" @change="onChange">
+              <option
+                v-for="optionValue, optionKey, index in periodoptions"
+                :value="optionKey"
+                :key="`${ index }`"
+              >{{optionValue}}</option>
+          </select>
+      </div>
+    </div>
+
+    <div v-if="Object.keys(ifoptions).length > 1" class="row justify-content-start">
+      <div class="col-6">
+          <select class="form-select" v-model="newIfOption" @change="onChange">
+              <option
+                v-for="optionValue, optionKey, index in ifoptions"
+                :value="optionKey"
+                :key="`${ index }`"
+              >{{optionValue}}</option>
+          </select>
+      </div>
+    </div>
+
+    <div v-if="questiontype !== 'DT'" class="row justify-content-start">
       <div class="col-6">
           <select class="form-select" v-model="newOption" @change="onChange">
               <option
@@ -67,32 +94,46 @@ export default {
     questions: Array,
     usedOptions: Array,
     listIndex: Number,
-    thenoptions: Object
+    thenoptions: Object,
+    ifoptions: Object,
+    periodoptions: Object,
+    questiontype: String
   },
   data () {
     const jumpToQuestion = this.condition.then_value.includes('question') ? this.condition.then_value.split('_')[1] : ''
     const newValue = this.condition.then_value.includes('question') ? 'question' : this.condition.then_value
+    const unit = this.questiontype == 'DT' ? this.condition.if_value.split('_')[0] : ''
+    const period = this.questiontype == 'DT' ? this.condition.if_value.split('_')[1].slice(-1) : ''
     return {
+      newIfOption: this.condition.if_option,
       newOption: this.condition.if_value,
       newValue: newValue,
       newCondition: this.condition,
-      jumpToQuestion: jumpToQuestion
+      jumpToQuestion: jumpToQuestion,
+      unit: unit,
+      period: period
     }
   },
   computed: {
     availableOptions () {
       let options = JSON.parse(JSON.stringify(this.options))
-      this.usedOptions.forEach(option => {
-        if(option !== this.condition.if_value) {
-          delete options[option]
-        }
-      })
+      if (this.questiontype == 'SO' || this.questiontype == 'MO') {
+        this.usedOptions.forEach(option => {
+          if(option !== this.condition.if_value) {
+            delete options[option]
+          }
+        })
+      }
       return options
     }
   },
   methods: {
     onChange () {
+      this.newCondition['if_option'] = this.newIfOption
       this.newCondition['if_value'] = this.newOption
+      if (this.questiontype == 'DT') {
+        this.newCondition['if_value'] = `${this.unit}_+${this.period}`
+      }
       if(this.newValue == 'question') {
         this.newCondition['then_value'] = `${this.newValue}_${this.jumpToQuestion}`
       } else {

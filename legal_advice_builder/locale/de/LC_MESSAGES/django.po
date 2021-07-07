@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-06 14:24+0200\n"
+"POT-Creation-Date: 2021-07-07 18:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,29 +29,49 @@ msgstr "Berechtigung Prüfen"
 msgid "personal data"
 msgstr "Personendaten"
 
-#: models/question.py:20
+#: models/question.py:18
 msgid "Long multiline Text input"
 msgstr "Langer mehrzeiliger Text"
 
-#: models/question.py:21
+#: models/question.py:19
 msgid "Pick one of multiple options"
 msgstr "Eine von mehreren Optionen wählen"
 
-#: models/question.py:22
+#: models/question.py:20
 msgid "Pick several of multiple options"
 msgstr "Viele von mehreren Optionen wählen"
 
-#: models/question.py:23
+#: models/question.py:21
 msgid "Short single line text input"
 msgstr "Kurze, einzeilige Texteingabe"
 
-#: models/question.py:24
+#: models/question.py:22
 msgid "File Upload"
 msgstr "Datei-Upload"
 
-#: models/question.py:25
+#: models/question.py:23
 msgid "Date"
 msgstr "Datum"
+
+#: models/question.py:132
+msgid "is"
+msgstr "ist"
+
+#: models/question.py:136
+msgid "is expired."
+msgstr "vergangen ist."
+
+#: models/question.py:137
+msgid "is still running."
+msgstr "noch nicht vergangen ist."
+
+#: models/question.py:143
+msgid "If the answer to this question is:"
+msgstr "Wenn die Antwort auf diese Frage lautet:"
+
+#: models/question.py:145
+msgid "If after the date given as answer a timespan of:"
+msgstr "Wenn nach dem Datum, dass als Antwort gegeben wurde, ein Zeitraum von:"
 
 #: templates/legal_advice_builder/admin/document_form.html:10
 msgid "view preview"
@@ -103,25 +123,6 @@ msgstr "Neu anlegen"
 #: templates/legal_advice_builder/admin/law_case_list.html:36
 msgid "type"
 msgstr "Typ"
-
-#: templates/legal_advice_builder/admin/law_case_list.html:44
-#, python-format
-msgid ""
-"\n"
-"                                        One answer\n"
-"                                        "
-msgid_plural ""
-"\n"
-"                                        %(counter)s answers\n"
-"                                        "
-msgstr[0] ""
-"\n"
-"                                        Eine Antwort\n"
-"                                        "
-msgstr[1] ""
-"\n"
-"                                        %(counter)s Antworten\n"
-"                                        "
 
 #: templates/legal_advice_builder/admin/law_case_list.html:60
 msgid "view"
@@ -232,25 +233,50 @@ msgstr "Beratungsprozess \"%(title)s\" wurde erfolgreich gelöscht."
 msgid "Question geupdated"
 msgstr "Frage aktualisiert"
 
-#: widgets.py:39
+#: widgets.py:42
 msgid "success: Jump to next questionaire."
 msgstr "Erfolg: Springe zum nächsten Fragenkatalog."
 
-#: widgets.py:40
+#: widgets.py:43
 msgid "failure: show failure message"
 msgstr "Kein Erfolg: Zeige Abbruchnachricht."
 
-#: widgets.py:41
+#: widgets.py:44
 msgid "jump to question:"
 msgstr "Springe zu Frage:"
 
-#: widgets.py:53
-msgid "If the answer to this question is:"
-msgstr "Wenn die Antwort auf diese Frage lautet:"
+#: widgets.py:49
+msgid "Days"
+msgstr "Tagen"
 
-#: widgets.py:54
+#: widgets.py:50
+msgid "Months"
+msgstr "Monaten"
+
+#: widgets.py:51
+msgid "years"
+msgstr "Jahren"
+
+#: widgets.py:67
 msgid "then"
 msgstr "dann"
+
+#~ msgid ""
+#~ "\n"
+#~ "                                        One answer\n"
+#~ "                                        "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                                        %(counter)s answers\n"
+#~ "                                        "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "                                        Eine Antwort\n"
+#~ "                                        "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "                                        %(counter)s Antworten\n"
+#~ "                                        "
 
 #~ msgid "One answer"
 #~ msgid_plural "%(counter)s answers"

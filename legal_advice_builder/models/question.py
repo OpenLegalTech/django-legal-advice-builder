@@ -1,6 +1,4 @@
-from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
@@ -59,7 +57,7 @@ class Question(MP_Node):
 
     def next(self, option=None, text=None, date=None):
         if option or date:
-            if self.is_success_by_conditions(option, date):
+            if self.is_status_by_conditions('success', option, date):
                 if self.questionaire.next():
                     return self.questionaire.next().get_first_question()
                 else:
@@ -70,60 +68,31 @@ class Question(MP_Node):
                 return None
         return self.get_children().first()
 
-    def is_success_by_conditions(self, option=None, date=None):
-        if self.field_type == self.SINGLE_OPTION and option:
-            return self.condition_set.filter(if_option='is',
-                                             if_value=option,
-                                             then_value='success').exists()
-        else:
-            conditions = self.success_conditions
-            for condition in conditions:
-                if self.field_type == self.DATE and date:
-                    condition_type = condition.get('type')
-                    period = condition.get('period')
-                    unit = condition.get('unit')
-                    now = timezone.now().date()
-                    kwargs = {}
-                    kwargs[unit] = int(period)
-                    date_to_validate = date + relativedelta(**kwargs)
-                    if condition_type == 'deadline_expired':
-                        return date_to_validate <= now
-                    if condition_type == 'deadline_running':
-                        return date_to_validate >= now
-
-        return False
-
-    def is_failure_by_conditions(self, option=None, date=None):
-        if self.field_type == self.SINGLE_OPTION and option:
-            return self.condition_set.filter(if_option='is',
-                                             if_value=option,
-                                             then_value='failure').exists()
-        else:
-            conditions = self.failure_conditions
-            for condition in conditions:
-                if self.field_type == self.DATE and date:
-                    condition_type = condition.get('type')
-                    period = condition.get('period')
-                    unit = condition.get('unit')
-                    now = timezone.now().date()
-                    kwargs = {}
-                    kwargs[unit] = int(period)
-                    date_to_validate = date + relativedelta(**kwargs)
-                    if condition_type == 'deadline_expired':
-                        return date_to_validate >= now
-                    if condition_type == 'deadline_running':
-                        return date_to_validate <= now
+    def is_status_by_conditions(self, status, option=None, date=None):
+        status_conditions = self.condition_set.filter(then_value=status)
+        if status_conditions.exists():
+            if self.field_type == self.SINGLE_OPTION and option:
+                return status_conditions.filter(if_option='is',
+                                                if_value=option).exists()
+            elif self.field_type == self.DATE and date:
+                date_conditions = status_conditions.filter(
+                    if_option__in=['deadline_expired', 'deadline_running']
+                )
+                for condition in date_conditions:
+                    res = condition.evaluate_date(date)
+                    if res:
+                        return res
         return False
 
     def get_status(self, option=None, text=None, date=None):
         if option or date:
-            if self.is_success_by_conditions(option=option, date=date):
+            if self.is_status_by_conditions('success', option=option, date=date):
                 return {
                     'success': True,
                     'message': self.get_success_message(),
                     'next': self.next(option, text, date)
                 }
-            elif self.is_failure_by_conditions(option=option, date=date):
+            elif self.is_status_by_conditions('failure', option=option, date=date):
                 return {
                     'failure': True,
                     'message': self.get_failure_message(),
@@ -156,6 +125,25 @@ class Question(MP_Node):
         if self.unsure_message:
             return self.unsure_message
         return self.questionaire.unsure_message
+
+    def get_options_by_type(self):
+        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS]:
+            return {
+                'is': _('is')
+            }
+        elif self.field_type == self.DATE:
+            return {
+                'deadline_expired': _('is expired.'),
+                'deadline_running': _('is still running.')
+            }
+        return {}
+
+    def get_if_text_by_type(self):
+        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS]:
+            return _('If the answer to this question is:')
+        elif self.field_type == self.DATE:
+            return _('If after the date given as answer a timespan of:')
+        return ''
 
     def get_options_names(self):
         return ', '.join([key for key, value in self.options.items()])

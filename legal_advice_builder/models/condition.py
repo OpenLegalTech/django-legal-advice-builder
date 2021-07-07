@@ -1,4 +1,6 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
+from django.utils import timezone
 
 from .question import Question
 
@@ -27,3 +29,18 @@ class Condition(models.Model):
                 question.refresh_from_db()
                 question.parent_option = self.if_value
                 question.save()
+
+    def evaluate_date(self, date):
+        condition_type = self.if_option
+        if condition_type in ['deadline_expired', 'deadline_running']:
+            unit = self.if_value.split('_')[0]
+            period = self.if_value.split('_')[1]
+            now = timezone.now().date()
+            kwargs = {}
+            kwargs[unit] = int(period)
+            date_to_validate = date + relativedelta(**kwargs)
+            if condition_type == 'deadline_expired':
+                return date_to_validate <= now
+            if condition_type == 'deadline_running':
+                return date_to_validate >= now
+        return False

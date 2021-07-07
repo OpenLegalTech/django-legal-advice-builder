@@ -98,10 +98,10 @@ def test_question_conditions_date_deadline_expired():
 
     with freeze_time('2020-05-10'):
         inserted_date = datetime.date(2020, 4, 10)
-        assert question.is_failure_by_conditions(date=inserted_date)
+        assert question.is_status_by_conditions('failure', date=inserted_date)
 
         inserted_date = datetime.date(2020, 1, 21)
-        assert not question.is_failure_by_conditions(date=inserted_date)
+        assert not question.is_status_by_conditions('failure', date=inserted_date)
 
 
 @pytest.mark.django_db
@@ -117,10 +117,10 @@ def test_question_conditions_date_unit():
 
     with freeze_time('2020-05-16'):
         inserted_date = datetime.date(2020, 5, 13)
-        assert question.is_failure_by_conditions(date=inserted_date)
+        assert question.is_status_by_conditions('failure', date=inserted_date)
 
         inserted_date = datetime.date(2020, 5, 1)
-        assert not question.is_failure_by_conditions(date=inserted_date)
+        assert not question.is_status_by_conditions('failure', date=inserted_date)
 
 
 @pytest.mark.django_db
@@ -136,7 +136,7 @@ def test_question_conditions_date_deadline_running():
 
     with freeze_time('2020-05-10'):
         inserted_date = datetime.date(2020, 4, 10)
-        assert not question.is_failure_by_conditions(date=inserted_date)
+        assert not question.is_status_by_conditions('failure', date=inserted_date)
 
         inserted_date = datetime.date(2020, 1, 21)
-        assert question.is_failure_by_conditions(date=inserted_date)
+        assert question.is_status_by_conditions('failure', date=inserted_date)

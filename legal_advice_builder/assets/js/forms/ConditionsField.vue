@@ -11,6 +11,9 @@
         :usedOptions="usedOptions"
         :questions="questions"
         :thenoptions="thenoptions"
+        :ifoptions="ifoptions"
+        :questiontype="questiontype"
+        :periodoptions="periodoptions"
         @conditionUpdated="conditionUpdated"
       ></Condition>
   </div>
@@ -28,7 +31,10 @@ export default {
     name: String,
     questions: Array,
     question: String,
-    thenoptions: Object
+    questiontype: String,
+    ifoptions: Object,
+    thenoptions: Object,
+    periodoptions: Object
   },
   data() {
     let data = {
@@ -48,15 +54,17 @@ export default {
     }
   },
   mounted() {
-    for (const [key, value] of Object.entries(this.options)) {
-      if(!this.usedOptions.includes(key)) {
-        const emptyCondition = {
-          if_option: 'is',
-          question: this.questions,
-          if_value: key,
-          then_value: ''
+    if (this.questiontype == 'SO' || this.questiontype == 'MO') {
+      for (const [key, value] of Object.entries(this.options)) {
+        if(!this.usedOptions.includes(key)) {
+          const emptyCondition = {
+            if_option: 'is',
+            question: this.questions,
+            if_value: key,
+            then_value: ''
+          }
+          this.formData.push(emptyCondition)
         }
-        this.formData.push(emptyCondition)
       }
     }
   },

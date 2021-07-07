@@ -34,6 +34,9 @@ class ConditionsWidget(forms.TextInput):
         ]
         return conditions
 
+    def get_if_options(self):
+        return self.question.get_options_by_type()
+
     def get_then_options(self):
         return {
             'success': str(_('success: Jump to next questionaire.')),
@@ -41,16 +44,26 @@ class ConditionsWidget(forms.TextInput):
             'question': str(_('jump to question:'))
         }
 
+    def get_period_options(self):
+        return {
+            'days': str(_('Days')),
+            'months': str(_('Months')),
+            'years': str(_('years'))
+        }
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.update({
-            'conditions': json.dumps(self.create_conditions_dict()),
+            'initial': json.dumps(self.create_conditions_dict()),
             'questions': json.dumps(self.get_other_questions()),
             'question_id': str(self.question.id),
+            'if_options': self.get_if_options(),
             'options': self.question.options,
             'then_options': json.dumps(self.get_then_options()),
+            'period_options': self.get_period_options(),
+            'question_type': self.question.field_type,
             'text': {
-                'if': _('If the answer to this question is:'),
+                'if': self.question.get_if_text_by_type(),
                 'then': _('then')
             }
         })
