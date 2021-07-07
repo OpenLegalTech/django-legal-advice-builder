@@ -168,7 +168,7 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
 
 
 class QuestionConditionForm(forms.ModelForm):
-    conditions = forms.CharField()
+    conditions = forms.CharField(required=False)
 
     class Meta:
         model = Question
@@ -182,15 +182,19 @@ class QuestionConditionForm(forms.ModelForm):
             del self.fields['failure_message']
 
     def save(self, commit=True):
-        self.instance.condition_set.all().delete()
-        conditions = json.loads(self.cleaned_data['conditions'])
-        for condition in conditions:
-            if 'id' in condition:
-                condition.pop('id')
-            condition['question'] = self.instance
-            if condition.get('then_value'):
-                condition = Condition.objects.create(**condition)
-                condition.update_questions()
+        if self.cleaned_data['conditions']:
+            self.instance.condition_set.all().delete()
+            conditions = json.loads(self.cleaned_data.pop('conditions'))
+            for condition in conditions:
+                if 'id' in condition:
+                    condition.pop('id')
+                condition['question'] = self.instance
+                if condition.get('then_value'):
+                    condition = Condition.objects.create(**condition)
+                    condition.update_questions()
+        if 'failure_message' in self.cleaned_data:
+            self.instance.failure_message = self.cleaned_data['failure_message']
+            self.instance.save()
         return self.instance
 
 
