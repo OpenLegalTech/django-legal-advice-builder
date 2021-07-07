@@ -100,10 +100,16 @@ export default {
     questiontype: String
   },
   data () {
+    let unit = ''
+    let period = ''
     const jumpToQuestion = this.condition.then_value.includes('question') ? this.condition.then_value.split('_')[1] : ''
     const newValue = this.condition.then_value.includes('question') ? 'question' : this.condition.then_value
-    const unit = this.questiontype == 'DT' ? this.condition.if_value.split('_')[0] : ''
-    const period = this.questiontype == 'DT' ? this.condition.if_value.split('_')[1].slice(-1) : ''
+
+    if (this.questiontype == 'DT' && this.condition.if_value !== '') {
+      unit = this.condition.if_value.split('_')[0]
+      period = this.condition.if_value.split('_')[1].slice(-1)
+    }
+
     return {
       newIfOption: this.condition.if_option,
       newOption: this.condition.if_value,

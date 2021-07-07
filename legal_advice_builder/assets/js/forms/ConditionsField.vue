@@ -16,6 +16,7 @@
         :periodoptions="periodoptions"
         @conditionUpdated="conditionUpdated"
       ></Condition>
+      <div class="btn btn-primary" @click="addNewCondition">Add condition</div>
   </div>
 </template>
 
@@ -76,6 +77,15 @@ export default {
       this.formData.splice(listIndex, 1, newValue)
       this.updateFormField()
       this.$forceUpdate()
+    },
+    addNewCondition: function () {
+      const emptyCondition = {
+        if_option: '',
+        question: this.questions,
+        if_value: '',
+        then_value: ''
+      }
+      this.formData.push(emptyCondition)
     }
   }
 }
