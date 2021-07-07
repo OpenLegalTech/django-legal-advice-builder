@@ -1,2 +1,3 @@
 recursive-include legal_advice_builder/templates *
 recursive-include legal_advice_builder/static *
+recursive-include legal_advice_builder/locale *
