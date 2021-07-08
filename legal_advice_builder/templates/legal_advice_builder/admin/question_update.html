@@ -4,17 +4,55 @@
 {% block current_form %}
 <ul class="nav nav-pills justify-content-end" id="question" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button"
-            role="tab" aria-controls="content" aria-selected="true">{% trans 'content' %}</button>
+        <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button"
+            role="tab" aria-controls="preview" aria-selected="true">{% trans 'preview' %}</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button"
-            role="tab" aria-controls="logic" aria-selected="false">{% trans 'logic' %} {% if question.condition_set.count > 0 %}( {{question.condition_set.count}}){% endif %}</button>
+        <button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button"
+            role="tab" aria-controls="content" aria-selected="true">{% trans 'base settings' %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link position-relative" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button" role="tab" aria-controls="logic" aria-selected="false">
+            {% trans 'logic' %}
+            {% if question.condition_set.count == 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <i class="bi bi-exclamation-lg"></i>
+            </span>
+            {% else %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                {{ question.condition_set.count }}
+            </span>
+            {% endif %}
+        </button>
     </li>
 </ul>
 
 <div class="tab-content" id="questionContent">
-    <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="contetn-tab">
+    <div class="tab-pane fade show active" id="preview" role="tabpanel" aria-labelledby="preview-tab">
+        <div class=" p-3 border border-primary border-5">
+            <div class="mb-5 mt-5" style="min-height: 500px;">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="clearfix mt-5 border p-3">
+                            <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1 }} von {{ lawcase.questionaire_count }}: {{ question.questionaire }}</div>
+                            {{ question_preview_form | crispy }}
+                            <div class="text-end mt-3">
+                                <input class="btn btn-primary btn-sm pull-right" type="submit" value="Weiter" />
+                            </div>
+                        </div>
+                        {% if question.information %}
+                            <div class="card mt-5 alert-info">
+                                <div class="card-body">
+                                    {{ question.information }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="content" role="tabpanel" aria-labelledby="contetn-tab">
         <form class=" p-3 border border-primary border-5" method="post">
             {% csrf_token %}
             {{ form | crispy }}

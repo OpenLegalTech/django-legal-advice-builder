@@ -202,7 +202,7 @@ class QuestionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'field_type', 'options')
+        fields = ('text', 'field_type', 'options', 'information')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -359,8 +359,10 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
         context.update({
             'lawcase': self.object.questionaire.law_case,
             'questionaire': self.object.questionaire,
+            'current_step': self.object.questionaire.law_case.get_index_of_questionaire(self.object.questionaire),
             'condition_form': QuestionConditionForm(instance=self.object),
             'question_create_form': QuestionCreateForm(),
+            'question_preview_form': QuestionForm(initial={'question': self.get_object().id}),
             'questionaire_update_form': QuestionaireForm(instance=self.get_object().questionaire),
         })
         return context
