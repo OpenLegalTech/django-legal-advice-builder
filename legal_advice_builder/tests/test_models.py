@@ -3,6 +3,7 @@ import datetime
 import pytest
 from freezegun import freeze_time
 
+from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Question
 from legal_advice_builder.models import Questionaire
 
@@ -59,7 +60,12 @@ def test_question_next(law_case_factory, questionaire_factory):
     q1 = Question.add_root(
         **(get_single_option_question(
             questionaire=questionaire_1)))
-    q1.success_conditions = [{'options': ['unsure']}]
+    Condition.objects.create(
+        question=q1,
+        if_option='is',
+        if_value='unsure',
+        then_value='success'
+    )
     q1_yes = q1.add_child(
         **(get_single_option_question(
             questionaire=questionaire_1,
@@ -86,14 +92,17 @@ def test_question_next(law_case_factory, questionaire_factory):
 
 
 @pytest.mark.django_db
-def test_question_conditions_date_deadline_expired():
-
-    fc = [{"period": "+3",
-           "unit": "months",
-           "type": "deadline_expired"}]
+def test_question_conditions_date_deadline_running():
 
     question = Question.add_root(
-        **(get_date_question(failure_conditions=fc))
+        **(get_date_question())
+    )
+
+    Condition.objects.create(
+        question=question,
+        if_option='deadline_running',
+        if_value='months_+3',
+        then_value='failure'
     )
 
     with freeze_time('2020-05-10'):
@@ -107,12 +116,15 @@ def test_question_conditions_date_deadline_expired():
 @pytest.mark.django_db
 def test_question_conditions_date_unit():
 
-    fc = [{"period": "+10",
-           "unit": "days",
-           "type": "deadline_expired"}]
-
     question = Question.add_root(
-        **(get_date_question(failure_conditions=fc))
+        **(get_date_question())
+    )
+
+    Condition.objects.create(
+        question=question,
+        if_option='deadline_running',
+        if_value='days_+10',
+        then_value='failure'
     )
 
     with freeze_time('2020-05-16'):
@@ -124,14 +136,17 @@ def test_question_conditions_date_unit():
 
 
 @pytest.mark.django_db
-def test_question_conditions_date_deadline_running():
-
-    fc = [{"period": "+3",
-           "unit": "months",
-           "type": "deadline_running"}]
+def test_question_conditions_date_deadline_expired():
 
     question = Question.add_root(
-        **(get_date_question(failure_conditions=fc))
+        **(get_date_question())
+    )
+
+    Condition.objects.create(
+        question=question,
+        if_option='deadline_expired',
+        if_value='months_+3',
+        then_value='failure'
     )
 
     with freeze_time('2020-05-10'):

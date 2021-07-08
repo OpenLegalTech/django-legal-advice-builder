@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.sessions.middleware import SessionMiddleware
 
+from legal_advice_builder.models import Condition
 from legal_advice_builder.models import LawCase
 from legal_advice_builder.models import Question
 from legal_advice_builder.views import FormWizardView
@@ -120,8 +121,12 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
            questionaire=qn_1,
            parent_option='yes')))
 
-    q2.failure_conditions = [{'options': ['no']}]
-    q2.save()
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='no',
+        then_value='failure'
+    )
 
     request = rf.get('/')
     middleware = SessionMiddleware()

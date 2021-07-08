@@ -36,15 +36,12 @@ def get_text_question(questionaire=None):
     return res_dict
 
 
-def get_date_question(questionaire=None, failure_conditions=None):
+def get_date_question(questionaire=None):
     res_dict = {
         'text': factory.Faker('text'),
         'field_type': Question.DATE,
     }
-    if failure_conditions:
-        res_dict.update({
-            'failure_conditions': failure_conditions
-        })
+
     if questionaire:
         res_dict.update({
             'questionaire': questionaire
