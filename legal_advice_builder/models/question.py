@@ -13,6 +13,7 @@ class Question(MP_Node):
     MULTIPLE_OPTIONS = 'MO'
     FILE_UPLOAD = 'FU'
     DATE = 'DT'
+    YES_NO = 'YN'
 
     FIELD_TYPES = [
         (TEXT, _('Long multiline Text input')),
@@ -20,7 +21,8 @@ class Question(MP_Node):
         (MULTIPLE_OPTIONS, _('Pick several of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
         (FILE_UPLOAD, _('File Upload')),
-        (DATE, _('Date'))
+        (DATE, _('Date')),
+        (YES_NO, _('Yes/No'))
     ]
 
     FIELD_ICONS = {
@@ -55,6 +57,14 @@ class Question(MP_Node):
     failure_message = models.TextField(blank=True)
     unsure_message = models.TextField(blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.field_type == self.YES_NO:
+            self.options = {
+                'yes': str(_('yes')),
+                'no': str(_('no'))
+            }
+        super().save(*args, **kwargs)
+
     def next(self, option=None, text=None, date=None):
         if option or date:
             if self.is_status_by_conditions('success', option, date):
@@ -62,10 +72,14 @@ class Question(MP_Node):
                     return self.questionaire.next().get_first_question()
                 else:
                     return None
-            try:
-                return self.get_children().get(parent_option=option)
-            except Question.DoesNotExist:
-                return None
+            if option:
+                conditions = self.condition_set.filter(
+                    if_option='is',
+                    if_value=option,
+                    then_value__contains='question')
+                if conditions:
+                    condition = conditions.first()
+                    return Question.objects.get(id=condition.then_value.split('_')[1])
         return self.get_children().first()
 
     def is_status_by_conditions(self, status, option=None, date=None):

@@ -22,7 +22,7 @@ from .widgets import ConditionsWidget
 class DispatchQuestionFieldTypeMixin:
 
     def get_field_for_question_type(self, question, options, form_fields, required=True):
-        if question.field_type == question.SINGLE_OPTION:
+        if question.field_type in [question.SINGLE_OPTION, question.YES_NO]:
             form_fields['option'] = fields.ChoiceField(
                 choices=options.items(),
                 widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
@@ -191,7 +191,6 @@ class QuestionConditionForm(forms.ModelForm):
                 condition['question'] = self.instance
                 if condition.get('then_value'):
                     condition = Condition.objects.create(**condition)
-                    condition.update_questions()
         if 'failure_message' in self.cleaned_data:
             self.instance.failure_message = self.cleaned_data['failure_message']
             self.instance.save()
@@ -208,15 +207,26 @@ class QuestionUpdateForm(forms.ModelForm):
         super().__init__(**kwargs)
         self.fields['options'].widget = ChoiceWidget()
         question = self.instance
-        if question.field_type not in [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]:
+        if question.field_type not in [Question.SINGLE_OPTION,
+                                       Question.YES_NO,
+                                       Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
 
 
 class QuestionCreateForm(forms.ModelForm):
+    parent_question = fields.CharField(required=False,
+                                       widget=forms.HiddenInput)
 
     class Meta:
         model = Question
         fields = ('text', 'field_type')
+
+    def __init__(self, **kwargs):
+        if 'parent_question' in kwargs:
+            self.parent_question = kwargs.pop('parent_question')
+        super().__init__(**kwargs)
+        if hasattr(self, 'parent_question') and self.parent_question:
+            self.fields['parent_question'].initial = self.parent_question
 
 
 class LawCaseCreateForm(forms.ModelForm):

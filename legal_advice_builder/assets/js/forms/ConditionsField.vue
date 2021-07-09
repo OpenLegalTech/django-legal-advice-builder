@@ -55,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    if (this.questiontype == 'SO' || this.questiontype == 'MO') {
+    if (this.questiontype == 'SO' || this.questiontype == 'MO' || this.questiontype == 'YN' ) {
       for (const [key, value] of Object.entries(this.options)) {
         if(!this.usedOptions.includes(key)) {
           const emptyCondition = {
