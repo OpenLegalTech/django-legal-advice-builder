@@ -62,8 +62,7 @@ def test_form_wizard_return_next_question_by_option(rf, law_case_factory, questi
             questionaire=qn_1)))
     q2 = q1.add_child(
         **(get_single_option_question(
-           questionaire=qn_1,
-           parent_option='yes')))
+           questionaire=qn_1)))
 
     request = rf.get('/')
     middleware = SessionMiddleware()
@@ -118,8 +117,7 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
             questionaire=qn_1)))
     q2 = q1.add_child(
         **(get_single_option_question(
-           questionaire=qn_1,
-           parent_option='yes')))
+           questionaire=qn_1)))
 
     Condition.objects.create(
         question=q2,

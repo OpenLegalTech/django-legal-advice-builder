@@ -46,12 +46,7 @@ class Question(MP_Node):
         default=SINGLE_OPTION,
     )
     help_text = models.CharField(max_length=200, blank=True)
-    parent_option = models.CharField(max_length=200, blank=True)
 
-    failure_conditions = models.JSONField(default=list, null=True, blank=True)
-    success_conditions = models.JSONField(default=list, null=True, blank=True)
-
-    unsure_options = models.JSONField(default=list, null=True, blank=True)
     information = models.TextField(blank=True)
     success_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
@@ -113,11 +108,6 @@ class Question(MP_Node):
                 return {
                     'failure': True,
                     'message': self.get_failure_message(),
-                }
-            elif self.unsure_options and option in self.unsure_options:
-                return {
-                    'unsure': True,
-                    'message': self.get_unsure_message(),
                 }
         return {
             'ongoing': True,
