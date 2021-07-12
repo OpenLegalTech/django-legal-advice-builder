@@ -80,16 +80,19 @@ class Document(models.Model):
             context
         ))
 
-    @property
-    def template_with_sample_answers(self):
+    def template_with_answers(self, answers):
         template = Template(mark_safe(self.document_type.document_template))
         context = self.fields_for_context()
         base_template = template.render(Context(context))
         result_template = Template(mark_safe(base_template))
         result = result_template.render(Context(
-            {'answers': generate_answers_dict_for_template(self.sample_answers)}
+            {'answers': generate_answers_dict_for_template(answers)}
         ))
         return result
+
+    @property
+    def template_with_sample_answers(self):
+        return self.template_with_answers(self.sample_answers)
 
 
 class DocumentType(models.Model):

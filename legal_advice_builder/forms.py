@@ -241,9 +241,7 @@ class LawCaseUpdateForm(forms.ModelForm):
 
     class Meta:
         model = LawCase
-        fields = ('title', 'description',
-                  'allow_download',
-                  'save_answers')
+        fields = ('title', 'description')
 
 
 class QuestionaireForm(forms.ModelForm):

@@ -1,10 +1,5 @@
 from django.db import models
-from django.template import Context
-from django.template import Template
-from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
-
-from legal_advice_builder.utils import generate_answers_dict_for_template
 
 from .document import Document
 from .template import LawCaseTemplate
@@ -14,8 +9,8 @@ class LawCase(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     extra_help = models.TextField(blank=True)
-    allow_download = models.BooleanField(default=False)
-    save_answers = models.BooleanField(default=False)
+    allow_download = models.BooleanField(default=True)
+    save_answers = models.BooleanField(default=True)
     law_case_template = models.ForeignKey(LawCaseTemplate,
                                           null=True,
                                           blank=True,
@@ -54,15 +49,7 @@ class LawCase(models.Model):
             )
 
     def get_rendered_template(self, answers):
-        template = get_template(
-            'legal_advice_builder/law_case_base_template.html')
-        context = {'object': self.law_case_template}
-        base_template = template.render(context)
-        result_template = Template(base_template)
-        result = result_template.render(Context(
-            {'answers': generate_answers_dict_for_template(answers)}
-        ))
-        return result
+        return self.document.template_with_answers(answers)
 
     @property
     def variables_for_template(self):
