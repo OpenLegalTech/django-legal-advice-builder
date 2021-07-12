@@ -58,14 +58,18 @@
 
             {% if form.options %}
             <div class="my-3">{{ form.options | as_crispy_field }}</div>
-            {% if question.has_error %}
-            <div class="alert alert-danger">
-                <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
-                {% trans 'You picked a field type with options but have not added any options.' %}
-            </div>
-            {% endif %}
+                {% if question.has_error %}
+                <div class="alert alert-danger">
+                    <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
+                    {% trans 'You picked a field type with options but have not added any options.' %}
+                </div>
+                {% endif %}
             {% endif %}
             {{ form.media }}
+
+            <div class="my-3">
+                {{ form.information | as_crispy_field }}
+            </div>
             <div class="text-end mt-3">
                 <input class="btn btn-primary btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
             </div>
