@@ -60,6 +60,7 @@ def test_question_next(law_case_factory, questionaire_factory):
     q1 = Question.add_root(
         **(get_single_option_question(
             questionaire=questionaire_1)))
+
     Condition.objects.create(
         question=q1,
         if_option='is',
@@ -68,12 +69,24 @@ def test_question_next(law_case_factory, questionaire_factory):
     )
     q1_yes = q1.add_child(
         **(get_single_option_question(
-            questionaire=questionaire_1,
-            parent_option='yes')))
+            questionaire=questionaire_1)))
     q1_no = q1.add_child(
         **(get_single_option_question(
-            questionaire=questionaire_1,
-            parent_option='no')))
+            questionaire=questionaire_1)))
+
+    Condition.objects.create(
+        question=q1,
+        if_option='is',
+        if_value='yes',
+        then_value='question_{}'.format(q1_yes.id)
+    )
+
+    Condition.objects.create(
+        question=q1,
+        if_option='is',
+        if_value='no',
+        then_value='question_{}'.format(q1_no.id)
+    )
 
     assert questionaire_1.get_first_question() == q1
     assert questionaire_1.questions.count() == 3
