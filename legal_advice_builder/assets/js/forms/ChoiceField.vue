@@ -1,5 +1,5 @@
 <template>
-  <div class="border p-3">
+  <div class="border p-3" :class="{'border-danger border': this.count==0}">
     <Choice v-for="(value, name, index) in choices"
       :key="`${ name }-${ index }`"
       :choiceKey="`${ name }`"
@@ -35,7 +35,8 @@ export default {
   data: function () {
     return {
       choices: this.initial,
-      newChoice: ''
+      newChoice: '',
+      count: Object.keys(this.initial).length
     };
   },
   methods: {

@@ -30,5 +30,12 @@ class Questionaire(models.Model):
             law_case=self.law_case, order__gt=self.order).first()
 
     @property
+    def has_error(self):
+        from . import Question
+        fields = [Question.SINGLE_OPTION, Question.MULTIPLE_OPTIONS]
+        print(self.question_set.filter(field_type__in=fields, options__isnull=True).exists())
+        return self.question_set.filter(field_type__in=fields, options={}).exists()
+
+    @property
     def questions(self):
         return self.question_set.all().order_by('path')

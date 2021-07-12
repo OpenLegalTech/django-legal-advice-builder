@@ -3,7 +3,7 @@ import factory
 from legal_advice_builder.models import Question
 
 
-def get_single_option_question(parent_option=None, questionaire=None):
+def get_single_option_question(questionaire=None):
     res_dict = {
         'text': factory.Faker('text'),
         'field_type': Question.SINGLE_OPTION,
@@ -13,10 +13,6 @@ def get_single_option_question(parent_option=None, questionaire=None):
             'maybe': 'maybe'
         }
     }
-    if parent_option:
-        res_dict.update({
-            'parent_option': parent_option
-        })
     if questionaire:
         res_dict.update({
             'questionaire': questionaire

@@ -83,8 +83,13 @@
                 <ul class="list-group">
                     {% for question in questionaire.questions %}
                         <a href="{% url 'legal_advice_builder:question-update' question.id %}"
-                        class="list-group-item list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
-                        ><i class="{{ question.icon }}"></i> {{ question.text }}</a>
+                        class="list-group-item position-relative list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
+                        >
+                            <i class="{{ question.icon }}"></i> {{ question.text }}
+                            {% if question.has_error %}
+                            <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
+                            {% endif %}
+                        </a>
                     {% endfor %}
                     <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm">{% trans 'Add question' %}</button>
                 </ul>

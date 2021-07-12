@@ -34,7 +34,12 @@
             <ul class="list-group list-group-flush">
                 {% for qn in lawcase.questionaire_set.all %}
                 <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
-                    href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}"><i class="bi bi-list-task"></i> {{ qn }}</a>
+                    href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">
+                        <i class="bi bi-list-task"></i> {{ qn }}
+                    {% if qn.has_error %}
+                        <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
+                    {% endif %}
+                </a>
                 {% endfor %}
             </ul>
         </div>

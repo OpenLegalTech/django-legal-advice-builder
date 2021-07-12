@@ -118,6 +118,10 @@ class Question(MP_Node):
     def icon(self):
         return self.FIELD_ICONS.get(self.field_type)
 
+    @property
+    def has_error(self):
+        return self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS] and not self.options
+
     def get_success_message(self):
         if self.success_message:
             return self.success_message
@@ -134,7 +138,7 @@ class Question(MP_Node):
         return self.questionaire.unsure_message
 
     def get_options_by_type(self):
-        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS]:
+        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS, self.YES_NO]:
             return {
                 'is': _('is')
             }
@@ -146,7 +150,7 @@ class Question(MP_Node):
         return {}
 
     def get_if_text_by_type(self):
-        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS]:
+        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS, self.YES_NO]:
             return _('If the answer to this question is:')
         elif self.field_type == self.DATE:
             return _('If after the date given as answer a timespan of:')
@@ -174,8 +178,7 @@ class Question(MP_Node):
     def __str__(self):
         short_title = self.short_title if self.short_title else ''
         if self.field_type == self.SINGLE_OPTION:
-            return '{}: {} {} ({})'.format(
-                self.parent_option,
+            return '{} {} ({})'.format(
                 short_title,
                 self.text,
                 self.get_options_names())
