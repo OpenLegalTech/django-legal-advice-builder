@@ -336,7 +336,7 @@ class QuestionaireDetail(DetailView):
 
 class QuestionDelete(DeleteView):
     model = Question
-    success_message = _('Question "%(text)s" was removed successfully')
+    success_message = _('Question {} was removed successfully')
 
     def get_success_url(self):
         return reverse('legal_advice_builder:questionaire-detail', args=[self.questionaire.id])
@@ -347,9 +347,10 @@ class QuestionDelete(DeleteView):
     def update_tree(self, question):
         if question.is_root():
             child = question.get_children().first()
-            new_root = Question.add_root()
-            child.move(new_root, pos='first-child')
-            child.refresh_from_db()
+            if child:
+                new_root = Question.add_root()
+                child.move(new_root, pos='first-child')
+                child.refresh_from_db()
         else:
             new_parent = question.get_parent()
             children = question.get_children()
@@ -361,7 +362,7 @@ class QuestionDelete(DeleteView):
         question = self.get_object()
         self.questionaire = question.questionaire
         self.update_tree(question)
-        messages.success(self.request, self.success_message % question.__dict__)
+        messages.success(self.request, self.success_message.format(question.text))
         return super().delete(request, *args, **kwargs)
 
 

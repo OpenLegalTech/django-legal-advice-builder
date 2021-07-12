@@ -80,12 +80,15 @@ class Question(MP_Node):
                 if conditions:
                     condition = conditions.first()
                     return Question.objects.get(id=condition.then_value.split('_')[1])
-        return self.get_children().first()
+        if self.get_children():
+            return self.get_children().first()
+        elif self.questionaire.next():
+            return self.questionaire.next().get_first_question()
 
     def is_status_by_conditions(self, status, option=None, date=None):
         status_conditions = self.condition_set.filter(then_value=status)
         if status_conditions.exists():
-            if self.field_type == self.SINGLE_OPTION and option:
+            if self.field_type in [self.SINGLE_OPTION, self.YES_NO] and option:
                 return status_conditions.filter(if_option='is',
                                                 if_value=option).exists()
             elif self.field_type == self.DATE and date:
