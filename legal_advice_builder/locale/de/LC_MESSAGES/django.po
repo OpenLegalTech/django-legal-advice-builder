@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 18:02+0200\n"
+"POT-Creation-Date: 2021-07-12 14:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,47 +29,58 @@ msgstr "Berechtigung Prüfen"
 msgid "personal data"
 msgstr "Personendaten"
 
-#: models/question.py:18
+#: models/question.py:19
 msgid "Long multiline Text input"
 msgstr "Langer mehrzeiliger Text"
 
-#: models/question.py:19
+#: models/question.py:20
 msgid "Pick one of multiple options"
 msgstr "Eine von mehreren Optionen wählen"
 
-#: models/question.py:20
+#: models/question.py:21
 msgid "Pick several of multiple options"
 msgstr "Viele von mehreren Optionen wählen"
 
-#: models/question.py:21
+#: models/question.py:22
 msgid "Short single line text input"
 msgstr "Kurze, einzeilige Texteingabe"
 
-#: models/question.py:22
+#: models/question.py:23
 msgid "File Upload"
 msgstr "Datei-Upload"
 
-#: models/question.py:23
+#: models/question.py:24
 msgid "Date"
 msgstr "Datum"
 
-#: models/question.py:132
+#: models/question.py:25
+msgid "Yes/No"
+msgstr "Ja/Nein"
+
+msgid "yes"
+msgstr "Ja"
+
+#: models/question.py:64
+msgid "no"
+msgstr "Nein"
+
+#: models/question.py:146
 msgid "is"
 msgstr "ist"
 
-#: models/question.py:136
+#: models/question.py:150
 msgid "is expired."
 msgstr "vergangen ist."
 
-#: models/question.py:137
+#: models/question.py:151
 msgid "is still running."
 msgstr "noch nicht vergangen ist."
 
-#: models/question.py:143
+#: models/question.py:157
 msgid "If the answer to this question is:"
 msgstr "Wenn die Antwort auf diese Frage lautet:"
 
-#: models/question.py:145
+#: models/question.py:159
 msgid "If after the date given as answer a timespan of:"
 msgstr "Wenn nach dem Datum, dass als Antwort gegeben wurde, ein Zeitraum von:"
 
@@ -79,9 +90,9 @@ msgstr "Vorschau ansehen"
 
 #: templates/legal_advice_builder/admin/document_form.html:36
 #: templates/legal_advice_builder/admin/document_preview.html:30
-#: templates/legal_advice_builder/admin/law_case_list.html:154
-#: templates/legal_advice_builder/admin/question_update.html:23
-#: templates/legal_advice_builder/admin/question_update.html:33
+#: templates/legal_advice_builder/admin/law_case_list.html:147
+#: templates/legal_advice_builder/admin/question_update.html:64
+#: templates/legal_advice_builder/admin/question_update.html:74
 #: templates/legal_advice_builder/admin/questionaire_detail.html:73
 #: templates/legal_advice_builder/admin/questionaire_detail.html:113
 msgid "Save"
@@ -99,83 +110,110 @@ msgstr "Platzhalter"
 msgid "edit document template"
 msgstr "Dokumentvorlage bearbeiten"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:9
-#: templates/legal_advice_builder/admin/law_case_list.html:9
-msgid "All processes"
-msgstr "Alle Prozesse"
+#: templates/legal_advice_builder/admin/law_case_detail.html:6
+#: templates/legal_advice_builder/admin/law_case_list.html:6
+msgid "All forms"
+msgstr "Alle Formulare"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:29
+#: templates/legal_advice_builder/admin/law_case_detail.html:18
+#: templates/legal_advice_builder/admin/law_case_list.html:53
+#: templates/legal_advice_builder/admin/question_update.html:8
+#, fuzzy
+#| msgid "view preview"
+msgid "preview"
+msgstr "Vorschau ansehen"
+
+#: templates/legal_advice_builder/admin/law_case_detail.html:32
 msgid "Questionaires"
-msgstr "Fragenkataloge"
+msgstr "Formularabschnitte"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:41
+#: templates/legal_advice_builder/admin/law_case_detail.html:44
 msgid "Document"
 msgstr "Dokument"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:44
+#: templates/legal_advice_builder/admin/law_case_detail.html:47
 msgid "Template"
 msgstr "Vorlage"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:25
-msgid "Add new"
-msgstr "Neu anlegen"
+#: templates/legal_advice_builder/admin/law_case_list.html:19
+msgid "new form"
+msgstr "Neues Formular"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:36
+#: templates/legal_advice_builder/admin/law_case_list.html:30
 msgid "type"
 msgstr "Typ"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:60
-msgid "view"
-msgstr "ansehen"
+#: templates/legal_advice_builder/admin/law_case_list.html:38
+#, python-format
+msgid ""
+"\n"
+"                                        One answer\n"
+"                                        "
+msgid_plural ""
+"\n"
+"                                        %(counter)s answers\n"
+"                                        "
+msgstr[0] ""
+"\n"
+"                                        Eine Antwort\n"
+"                                        "
+msgstr[1] ""
+"\n"
+"                                        %(counter)s Antworten\n"
+"                                        "
 
-#: templates/legal_advice_builder/admin/law_case_list.html:67
+#: templates/legal_advice_builder/admin/law_case_list.html:60
 #: templates/legal_advice_builder/admin/questionaire_detail.html:19
 msgid "edit"
 msgstr "bearbeiten"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:78
-#: templates/legal_advice_builder/admin/law_case_list.html:106
+#: templates/legal_advice_builder/admin/law_case_list.html:71
+#: templates/legal_advice_builder/admin/law_case_list.html:99
+#: templates/legal_advice_builder/admin/question_update.html:34
+#: templates/legal_advice_builder/admin/question_update.html:92
 msgid "delete"
 msgstr "Löschen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:99
+#: templates/legal_advice_builder/admin/law_case_list.html:92
+#: templates/legal_advice_builder/admin/question_update.html:85
 #, python-format
 msgid " Do you want to delete \"%(title)s\"? "
 msgstr " Wollen Sie \"%(title)s\" löschen? "
 
-#: templates/legal_advice_builder/admin/law_case_list.html:103
+#: templates/legal_advice_builder/admin/law_case_list.html:96
+#: templates/legal_advice_builder/admin/question_update.html:89
 msgid "cancel"
 msgstr "abbrechen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:131
+#: templates/legal_advice_builder/admin/law_case_list.html:124
 msgid "close"
 msgstr "Schließen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:132
+#: templates/legal_advice_builder/admin/law_case_list.html:125
 msgid "save"
 msgstr "Speichern"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:144
+#: templates/legal_advice_builder/admin/law_case_list.html:137
 #: templates/legal_advice_builder/admin/questionaire_detail.html:103
 msgid "Add new question"
 msgstr "Neue Frage anlegen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:153
+#: templates/legal_advice_builder/admin/law_case_list.html:146
 #: templates/legal_advice_builder/admin/questionaire_detail.html:112
 msgid "Close"
 msgstr "Schließen"
 
-#: templates/legal_advice_builder/admin/question_update.html:8
-msgid "content"
-msgstr "Inhalte"
-
 #: templates/legal_advice_builder/admin/question_update.html:12
+msgid "base settings"
+msgstr "Grundeinstellungen"
+
+#: templates/legal_advice_builder/admin/question_update.html:16
 msgid "logic"
 msgstr "Logik"
 
 #: templates/legal_advice_builder/admin/questionaire_detail.html:13
 msgid "Questionaire"
-msgstr "Fragenkatalog"
+msgstr "Formularabschnitt"
 
 #: templates/legal_advice_builder/admin/questionaire_detail.html:18
 msgid "done"
@@ -229,13 +267,16 @@ msgstr "Herunterladen"
 msgid "Lawcase \"%(title)s\" was removed successfully"
 msgstr "Beratungsprozess \"%(title)s\" wurde erfolgreich gelöscht."
 
-#: views.py:333
+msgid "Question \"%(text)s\" was removed successfully"
+msgstr "Beratungsprozess \"%(title)s\" wurde erfolgreich gelöscht."
+
+#: views.py:372
 msgid "Question geupdated"
 msgstr "Frage aktualisiert"
 
 #: widgets.py:42
 msgid "success: Jump to next questionaire."
-msgstr "Erfolg: Springe zum nächsten Fragenkatalog."
+msgstr "Erfolg: Springe zum nächsten Abschnitt."
 
 #: widgets.py:43
 msgid "failure: show failure message"
@@ -261,22 +302,17 @@ msgstr "Jahren"
 msgid "then"
 msgstr "dann"
 
-#~ msgid ""
-#~ "\n"
-#~ "                                        One answer\n"
-#~ "                                        "
-#~ msgid_plural ""
-#~ "\n"
-#~ "                                        %(counter)s answers\n"
-#~ "                                        "
-#~ msgstr[0] ""
-#~ "\n"
-#~ "                                        Eine Antwort\n"
-#~ "                                        "
-#~ msgstr[1] ""
-#~ "\n"
-#~ "                                        %(counter)s Antworten\n"
-#~ "                                        "
+#~ msgid "All processes"
+#~ msgstr "Alle Prozesse"
+
+#~ msgid "Add new"
+#~ msgstr "Neu anlegen"
+
+#~ msgid "view"
+#~ msgstr "ansehen"
+
+#~ msgid "content"
+#~ msgstr "Inhalte"
 
 #~ msgid "One answer"
 #~ msgid_plural "%(counter)s answers"

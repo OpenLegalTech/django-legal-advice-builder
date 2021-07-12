@@ -2,21 +2,24 @@
 {% load i18n crispy_forms_tags %}
 
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="{% url 'legal_advice_builder:law-case-list' %}">{% trans 'All processes' %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#"> {{ lawcase.title }}</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<a class="navbar-brand" href="{% url 'legal_advice_builder:law-case-list' %}">
+    <i class="bi bi-card-checklist"></i> {% trans 'All forms' %}
+</a>
+<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">{{ lawcase.title }}</a>
+        </li>
+    </ul>
+</div>
+<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+            <a class="btn btn-primary" target="_blank" href="{% url 'law-case-detail' lawcase.id %}"><i class="bi bi-eye"></i> {% trans 'preview' %}</a>
+        </li>
+    </ul>
+</div>
+
 {% endblock %}
 
 {% block content %}

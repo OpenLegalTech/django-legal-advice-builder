@@ -2,15 +2,9 @@
 {% load i18n crispy_forms_tags %}
 
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">{% trans 'All processes' %}</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<a class="navbar-brand" href="{% url 'legal_advice_builder:law-case-list' %}">
+    <i class="bi bi-card-checklist"></i> {% trans 'All forms' %}
+</a>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +16,7 @@
                 <div class="card h-100 bg-primary">
                     <button class="btn w-100 h-100 text-white text-uppercase fw-bolder fs-5" type="button"
                         data-bs-toggle="modal" data-bs-target="#newLawCaseForm">
-                        <i class="bi bi-plus"></i> {% trans 'Add new' %}
+                        <i class="bi bi-plus"></i> {% trans 'new form' %}
                     </button>
                 </div>
             </div>
@@ -56,8 +50,7 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li><a class="dropdown-item" target="_blank"
-                                                    href="{% url 'law-case-detail' law_case.id %}"><i
-                                                        class="bi bi-box-arrow-up-right"></i> {% trans 'view' %}</a>
+                                                    href="{% url 'law-case-detail' law_case.id %}"><i class="bi bi-eye"></i> {% trans 'preview' %}</a>
                                             </li>
                                             <li class="dropdown-item" href="#">
                                                 <button type="button"
