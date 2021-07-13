@@ -16,6 +16,9 @@ module.exports = {
     ],
     conditions_field: [
       '/legal_advice_builder/assets/js/forms/conditions_field.js'
+    ],
+    placeholder_list: [
+      '/legal_advice_builder/assets/js/document/placeholder_list.js'
     ]
   },
   resolve: {

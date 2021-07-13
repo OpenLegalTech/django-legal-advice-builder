@@ -1,5 +1,9 @@
 {% extends 'legal_advice_builder/admin/law_case_detail.html' %}
-{% load i18n crispy_forms_tags %}
+{% load static i18n crispy_forms_tags %}
+
+{% block extra_scripts %}
+<script src="{% static 'placeholder_list.js' %}"></script>
+{% endblock %}
 
 {% block main_content %}
 
@@ -41,24 +45,11 @@
         </div>
 
         <div class="col">
-        {% if variables %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">{% trans 'Question' %}</th>
-                        <th scope="col">{% trans 'Placeholder' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for variable, question in variables.items %}
-                    <tr>
-                        <td>{{ question }} {% if question.options %}{{ question.options }}{% endif %}</td>
-                        <td>&#123;&#123; answers.{{ variable }} &#125;&#125;</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+            <div id="placeholders">
+                <placeholders
+                    :variables="{{ variables }}"
+                ></placeholders>
+            </div>
         </div>
     </div>
 
