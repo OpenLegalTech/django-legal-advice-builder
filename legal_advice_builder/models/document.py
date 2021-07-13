@@ -51,17 +51,18 @@ class Document(models.Model):
         answers_questions = [int(answer.get('question')) for answer in self.sample_answers]
 
         for question in questions:
-            if question.id not in answers_questions:
-                initial_data.append(
-                    {
-                        'question': question.id
-                    }
-                )
-            else:
-                index = answers_questions.index(question.id)
-                initial_data.append(
-                    self.sample_answers[index]
-                )
+            if question.get_dict_key()[0] in self.template:
+                if question.id not in answers_questions:
+                    initial_data.append(
+                        {
+                            'question': question.id
+                        }
+                    )
+                else:
+                    index = answers_questions.index(question.id)
+                    initial_data.append(
+                        self.sample_answers[index]
+                    )
 
         return initial_data
 
