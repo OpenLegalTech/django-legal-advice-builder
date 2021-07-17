@@ -74,7 +74,8 @@ class Question(MP_Node):
                     then_value__contains='question')
                 if conditions:
                     condition = conditions.first()
-                    return Question.objects.get(id=condition.then_value.split('_')[1])
+                    return Question.objects.get(
+                        id=condition.then_value.split('_')[1])
         if self.get_children():
             return self.get_children().first()
         elif self.questionaire.next():

@@ -16,6 +16,7 @@ from .models import Questionaire
 
 class ConditionInline(admin.TabularInline):
     model = Condition
+    fk_name = 'question'
 
 
 class QuestionAdmin(TreeAdmin):

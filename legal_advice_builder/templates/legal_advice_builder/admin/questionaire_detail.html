@@ -23,21 +23,9 @@
         <div class="mt-3">
             <div class="row" id="questionaire_detail">
                 <div class="col border m-2 p-2">
-                    <small>{% trans 'This message is shown if you marked a specific answer to a question as successfull.' %}</small>
+                    <small>{{ questionaire_update_form.success_message.help_text }}</small>
                     <div class="my-2">
                         {{ questionaire.success_message }}
-                    </div>
-                </div>
-                <div class="col border m-2 p-2">
-                    <small>{% trans 'This message is shown if you marked a specific answer to a question as failure.' %}</small>
-                    <div class="my-2">
-                    {{ questionaire.failure_message }}
-                    </div>
-                </div>
-                <div class="col border m-2 p-2">
-                    <small>{% trans 'This message is shown if you marked a specific answer to a question as unsure.' %}</small>
-                    <div class="my-2">
-                    {{ questionaire.unsure_message }}
                     </div>
                 </div>
             </div>
@@ -51,21 +39,9 @@
                     </div>
                     <div class="row">
                         <div class="col border m-2 p-2">
-                            <small>{% trans 'This message is shown if you marked a specific answer to a question as successfull.' %}</small>
+                            <small>{{ questionaire_update_form.success_message.help_text }}</small>
                             <div class="my-2">
                                 {{ questionaire_update_form.success_message | as_crispy_field }}
-                            </div>
-                        </div>
-                        <div class="col border m-2 p-2">
-                            <small>{% trans 'This message is shown if you marked a specific answer to a question as failure.' %}</small>
-                            <div class="my-2">
-                            {{ questionaire_update_form.failure_message  | as_crispy_field }}
-                            </div>
-                        </div>
-                        <div class="col border m-2 p-2">
-                            <small>{% trans 'This message is shown if you marked a specific answer to a question as unsure.' %}</small>
-                            <div class="my-2">
-                            {{ questionaire_update_form.unsure_message  | as_crispy_field }}
                             </div>
                         </div>
                     </div>

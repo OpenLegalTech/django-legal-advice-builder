@@ -4,6 +4,7 @@ from django import forms
 from django.forms import fields
 from django.forms.models import model_to_dict
 from django.utils import dateformat
+from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
 
 from .models import Answer
@@ -248,5 +249,12 @@ class QuestionaireForm(forms.ModelForm):
 
     class Meta:
         model = Questionaire
-        fields = ('title', 'success_message',
-                  'failure_message', 'unsure_message')
+        fields = ('title', 'success_message')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['success_message'].help_text = _('This message is '
+                                                     'shown if the user has '
+                                                     'reached the end '
+                                                     'of this questionaire '
+                                                     'successfully.')

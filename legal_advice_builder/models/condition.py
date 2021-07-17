@@ -5,10 +5,15 @@ from django.utils import timezone
 
 class Condition(models.Model):
     question = models.ForeignKey('legal_advice_builder.Question',
+                                 related_name='conditions',
                                  on_delete=models.CASCADE)
     if_option = models.CharField(max_length=500)
     if_value = models.CharField(max_length=500)
     then_value = models.CharField(max_length=500)
+    then_question = models.ForeignKey('legal_advice_builder.Question',
+                                      null=True,
+                                      on_delete=models.SET_NULL)
+    message = models.TextField(blank=True)
 
     class Meta:
         unique_together = ['question', 'if_value', 'then_value']
