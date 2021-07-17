@@ -51,12 +51,18 @@ class ConditionsWidget(forms.TextInput):
             'years': str(_('years'))
         }
 
+    def get_default_next(self):
+        children = self.question.get_children()
+        if children:
+            return children.first().id
+        return ''
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.update({
             'initial': json.dumps(self.create_conditions_dict()),
             'questions': json.dumps(self.get_other_questions()),
-            'default_next': self.question.get_children().first().id,
+            'default_next': self.get_default_next(),
             'question_id': str(self.question.id),
             'if_options': self.get_if_options(),
             'options': self.question.options,
