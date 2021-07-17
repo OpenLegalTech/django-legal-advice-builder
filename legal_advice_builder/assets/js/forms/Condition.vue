@@ -4,16 +4,16 @@
                                         'alert-success': this.newValue=='success',
                                         'alert-danger': this.newValue=='failure'}">
     <div class="row justify-content-start">
-      <div class="col-4">
+      <div class="col-xxl-4">
           {{ textIf }}
       </div>
     </div>
 
     <div v-if="questiontype == 'DT'" class="row justify-content-start">
-      <div class="col-3">
+      <div class="col-xxl-3">
           <input type="number" min="1" max="365" @change="onChange" class="textinput textInput form-control" v-model="period">
       </div>
-      <div class="col-3">
+      <div class="col-xxl-3">
           <select class="form-select" v-model="unit" @change="onChange">
               <option
                 v-for="optionValue, optionKey, index in periodoptions"
@@ -25,7 +25,7 @@
     </div>
 
     <div v-if="Object.keys(ifoptions).length > 1" class="row justify-content-start">
-      <div class="col-6">
+      <div class="col-xxl-6">
           <select class="form-select" v-model="newIfOption" @change="onChange">
               <option
                 v-for="optionValue, optionKey, index in ifoptions"
@@ -37,7 +37,7 @@
     </div>
 
     <div v-if="questiontype !== 'DT'" class="row justify-content-start">
-      <div class="col-6">
+      <div class="col-xxl-6">
           <select class="form-select" v-model="newOption" @change="onChange">
               <option
                 v-for="optionValue, optionKey, index in availableOptions"
@@ -49,13 +49,13 @@
     </div>
 
     <div class="row justify-content-start">
-      <div class="col-4">
+      <div class="col-xxl-4">
           {{ textThen }}
       </div>
     </div>
 
     <div class="row justify-content-start">
-        <div class="col-6">
+        <div class="col-xxl-6">
             <select class="form-select" v-model="newValue" @change="onChange">
               <option
                 v-for="optionValue, optionKey, index in thenoptions"
@@ -67,7 +67,7 @@
     </div>
 
     <div v-if="newValue == 'question'" class="row justify-content-start">
-        <div class="col-6">
+        <div class="col-xxl-6">
             <select class="form-select" v-model="jumpToQuestion" @change="onChange">
               <option
                 v-for="question, index in questions"
