@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 18:47+0200\n"
+"POT-Creation-Date: 2021-07-17 22:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: forms.py:262
+msgid ""
+"This message is shown if the user has reached the end of this questionaire "
+"successfully."
+msgstr ""
+"Diese Meldung wird angezeigt, wenn der Formularabschnitt erfolgreich "
+"durchlaufen wurde."
 
 #: models/answer.py:16
 msgid "Rendered Document"
@@ -65,47 +73,39 @@ msgstr "Ja"
 msgid "no"
 msgstr "Nein"
 
-#: models/question.py:143
+#: models/question.py:144
 msgid "is"
 msgstr "ist"
 
-#: models/question.py:147
+#: models/question.py:148
 msgid "is expired."
 msgstr "vergangen ist."
 
-#: models/question.py:148
+#: models/question.py:149
 msgid "is still running."
 msgstr "noch nicht vergangen ist."
 
-#: models/question.py:154
+#: models/question.py:155
 msgid "If the answer to this question is:"
 msgstr "Wenn die Antwort auf diese Frage lautet:"
 
-#: models/question.py:156
+#: models/question.py:157
 msgid "If after the date given as answer a timespan of:"
 msgstr "Wenn nach dem Datum, dass als Antwort gegeben wurde, ein Zeitraum von:"
 
-#: templates/legal_advice_builder/admin/document_form.html:10
+#: templates/legal_advice_builder/admin/document_form.html:14
 msgid "view preview"
 msgstr "Vorschau ansehen"
 
-#: templates/legal_advice_builder/admin/document_form.html:36
+#: templates/legal_advice_builder/admin/document_form.html:40
 #: templates/legal_advice_builder/admin/document_preview.html:30
-#: templates/legal_advice_builder/admin/law_case_list.html:147
-#: templates/legal_advice_builder/admin/question_update.html:70
-#: templates/legal_advice_builder/admin/question_update.html:80
-#: templates/legal_advice_builder/admin/questionaire_detail.html:73
-#: templates/legal_advice_builder/admin/questionaire_detail.html:118
+#: templates/legal_advice_builder/admin/law_case_list.html:146
+#: templates/legal_advice_builder/admin/question_update.html:74
+#: templates/legal_advice_builder/admin/question_update.html:84
+#: templates/legal_advice_builder/admin/questionaire_detail.html:49
+#: templates/legal_advice_builder/admin/questionaire_detail.html:94
 msgid "Save"
 msgstr "Speichern"
-
-#: templates/legal_advice_builder/admin/document_form.html:48
-msgid "Question"
-msgstr "Frage"
-
-#: templates/legal_advice_builder/admin/document_form.html:49
-msgid "Placeholder"
-msgstr "Platzhalter"
 
 #: templates/legal_advice_builder/admin/document_preview.html:8
 msgid "edit document template"
@@ -116,6 +116,9 @@ msgstr "Dokumentvorlage bearbeiten"
 msgid "All forms"
 msgstr "Alle Formulare"
 
+#: templates/legal_advice_builder/admin/law_case_detail.html:18
+#: templates/legal_advice_builder/admin/law_case_list.html:52
+#: templates/legal_advice_builder/admin/question_update.html:8
 msgid "preview"
 msgstr "Vorschau ansehen"
 
@@ -131,15 +134,15 @@ msgstr "Dokument"
 msgid "Template"
 msgstr "Vorlage"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:19
+#: templates/legal_advice_builder/admin/law_case_list.html:18
 msgid "new form"
 msgstr "Neues Formular"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:30
+#: templates/legal_advice_builder/admin/law_case_list.html:29
 msgid "type"
 msgstr "Typ"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:38
+#: templates/legal_advice_builder/admin/law_case_list.html:37
 #, python-format
 msgid ""
 "\n"
@@ -158,44 +161,44 @@ msgstr[1] ""
 "                                        %(counter)s Antworten\n"
 "                                        "
 
-#: templates/legal_advice_builder/admin/law_case_list.html:60
+#: templates/legal_advice_builder/admin/law_case_list.html:59
 #: templates/legal_advice_builder/admin/questionaire_detail.html:19
 msgid "edit"
 msgstr "bearbeiten"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:71
-#: templates/legal_advice_builder/admin/law_case_list.html:99
+#: templates/legal_advice_builder/admin/law_case_list.html:70
+#: templates/legal_advice_builder/admin/law_case_list.html:98
 #: templates/legal_advice_builder/admin/question_update.html:25
-#: templates/legal_advice_builder/admin/question_update.html:98
+#: templates/legal_advice_builder/admin/question_update.html:102
 msgid "delete"
 msgstr "Löschen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:92
-#: templates/legal_advice_builder/admin/question_update.html:91
+#: templates/legal_advice_builder/admin/law_case_list.html:91
+#: templates/legal_advice_builder/admin/question_update.html:95
 #, python-format
 msgid " Do you want to delete \"%(title)s\"? "
 msgstr " Wollen Sie \"%(title)s\" löschen? "
 
-#: templates/legal_advice_builder/admin/law_case_list.html:96
-#: templates/legal_advice_builder/admin/question_update.html:95
+#: templates/legal_advice_builder/admin/law_case_list.html:95
+#: templates/legal_advice_builder/admin/question_update.html:99
 msgid "cancel"
 msgstr "abbrechen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:124
+#: templates/legal_advice_builder/admin/law_case_list.html:123
 msgid "close"
 msgstr "Schließen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:125
+#: templates/legal_advice_builder/admin/law_case_list.html:124
 msgid "save"
 msgstr "Speichern"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:137
-#: templates/legal_advice_builder/admin/questionaire_detail.html:108
+#: templates/legal_advice_builder/admin/law_case_list.html:136
+#: templates/legal_advice_builder/admin/questionaire_detail.html:84
 msgid "Add new question"
 msgstr "Neue Frage anlegen"
 
-#: templates/legal_advice_builder/admin/law_case_list.html:146
-#: templates/legal_advice_builder/admin/questionaire_detail.html:117
+#: templates/legal_advice_builder/admin/law_case_list.html:145
+#: templates/legal_advice_builder/admin/questionaire_detail.html:93
 msgid "Close"
 msgstr "Schließen"
 
@@ -219,38 +222,11 @@ msgstr "Formularabschnitt"
 msgid "done"
 msgstr "fertig"
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:26
-#: templates/legal_advice_builder/admin/questionaire_detail.html:54
-msgid ""
-"This message is shown if you marked a specific answer to a question as "
-"successfull."
-msgstr ""
-"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
-"als erfolgreich markiert haben."
-
-#: templates/legal_advice_builder/admin/questionaire_detail.html:32
-#: templates/legal_advice_builder/admin/questionaire_detail.html:60
-msgid ""
-"This message is shown if you marked a specific answer to a question as "
-"failure."
-msgstr ""
-"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
-"als Abbruchbedingung definiert haben."
-
-#: templates/legal_advice_builder/admin/questionaire_detail.html:38
-#: templates/legal_advice_builder/admin/questionaire_detail.html:66
-msgid ""
-"This message is shown if you marked a specific answer to a question as "
-"unsure."
-msgstr ""
-"Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine Frage "
-"als unklar definiert haben."
-
-#: templates/legal_advice_builder/admin/questionaire_detail.html:80
+#: templates/legal_advice_builder/admin/questionaire_detail.html:56
 msgid "Questions"
 msgstr "Fragen"
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:94
+#: templates/legal_advice_builder/admin/questionaire_detail.html:70
 msgid "Add question"
 msgstr "Frage anlegen"
 
@@ -301,9 +277,29 @@ msgstr "Monaten"
 msgid "years"
 msgstr "Jahren"
 
-#: widgets.py:67
+#: widgets.py:68
 msgid "then"
 msgstr "dann"
+
+#~ msgid "Question"
+#~ msgstr "Frage"
+
+#~ msgid "Placeholder"
+#~ msgstr "Platzhalter"
+
+#~ msgid ""
+#~ "This message is shown if you marked a specific answer to a question as "
+#~ "failure."
+#~ msgstr ""
+#~ "Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine "
+#~ "Frage als Abbruchbedingung definiert haben."
+
+#~ msgid ""
+#~ "This message is shown if you marked a specific answer to a question as "
+#~ "unsure."
+#~ msgstr ""
+#~ "Diese Meldung wird angezeigt, wenn Sie eine bestimmte Antwort auf eine "
+#~ "Frage als unklar definiert haben."
 
 #~ msgid "All processes"
 #~ msgstr "Alle Prozesse"
