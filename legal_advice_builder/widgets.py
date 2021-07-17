@@ -30,7 +30,7 @@ class ConditionsWidget(forms.TextInput):
 
     def create_conditions_dict(self):
         conditions = [
-            model_to_dict(condition) for condition in self.question.condition_set.all()
+            model_to_dict(condition) for condition in self.question.conditions.all()
         ]
         return conditions
 

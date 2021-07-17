@@ -68,7 +68,7 @@ class Question(MP_Node):
                 else:
                     return None
             if option:
-                conditions = self.condition_set.filter(
+                conditions = self.conditions.filter(
                     if_option='is',
                     if_value=option,
                     then_value__contains='question')
@@ -82,7 +82,7 @@ class Question(MP_Node):
             return self.questionaire.next().get_first_question()
 
     def is_status_by_conditions(self, status, option=None, date=None):
-        status_conditions = self.condition_set.filter(then_value=status)
+        status_conditions = self.conditions.filter(then_value=status)
         if status_conditions.exists():
             if self.field_type in [self.SINGLE_OPTION, self.YES_NO] and option:
                 return status_conditions.filter(if_option='is',

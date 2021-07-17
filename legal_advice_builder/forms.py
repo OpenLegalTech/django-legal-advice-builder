@@ -179,12 +179,12 @@ class QuestionConditionForm(forms.ModelForm):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
         question = self.instance
-        if not question.condition_set.filter(then_value='failure'):
+        if not question.conditions.filter(then_value='failure'):
             del self.fields['failure_message']
 
     def save(self, commit=True):
         if self.cleaned_data['conditions']:
-            self.instance.condition_set.all().delete()
+            self.instance.conditions.all().delete()
             conditions = json.loads(self.cleaned_data.pop('conditions'))
             for condition in conditions:
                 if 'id' in condition:

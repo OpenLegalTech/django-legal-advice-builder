@@ -70,7 +70,7 @@ def test_question_next(law_case_factory, questionaire_factory):
     q1_yes = q1.add_child(
         **(get_single_option_question(
             questionaire=questionaire_1)))
-    q1_no = q1.add_child(
+    q1_no = q1_yes.add_child(
         **(get_single_option_question(
             questionaire=questionaire_1)))
 
