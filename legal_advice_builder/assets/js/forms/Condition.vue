@@ -88,6 +88,7 @@ export default {
   name: "condition",
   props: {
     condition: Object,
+    defaultnext: String,
     textIf: String,
     textThen: String,
     options: Object,
@@ -102,8 +103,8 @@ export default {
   data () {
     let unit = ''
     let period = ''
-    const jumpToQuestion = this.condition.then_question ? this.condition.then_question : ''
-    const newValue = this.condition.then_value.includes('question') ? 'question' : this.condition.then_value
+    const jumpToQuestion = this.condition.then_question ? this.condition.then_question : this.defaultnext
+    const newValue = this.condition.then_value ? this.condition.then_value : 'question'
 
     if (this.questiontype == 'DT' && this.condition.if_value !== '') {
       unit = this.condition.if_value.split('_')[0]

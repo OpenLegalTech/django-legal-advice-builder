@@ -5,6 +5,7 @@
         :key="index"
         :listIndex="index"
         :condition="condition"
+        :defaultnext="defaultnext"
         :options="options"
         :textIf="`${textIf}`"
         :textThen="`${textThen}`"
@@ -32,6 +33,7 @@ export default {
     name: String,
     questions: Array,
     question: String,
+    defaultnext: String,
     questiontype: String,
     ifoptions: Object,
     thenoptions: Object,

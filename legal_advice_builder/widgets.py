@@ -56,6 +56,7 @@ class ConditionsWidget(forms.TextInput):
         context.update({
             'initial': json.dumps(self.create_conditions_dict()),
             'questions': json.dumps(self.get_other_questions()),
+            'default_next': self.question.get_children().first().id,
             'question_id': str(self.question.id),
             'if_options': self.get_if_options(),
             'options': self.question.options,
