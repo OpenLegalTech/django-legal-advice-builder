@@ -102,7 +102,7 @@ export default {
   data () {
     let unit = ''
     let period = ''
-    const jumpToQuestion = this.condition.then_value.includes('question') ? this.condition.then_value.split('_')[1] : ''
+    const jumpToQuestion = this.condition.then_question ? this.condition.then_question : ''
     const newValue = this.condition.then_value.includes('question') ? 'question' : this.condition.then_value
 
     if (this.questiontype == 'DT' && this.condition.if_value !== '') {
@@ -141,7 +141,8 @@ export default {
         this.newCondition['if_value'] = `${this.unit}_+${this.period}`
       }
       if(this.newValue == 'question') {
-        this.newCondition['then_value'] = `${this.newValue}_${this.jumpToQuestion}`
+        this.newCondition['then_value'] = `${this.newValue}`
+        this.newCondition['then_question'] = `${this.jumpToQuestion}`
       } else {
         this.newCondition['then_value'] = this.newValue
       }

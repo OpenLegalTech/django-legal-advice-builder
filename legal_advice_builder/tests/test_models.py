@@ -78,14 +78,16 @@ def test_question_next(law_case_factory, questionaire_factory):
         question=q1,
         if_option='is',
         if_value='yes',
-        then_value='question_{}'.format(q1_yes.id)
+        then_value='question',
+        then_question=q1_yes
     )
 
     Condition.objects.create(
         question=q1,
         if_option='is',
         if_value='no',
-        then_value='question_{}'.format(q1_no.id)
+        then_value='question',
+        then_question=q1_no
     )
 
     assert questionaire_1.get_first_question() == q1

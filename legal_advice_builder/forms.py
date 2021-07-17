@@ -191,6 +191,12 @@ class QuestionConditionForm(forms.ModelForm):
                     condition.pop('id')
                 condition['question'] = self.instance
                 if condition.get('then_value'):
+                    if 'question' in condition.get('then_value'):
+                        question_id = condition.get('then_question')
+                        question = Question.objects.filter(id=question_id).first()
+                        if question:
+                            condition['then_value'] = 'question'
+                            condition['then_question'] = question
                     condition = Condition.objects.create(**condition)
         if 'failure_message' in self.cleaned_data:
             self.instance.failure_message = self.cleaned_data['failure_message']

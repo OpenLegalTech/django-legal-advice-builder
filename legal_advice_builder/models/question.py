@@ -71,11 +71,11 @@ class Question(MP_Node):
                 conditions = self.conditions.filter(
                     if_option='is',
                     if_value=option,
-                    then_value__contains='question')
+                    then_value='question',
+                    then_question__isnull=False)
                 if conditions:
                     condition = conditions.first()
-                    return Question.objects.get(
-                        id=condition.then_value.split('_')[1])
+                    return condition.then_question
         if self.get_children():
             return self.get_children().first()
         elif self.questionaire.next():
