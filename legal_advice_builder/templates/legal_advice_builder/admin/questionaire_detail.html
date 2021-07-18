@@ -25,7 +25,10 @@
                 <div class="col border m-2 p-2">
                     <small>{{ questionaire_update_form.success_message.help_text }}</small>
                     <div class="my-2">
-                        {{ questionaire.success_message }}
+                      <div class="alert alert-success mt-3" role="alert">
+                        <div class="mb-3 fw-bold pb-2">Schritt {{ current_step|add:1}} von {{ lawcase.questionaire_count }}: {{ questionaire }} <i class="bi bi-check-lg"></i></div>
+                          <div>{{ questionaire.success_message }}</div>
+                        </div>
                     </div>
                 </div>
             </div>

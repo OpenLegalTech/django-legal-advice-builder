@@ -326,6 +326,7 @@ class QuestionaireDetail(DetailView):
         context = super().get_context_data(**kwargs)
         question = self.get_object().get_last_question()
         context.update({
+            'current_step': self.object.law_case.get_index_of_questionaire(self.object),
             'question_create_form': QuestionCreateForm(
                 parent_question=question.id if question else None),
             'questionaire_update_form': QuestionaireForm(instance=self.get_object()),
