@@ -12,6 +12,7 @@ class Condition(models.Model):
     then_value = models.CharField(max_length=500)
     then_question = models.ForeignKey('legal_advice_builder.Question',
                                       null=True,
+                                      blank=True,
                                       on_delete=models.SET_NULL)
     message = models.TextField(blank=True)
 

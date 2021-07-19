@@ -78,6 +78,14 @@
         </div>
     </div>
 
+    <div v-if="newValue == 'failure'" class="row justify-content-start">
+        <div class="col-xxl-6 mt-5">
+            <label class="form-label">Begründung</label>
+            <textarea class="form-control" v-model="newMessage" @change="onChange"></textarea>
+            <small>Bitte geben Sie eine Begründung für den Abbruch ein.</small>
+        </div>
+    </div>
+
   </div>
 
 
@@ -115,6 +123,7 @@ export default {
       newIfOption: this.condition.if_option,
       newOption: this.condition.if_value,
       newValue: newValue,
+      newMessage: this.condition.message,
       newCondition: this.condition,
       jumpToQuestion: jumpToQuestion,
       unit: unit,
@@ -147,6 +156,7 @@ export default {
       } else {
         this.newCondition['then_value'] = this.newValue
       }
+      this.newCondition['message'] = this.newMessage
       this.$emit('conditionUpdated', this.newCondition, this.listIndex)
     }
   }
