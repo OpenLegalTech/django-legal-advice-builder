@@ -82,7 +82,7 @@ export default {
         };
         this.formData.push(emptyCondition)
       }
-    } else if (this.questiontype == "DT") {
+    } else if (this.questiontype == "DT" && this.formData.length == 0) {
         const emptyCondition = {
           if_option: "",
           question: this.questions,
