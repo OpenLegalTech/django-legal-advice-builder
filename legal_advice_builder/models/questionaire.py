@@ -9,7 +9,6 @@ class Questionaire(models.Model):
     title = models.CharField(max_length=200)
     short_title = models.CharField(max_length=50, blank=True)
     success_message = models.TextField(blank=True)
-    failure_message = models.TextField(blank=True)
     unsure_message = models.TextField(blank=True)
     order = models.IntegerField()
 

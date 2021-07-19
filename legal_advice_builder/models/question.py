@@ -48,9 +48,6 @@ class Question(MP_Node):
     help_text = models.CharField(max_length=200, blank=True)
 
     information = models.TextField(blank=True)
-    success_message = models.TextField(blank=True)
-    failure_message = models.TextField(blank=True)
-    unsure_message = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
         if self.field_type == self.YES_NO:
@@ -85,8 +82,10 @@ class Question(MP_Node):
         status_conditions = self.conditions.filter(then_value=status)
         if status_conditions.exists():
             if self.field_type in [self.SINGLE_OPTION, self.YES_NO] and option:
-                return status_conditions.filter(if_option='is',
-                                                if_value=option).exists()
+                option_conditions = status_conditions.filter(if_option='is',
+                                                             if_value=option)
+                if option_conditions.exists():
+                    return option_conditions.first()
             elif self.field_type == self.DATE and date:
                 date_conditions = status_conditions.filter(
                     if_option__in=['deadline_expired', 'deadline_running']
@@ -94,21 +93,25 @@ class Question(MP_Node):
                 for condition in date_conditions:
                     res = condition.evaluate_date(date)
                     if res:
-                        return res
+                        return condition
         return False
 
     def get_status(self, option=None, text=None, date=None):
         if option or date:
-            if self.is_status_by_conditions('success', option=option, date=date):
+            condition_success = self.is_status_by_conditions(
+                'success', option=option, date=date)
+            condition_failure = self.is_status_by_conditions(
+                'failure', option=option, date=date)
+            if condition_success:
                 return {
                     'success': True,
-                    'message': self.get_success_message(),
+                    'message': condition_success.message,
                     'next': self.next(option, text, date)
                 }
-            elif self.is_status_by_conditions('failure', option=option, date=date):
+            elif condition_failure:
                 return {
                     'failure': True,
-                    'message': self.get_failure_message(),
+                    'message': condition_failure.message,
                 }
         return {
             'ongoing': True,
@@ -122,16 +125,6 @@ class Question(MP_Node):
     @property
     def has_error(self):
         return self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS] and not self.options
-
-    def get_success_message(self):
-        if self.success_message:
-            return self.success_message
-        return self.questionaire.success_message
-
-    def get_failure_message(self):
-        if self.failure_message:
-            return self.failure_message
-        return self.questionaire.failure_message
 
     def get_unsure_message(self):
         if self.unsure_message:

@@ -173,14 +173,12 @@ class QuestionConditionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('conditions', 'failure_message')
+        fields = ('conditions',)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
         question = self.instance
-        if not question.conditions.filter(then_value='failure'):
-            del self.fields['failure_message']
 
     def save(self, commit=True):
         if self.cleaned_data['conditions']:
@@ -201,9 +199,6 @@ class QuestionConditionForm(forms.ModelForm):
                         if 'then_question' in condition:
                             condition.pop('then_question')
                     condition = Condition.objects.create(**condition)
-        if 'failure_message' in self.cleaned_data:
-            self.instance.failure_message = self.cleaned_data['failure_message']
-            self.instance.save()
         return self.instance
 
 
