@@ -10,8 +10,13 @@ from .helpers import get_single_option_question
 from .helpers import get_text_question
 
 
+def dummy_get_response(request):
+    return None
+
+
 @pytest.mark.django_db
-def test_form_wizard_returns_first_question_form(rf, law_case_factory, questionaire_factory):
+def test_form_wizard_returns_first_question_form(
+        rf, law_case_factory, questionaire_factory):
 
     class TestWizardView(FormWizardView):
 
@@ -28,7 +33,7 @@ def test_form_wizard_returns_first_question_form(rf, law_case_factory, questiona
             questionaire=qn_1)))
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     response = TestWizardView.as_view()(request)
@@ -65,7 +70,7 @@ def test_form_wizard_return_next_question_by_option(rf, law_case_factory, questi
            questionaire=qn_1)))
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
 
@@ -75,14 +80,14 @@ def test_form_wizard_return_next_question_by_option(rf, law_case_factory, questi
     }
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     response = TestWizardView.as_view()(request)
 
     praefix = 'legal_advice_builder_{}'.format(law_case.id)
     request = rf.post('/', data)
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     session_data = response._request.session.get(praefix)
@@ -127,7 +132,7 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
     )
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     response = TestWizardView.as_view()(request)
@@ -149,7 +154,7 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
     }
 
     request = rf.post('/', data)
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     request.session[praefix] = session_data
@@ -171,7 +176,7 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
     }
 
     request = rf.post('/', data)
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     request.session[praefix] = session_data
@@ -214,7 +219,7 @@ def test_form_wizard_initial_data(rf, law_case_factory, questionaire_factory):
     q1.save()
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     response = TestWizardView.as_view()(request)
@@ -256,7 +261,7 @@ def test_form_wizard_initial_options(rf, law_case_factory, questionaire_factory)
     q1.save()
 
     request = rf.get('/')
-    middleware = SessionMiddleware()
+    middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     request.session.save()
     response = TestWizardView.as_view()(request)

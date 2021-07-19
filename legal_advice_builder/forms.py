@@ -177,8 +177,8 @@ class QuestionConditionForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.fields['conditions'].widget = ConditionsWidget(question=self.instance)
-        question = self.instance
+        self.fields['conditions'].widget = ConditionsWidget(
+            question=self.instance)
 
     def save(self, commit=True):
         if self.cleaned_data['conditions']:
@@ -191,7 +191,8 @@ class QuestionConditionForm(forms.ModelForm):
                 if condition.get('then_value'):
                     if 'question' in condition.get('then_value'):
                         question_id = condition.get('then_question')
-                        question = Question.objects.filter(id=question_id).first()
+                        question = Question.objects.filter(
+                            id=question_id).first()
                         if question:
                             condition['then_value'] = 'question'
                             condition['then_question'] = question
