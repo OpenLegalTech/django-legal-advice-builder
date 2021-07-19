@@ -11,10 +11,11 @@
 
     <div v-if="questiontype == 'DT'" class="row justify-content-start">
       <div class="col-xxl-3">
-          <input type="number" min="1" max="365" @change="onChange" class="textinput textInput form-control" v-model="period">
+          <input type="number" min="1" max="365" @change="onChange" placeholder="Anzahl" class="textinput textInput form-control" v-model="period">
       </div>
       <div class="col-xxl-3">
           <select class="form-select" v-model="unit" @change="onChange">
+              <option value="" selected disabled hidden>Einheit</option>
               <option
                 v-for="optionValue, optionKey, index in periodoptions"
                 :value="optionKey"
@@ -27,6 +28,7 @@
     <div v-if="Object.keys(ifoptions).length > 1" class="row justify-content-start">
       <div class="col-xxl-6">
           <select class="form-select" v-model="newIfOption" @change="onChange">
+              <option value="" selected disabled hidden>Bedingung</option>
               <option
                 v-for="optionValue, optionKey, index in ifoptions"
                 :value="optionKey"

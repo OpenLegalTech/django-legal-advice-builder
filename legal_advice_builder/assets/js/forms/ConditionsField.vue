@@ -17,13 +17,6 @@
       :periodoptions="periodoptions"
       @conditionUpdated="conditionUpdated"
     ></Condition>
-    <div
-      v-if="this.questiontype == 'DT'"
-      class="btn btn-primary"
-      @click="addNewCondition"
-    >
-      Add condition
-    </div>
   </div>
 </template>
 
@@ -87,8 +80,16 @@ export default {
           if_value: "",
           then_value: "",
         };
-        this.formData.push(emptyCondition);
+        this.formData.push(emptyCondition)
       }
+    } else if (this.questiontype == "DT") {
+        const emptyCondition = {
+          if_option: "",
+          question: this.questions,
+          if_value: "",
+          then_value: "question",
+        };
+        this.formData.push(emptyCondition)
     }
   },
   methods: {
