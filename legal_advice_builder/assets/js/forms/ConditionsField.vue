@@ -68,7 +68,7 @@ export default {
       this.questiontype == "MO" ||
       this.questiontype == "YN"
     ) {
-      if (Object.keys(this.options).lenth > 0) {
+      if (Object.keys(this.options).length > 0) {
         for (const [key, value] of Object.entries(this.options)) {
           if (!this.usedOptions.includes(key)) {
             const emptyCondition = {
