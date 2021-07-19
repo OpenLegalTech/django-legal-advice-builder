@@ -105,7 +105,7 @@ class Question(MP_Node):
             if condition_success:
                 return {
                     'success': True,
-                    'message': condition_success.message,
+                    'message': self.questionaire.success_message,
                     'next': self.next(option, text, date)
                 }
             elif condition_failure:
