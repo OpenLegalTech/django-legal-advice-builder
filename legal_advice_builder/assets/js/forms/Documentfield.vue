@@ -34,17 +34,22 @@
       ></div>
     </div>
     <div v-if="showForm">
-      <div class="form-floating">
-        <textarea
-          ref="contentTextArea"
-          class="form-control"
-          placeholder="Leave a comment here"
-          v-model="renderedContentEdited"
-          id="floatingTextarea"
-          :style="getformStyles()"
-        ></textarea>
-        <label for="floatingTextarea">{{ this.name }}</label>
-      </div>
+      <editor
+        v-model="renderedContentEdited"
+        :init="{
+          height: this.formheight,
+          menubar: false,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount',
+          ],
+          toolbar:
+            'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | \
+           bullist numlist outdent indent | removeformat | help',
+        }"
+      />
 
       <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-1">
         <button
@@ -63,8 +68,12 @@
 </template>
 
 <script>
+import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "documentfield",
+  components: {
+    editor: Editor,
+  },
   props: {
     content: String,
     document: String,
@@ -94,14 +103,17 @@ export default {
   methods: {
     matchHeight: function () {
       if (this.$refs.contentBox) {
-        return this.$refs.contentBox.clientHeight + 40;
+        return this.$refs.contentBox.clientHeight + 100;
       }
     },
     getformStyles: function () {
       return { height: `${this.formheight}px` };
     },
     getContentStyles: function () {
-      return { "min-height": `${this.formheight}px` };
+      if (this.renderedContent == "") {
+        return { "min-height": `${this.formheight}px` };
+      }
+      return {};
     },
     getEmptyContentPlaceholder: function () {
       return `< ${this.name} >`;
@@ -110,15 +122,12 @@ export default {
       this.hover = !this.hover;
     },
     toggleShowForm: function () {
-      this.showForm = !this.showForm;
-      this.hover = false;
-      setTimeout(() => {
-        this.$refs.contentTextArea.focus();
-      });
+      this.showForm = !this.showForm
+      this.hover = false
     },
     cancel: function () {
       this.showForm = !this.showForm;
-      this.renderedContentEdited = this.renderedContent;
+      this.renderedContentEdited = this.renderedContent
     },
     save: function () {
       const data = {
