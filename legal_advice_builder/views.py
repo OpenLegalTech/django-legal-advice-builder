@@ -1,8 +1,13 @@
+import json
+
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.template import Context
+from django.template import Template
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +18,6 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
-from .forms import DocumentFieldForm
 from .forms import LawCaseCreateForm
 from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
@@ -29,6 +33,8 @@ from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
 from .models import Document
+from .models import DocumentField
+from .models import DocumentFieldType
 from .models import LawCase
 from .models import Question
 from .models import Questionaire
@@ -161,23 +167,48 @@ class DocumentFormView(TemplateView):
             return LawCase.objects.get(pk=pk).document
 
     def post(self, *args, **kwargs):
-        data = self.request.POST
-        document_form = self.get_form(data=data)
-        document_form_set = self.get_document_field_formset(data=data)
-        if document_form.is_valid():
-            self.document = document_form.save()
-        if document_form_set and document_form_set.is_valid():
-            for form in document_form_set:
-                form.save()
-        context = self.get_context_data()
-        return self.render_to_response(context)
+        data = json.loads(self.request.body)
+        content = data.get('content')
+        document = data.get('document')
+        field_type_id = data.get('fieldtypeid')
 
-    def get_document_field_formset(self, data=None):
-        if self.document:
-            DocumentFieldFormset = formset_factory(DocumentFieldForm, extra=0)
-            formset = DocumentFieldFormset(data=data,
-                                           initial=self.document.get_initial_fields_dict())
-            return formset
+        document = self.document
+        field_type = DocumentFieldType.objects.get(id=field_type_id)
+
+        field, created = DocumentField.objects.get_or_create(
+            field_type=field_type,
+            document=document
+        )
+        field.content = content
+        field.save()
+
+        return JsonResponse({'content': field.content})
+
+    def document_fields_templates(self):
+        document_fields = self.document.get_initial_fields_dict()
+        res = {}
+        for field in document_fields:
+            key = field.get('field_slug')
+            document = field.get('document')
+            field_type_id = field.get('field_type')
+            field_name = field.get('field_name')
+            content = field.get('content').replace('{{', '[[').replace('}}', ']]')
+            vue_template = Template("<document-field content='{{ content }}' name='{{ field_name }}' "
+                                    "fieldtypeid='{{ field_type_id }}' document='{{ document }}'>"
+                                    "</document-field>")
+            context = {'content': content,
+                       'document': document,
+                       'field_name': field_name,
+                       'field_type_id': field_type_id}
+            res[key] = vue_template.render(Context(context))
+        return res
+
+    def document_fields(self):
+        document_form = Template(self.get_document().document_type.document_template)
+        context = self.document_fields_templates()
+        return document_form.render(Context(
+            context
+        ))
 
     def get_questions_formset(self, data=None):
         if self.document:
@@ -197,10 +228,10 @@ class DocumentFormView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'form': self.get_form(),
-            'document_field_formset': self.get_document_field_formset(),
             'variables': self.get_variables(),
             'document': self.document,
-            'lawcase': self.document.lawcase
+            'lawcase': self.document.lawcase,
+            'document_form': self.document_fields()
         })
         return context
 

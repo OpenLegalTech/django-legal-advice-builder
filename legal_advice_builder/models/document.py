@@ -36,6 +36,8 @@ class Document(models.Model):
             initial_data.append(
                 {
                     'field_type': field_type.id,
+                    'field_slug': field_type.slug,
+                    'field_name': field_type.name,
                     'document': self.id,
                     'content': self.get_value_for_field(field_type)
                 }

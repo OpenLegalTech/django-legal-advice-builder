@@ -3,10 +3,11 @@
 
 {% block extra_scripts %}
 <script src="{% static 'placeholder_list.js' %}"></script>
+<script src="{% static 'document_field.js' %}"></script>
+<!-- <script src="{% static 'js/snippets/document_form.js' %}"></script> -->
 {% endblock %}
 
 {% block main_content %}
-
     <div class="row">
 
         <div class="col">
@@ -14,33 +15,24 @@
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'view preview' %}</a>
             </div>
             <div class="mt-3 border p-3">
-                <form method="post" class="clearfix mt-5 border p-3">
-                    <div class="mb-3 fw-bold border-bottom pb-2">
+                <div id="app">
                     {% csrf_token %}
-                    {{ document_field_formset.media }}
-                    {{ document_field_formset.management_form }}
-                    {{ form|crispy }}
-                    <div class="accordion mt-3" id="document_fields">
-                    {% for form in document_field_formset %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ forloop.counter }}">
-                            <button class="accordion-button bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
-                            {{ form.content.label }}
-                            </button>
-                        </h2>
-                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ forloop.counter }}">
-                            <div class="accordion-body">
-                                {{ form|crispy }}
-                            </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    </div>
-                        <div class="text-end mt-3">
-                            <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+                    {{ document_form | safe }}
+                </div>
+
+                <!-- <form method="post" class="clearfix mt-5 border p-3">
+                    <div class="mb-3 border-bottom pb-2">
+                        <div id="app">
+                        {% csrf_token %}
+                        {{ document_field_formset.media }}
+                        {{ document_field_formset.management_form }}
+                        {{ document_form | safe }}
                         </div>
                     </div>
-                </form>
+                    <div class="text-end mt-3">
+                        <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+                    </div>
+                </form> -->
             </div>
         </div>
 

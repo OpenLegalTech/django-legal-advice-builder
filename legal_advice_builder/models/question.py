@@ -159,7 +159,7 @@ class Question(MP_Node):
         question_key = self.short_title if self.short_title else 'question_{}'.format(self.id)
         value = ''
         if option:
-            if self.field_type == self.SINGLE_OPTION:
+            if self.field_type in [self.SINGLE_OPTION, self.YES_NO]:
                 value = self.options.get(option)
             elif self.field_type == self.MULTIPLE_OPTIONS:
                 value = [self.options.get(opt) for opt in option]
