@@ -33,24 +33,33 @@
         v-html="renderedContent"
       ></div>
     </div>
-    <div v-if="showForm">
+    <div v-if="showForm" class="bg-light p-3">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-1">
+        <span
+          @click="toggleShowForm"
+          :style="{cursor: 'pointer'}"
+          class="badge rounded-pill bg-white text-body mb-2"
+        >
+          <i class="bi bi-x-circle"></i> done
+        </span>
+      </div>
       <editor
         v-model="renderedContentEdited"
         :init="{
           height: this.formheight,
           menubar: false,
+          entity_encoding: 'raw',
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
             'insertdatetime media table paste code help wordcount',
           ],
           toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
+            'undo redo | formatselect | bold italic | \
            alignleft aligncenter alignright alignjustify | \
            bullist numlist outdent indent | removeformat | help',
         }"
       />
-
       <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-1">
         <button
           class="btn btn-primary btn-sm me-md-2"
@@ -122,12 +131,12 @@ export default {
       this.hover = !this.hover;
     },
     toggleShowForm: function () {
-      this.showForm = !this.showForm
-      this.hover = false
+      this.showForm = !this.showForm;
+      this.hover = false;
     },
     cancel: function () {
       this.showForm = !this.showForm;
-      this.renderedContentEdited = this.renderedContent
+      this.renderedContentEdited = this.renderedContent;
     },
     save: function () {
       const data = {

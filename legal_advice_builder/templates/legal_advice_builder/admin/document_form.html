@@ -5,43 +5,30 @@
 <script src="{% static 'placeholder_list.js' %}"></script>
 <script src="{% static 'document_field.js' %}"></script>
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
-<!-- <script src="{% static 'js/snippets/document_form.js' %}"></script> -->
 {% endblock %}
 
 {% block main_content %}
     <div class="row">
 
         <div class="col">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
+            <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'view preview' %}</a>
-            </div>
+            </div> -->
             <div class="mt-3 border p-3">
                 <div id="app">
                     {% csrf_token %}
                     {{ document_form | safe }}
                 </div>
-
-                <!-- <form method="post" class="clearfix mt-5 border p-3">
-                    <div class="mb-3 border-bottom pb-2">
-                        <div id="app">
-                        {% csrf_token %}
-                        {{ document_field_formset.media }}
-                        {{ document_field_formset.management_form }}
-                        {{ document_form | safe }}
-                        </div>
-                    </div>
-                    <div class="text-end mt-3">
-                        <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
-                    </div>
-                </form> -->
             </div>
         </div>
 
         <div class="col">
-            <div id="placeholders">
-                <placeholders
-                    :variables="{{ variables }}"
-                ></placeholders>
+            <div class="mt-3 sticky-top">
+                <div id="placeholders" class="sticky-top pt-3">
+                    <placeholders
+                        :variables="{{ variables }}"
+                    ></placeholders>
+                </div>
             </div>
         </div>
     </div>
