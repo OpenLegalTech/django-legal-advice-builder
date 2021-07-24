@@ -24,6 +24,22 @@ class Questionaire(models.Model):
     def get_last_question(self):
         return self.questions.last()
 
+    def add_new_after_question(self, data, parent_question=None):
+        from . import Question
+        if parent_question:
+            question = self.questions.get(id=parent_question)
+            children = question.get_children()
+            new_question = question.add_child(**data)
+            for child in children:
+                if not child == new_question:
+                    child.move(new_question, pos='last-child')
+                    child.refresh_from_db()
+            return new_question
+        else:
+            return Question.add_root(**data)
+
+
+
     def next(self):
         return Questionaire.objects.filter(
             law_case=self.law_case, order__gt=self.order).first()

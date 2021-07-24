@@ -57,6 +57,20 @@ class Question(MP_Node):
             }
         super().save(*args, **kwargs)
 
+    def prepare_for_delete(self):
+        if self.is_root():
+            child = self.get_children().first()
+            if child:
+                new_root = Question.add_root()
+                child.move(new_root, pos='first-child')
+                child.refresh_from_db()
+        else:
+            new_parent = self.get_parent()
+            children = self.get_children()
+            for child in children:
+                child.move(new_parent, pos='last-child')
+                child.refresh_from_db()
+
     def next(self, option=None, text=None, date=None):
         if option or date:
             if self.is_status_by_conditions('success', option, date):

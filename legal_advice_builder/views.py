@@ -299,17 +299,10 @@ class QuestionaireDetail(DetailView):
             if form.is_valid():
                 data = form.cleaned_data
                 parent_question = data.pop('parent_question')
-                data['questionaire'] = self.get_object()
-                if parent_question:
-                    question = Question.objects.get(id=parent_question)
-                    children = question.get_children()
-                    new_question = question.add_child(**data)
-                    for child in children:
-                        if not child == new_question:
-                            child.move(new_question, pos='last-child')
-                            child.refresh_from_db()
-                else:
-                    new_question = Question.add_root(**data)
+                questionaire = self.get_object()
+                data['questionaire'] = questionaire
+                new_question = questionaire.add_new_after_question(
+                    data, parent_question=parent_question)
                 return HttpResponseRedirect(reverse(
                     'legal_advice_builder:question-update',
                     args=[new_question.id]))
@@ -340,30 +333,18 @@ class QuestionDelete(DeleteView):
     success_message = _('Question {} was removed successfully')
 
     def get_success_url(self):
-        return reverse('legal_advice_builder:questionaire-detail', args=[self.questionaire.id])
+        return reverse('legal_advice_builder:questionaire-detail',
+                       args=[self.questionaire.id])
 
     def get(self, *args, **kwargs):
         return self.post(*args, **kwargs)
 
-    def update_tree(self, question):
-        if question.is_root():
-            child = question.get_children().first()
-            if child:
-                new_root = Question.add_root()
-                child.move(new_root, pos='first-child')
-                child.refresh_from_db()
-        else:
-            new_parent = question.get_parent()
-            children = question.get_children()
-            for child in children:
-                child.move(new_parent, pos='last-child')
-                child.refresh_from_db()
-
     def delete(self, request, *args, **kwargs):
         question = self.get_object()
         self.questionaire = question.questionaire
-        self.update_tree(question)
-        messages.success(self.request, self.success_message.format(question.text))
+        question.prepare_for_delete()
+        messages.success(self.request,
+                         self.success_message.format(question.text))
         return super().delete(request, *args, **kwargs)
 
 
@@ -375,7 +356,8 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
 
     def get_success_url(self):
         return reverse(
-            'legal_advice_builder:question-update', args=[self.get_object().id])
+            'legal_advice_builder:question-update',
+            args=[self.get_object().id])
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('logic'):
@@ -397,13 +379,18 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        questionaire = self.object.questionaire
         context.update({
-            'lawcase': self.object.questionaire.law_case,
-            'questionaire': self.object.questionaire,
-            'current_step': self.object.questionaire.law_case.get_index_of_questionaire(self.object.questionaire),
+            'lawcase': questionaire.law_case,
+            'questionaire': questionaire,
+            'current_step': questionaire.law_case.get_index_of_questionaire(
+                questionaire),
             'condition_form': QuestionConditionForm(instance=self.object),
-            'question_create_form': QuestionCreateForm(parent_question=self.get_object().id),
-            'question_preview_form': QuestionForm(initial={'question': self.get_object().id}),
-            'questionaire_update_form': QuestionaireForm(instance=self.get_object().questionaire),
+            'question_create_form': QuestionCreateForm(
+                parent_question=self.get_object().id),
+            'question_preview_form': QuestionForm(
+                initial={'question': self.get_object().id}),
+            'questionaire_update_form': QuestionaireForm(
+                instance=self.get_object().questionaire),
         })
         return context
