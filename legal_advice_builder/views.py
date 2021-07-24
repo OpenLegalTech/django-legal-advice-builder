@@ -90,12 +90,14 @@ class FormWizardView(TemplateView,
             if self.allow_download:
                 if self.answer:
                     self.save_document_form(self.request.POST, self.answer)
-                return self.render_download_response(answers, answer=self.answer)
+                return self.render_download_response(
+                    answers, answer=self.answer)
             else:
                 return HttpResponseNotAllowed(['POST'])
 
         elif self.answer:
-            return self.render_document_form(self.request.POST, self.answer, **kwargs)
+            return self.render_document_form(
+                self.request.POST, self.answer, **kwargs)
 
         else:
             return self.validate_form_and_get_next(question=question,

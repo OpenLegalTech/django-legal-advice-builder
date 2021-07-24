@@ -90,6 +90,14 @@ export default {
           then_value: "question",
         };
         this.formData.push(emptyCondition)
+    } else if (this.questiontype == "TX" || this.questiontype == "SL") {
+        const emptyCondition = {
+          if_option: "is",
+          question: this.questions,
+          if_value: "",
+          then_value: "question",
+        };
+        this.formData.push(emptyCondition)
     }
   },
   methods: {

@@ -72,16 +72,16 @@ class Question(MP_Node):
                 child.refresh_from_db()
 
     def next(self, option=None, text=None, date=None):
-        if option or date:
-            if self.is_status_by_conditions('success', option, date):
+        if option or date or text:
+            if self.is_status_by_conditions('success', option, date, text):
                 if self.questionaire.next():
                     return self.questionaire.next().get_first_question()
                 else:
                     return None
-            if option:
+            if option or text:
                 conditions = self.conditions.filter(
                     if_option='is',
-                    if_value=option,
+                    if_value__in=[option, text],
                     then_value='question',
                     then_question__isnull=False)
                 if conditions:
@@ -92,12 +92,17 @@ class Question(MP_Node):
         elif self.questionaire.next():
             return self.questionaire.next().get_first_question()
 
-    def is_status_by_conditions(self, status, option=None, date=None):
+    def is_status_by_conditions(self, status, option=None,
+                                date=None, text=None):
         status_conditions = self.conditions.filter(then_value=status)
         if status_conditions.exists():
-            if self.field_type in [self.SINGLE_OPTION, self.YES_NO] and option:
-                option_conditions = status_conditions.filter(if_option='is',
-                                                             if_value=option)
+            if self.field_type in [self.SINGLE_OPTION,
+                                   self.YES_NO, self.TEXT,
+                                   self.SINGLE_LINE] and (option or text):
+                types = [option, text]
+                option_conditions = status_conditions.filter(
+                    if_option='is',
+                    if_value__in=types)
                 if option_conditions.exists():
                     return option_conditions.first()
             elif self.field_type == self.DATE and date:
@@ -112,11 +117,11 @@ class Question(MP_Node):
 
     def get_status(self, option=None, text=None, date=None):
         next = self.next(option, text)
-        if option or date:
+        if option or date or text:
             condition_success = self.is_status_by_conditions(
-                'success', option=option, date=date)
+                'success', option=option, date=date, text=text)
             condition_failure = self.is_status_by_conditions(
-                'failure', option=option, date=date)
+                'failure', option=option, date=date, text=text)
             if condition_success or (not next and not condition_failure):
                 return {
                     'success': True,
@@ -159,7 +164,11 @@ class Question(MP_Node):
         return {}
 
     def get_if_text_by_type(self):
-        if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS, self.YES_NO]:
+        if self.field_type in [self.SINGLE_OPTION,
+                               self.MULTIPLE_OPTIONS,
+                               self.YES_NO,
+                               self.TEXT,
+                               self.SINGLE_LINE]:
             return _('If the answer to this question is:')
         elif self.field_type == self.DATE:
             return _('If after the date given as answer a timespan of:')
