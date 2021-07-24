@@ -117,7 +117,7 @@ class Question(MP_Node):
                 'success', option=option, date=date)
             condition_failure = self.is_status_by_conditions(
                 'failure', option=option, date=date)
-            if condition_success or not next:
+            if condition_success or (not next and not condition_failure):
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,
