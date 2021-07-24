@@ -44,6 +44,7 @@
             </ul>
         </div>
 
+        {% if lawcase.document %}
         <div class="card mt-3 ">
             <div class="card-header">
                 {% trans 'Document' %}
@@ -52,6 +53,7 @@
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item"><i class="bi bi-file-earmark-text"></i> {% trans 'Template' %}</a>
             </ul>
         </div>
+        {% endif %}
         {% endblock %}
         </div>
     </div>

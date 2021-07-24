@@ -111,12 +111,13 @@ class Question(MP_Node):
         return False
 
     def get_status(self, option=None, text=None, date=None):
+        next = self.next(option, text)
         if option or date:
             condition_success = self.is_status_by_conditions(
                 'success', option=option, date=date)
             condition_failure = self.is_status_by_conditions(
                 'failure', option=option, date=date)
-            if condition_success:
+            if condition_success or not next:
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,
@@ -129,7 +130,7 @@ class Question(MP_Node):
                 }
         return {
             'ongoing': True,
-            'next': self.next(option, text)
+            'next': next
         }
 
     @property

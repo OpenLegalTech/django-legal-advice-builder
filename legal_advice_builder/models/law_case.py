@@ -31,7 +31,8 @@ class LawCase(models.Model):
         return self.get_first_questionaire()
 
     def get_index_of_questionaire(self, questionaire):
-        questionaire_ids = list(self.questionaire_set.values_list('id', flat=True))
+        questionaire_ids = list(
+            self.questionaire_set.values_list('id', flat=True))
         if questionaire.id in questionaire_ids:
             return questionaire_ids.index(questionaire.id)
 
@@ -39,8 +40,14 @@ class LawCase(models.Model):
         return self.questionaire_set.count()
 
     def generate_default_questionaires(self):
+        questionaire_list = [
+            {'title': _('Questionaire 1')},
+        ]
         from .questionaire import Questionaire
-        questionaire_list = [{'title': _('verify')}, {'title': _('personal data')}]
+        if self.document:
+            questionaire_list = [
+                {'title': _('verify')},
+                {'title': _('personal data')}]
         for index, questionaire in enumerate(questionaire_list):
             Questionaire.objects.create(
                 law_case=self,

@@ -232,7 +232,8 @@ class QuestionCreateForm(forms.ModelForm):
 
 
 class LawCaseCreateForm(forms.ModelForm):
-    document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all())
+    document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all(),
+                                           required=False)
 
     class Meta:
         model = LawCase

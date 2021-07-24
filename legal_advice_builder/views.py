@@ -263,13 +263,15 @@ class LawCaseList(ListView, FormView):
     model = LawCase
 
     def form_valid(self, form):
+        document = None
         document_type = form.cleaned_data.pop('document_type')
         title = form.cleaned_data.get('title')
         description = form.cleaned_data.get('description')
-        document = Document.objects.create(
-            document_type=document_type,
-            name=title,
-        )
+        if document_type:
+            document = Document.objects.create(
+                document_type=document_type,
+                name=title,
+            )
         law_case = LawCase.objects.create(
             title=title,
             document=document,
