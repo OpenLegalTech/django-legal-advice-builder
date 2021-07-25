@@ -1,0 +1,98 @@
+{% extends 'legal_advice_builder/admin/base.html' %}
+{% load i18n crispy_forms_tags %}
+
+{% block navbar %}
+<a class="navbar-brand" href="{% url 'legal_advice_builder:law-case-list' %}">
+    <i class="bi bi-card-checklist"></i> {% trans 'All forms' %}
+</a>
+<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">{{ law_case.title }}</a>
+        </li>
+    </ul>
+</div>
+<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+            <a class="btn btn-primary" href="{% url 'legal_advice_builder:questionaire-detail' law_case.first_questionaire.id %}"><i class="bi bi-pencil"></i> {% trans 'back to edit' %}</a>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5 mt-5" style="min-height: 500px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3>{{ law_case.title }}</h3>
+
+            {% if form %}
+                <form method="post" class="clearfix mt-5 border p-3">
+                    {% if step_count > 1 %}
+                    <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1}} von {{ step_count }}: {{ question.questionaire }}</div>
+                    {% endif %}
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="text-end mt-3">
+                        <input class="btn btn-primary btn-lg pull-right" type="submit" value="Weiter" />
+                    </div>
+                </form>
+                {% if question.information %}
+                <div class="card mt-5 alert-info">
+                    <div class="card-body">
+                        {{ question.information }}
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            {% if success %}
+                <div class="alert alert-success mt-5" role="alert">
+                    <div class="mb-3 fw-bold pb-2">Schritt {{ current_step|add:1}} von {{ step_count }}: {{ question.questionaire }} <i class="bi bi-check-lg"></i></div>
+                    <div>{{ message }}</div>
+                </div>
+                {% if next %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-3">
+                            <button class="btn btn-primary btn-lg">
+                            <input type="hidden" name="next" value="{{ next.id }}" />
+                            Weiter
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+            {% if failure %}
+                <div class="alert alert-danger mt-5" role="alert">
+                    <div class="mb-3 fw-bold pb-2">Schritt {{ current_step|add:1}} von {{ step_count }}: {{ question.questionaire }} <i class="bi bi-x-lg"></i></div>
+                    <div>{{ message }}</div>
+                </div>
+            {% endif %}
+
+            {% if answer_form %}
+                {% if law_case.extra_help %}
+                    <div class="alert alert-success mt-5" role="alert">
+                    {{ law_case.extra_help }}
+                    </div>
+                {% endif %}
+                {{ answer_form.media }}
+                <form method="post">
+                {% csrf_token %}
+                {{ answer_form|crispy }}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-3">
+                    <input class="btn btn-primary btn-lg" type="submit" name="download" value="download" />
+                    <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern" />
+                </div>
+                </form>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

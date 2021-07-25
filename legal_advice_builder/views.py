@@ -300,6 +300,14 @@ class LawCaseList(ListView, FormView):
         return context
 
 
+class LawCasePreview(FormWizardView):
+    template_name = 'legal_advice_builder/admin/form_wizard_preview.html'
+
+    def get_lawcase(self):
+        lawcase_id = self.kwargs.get('pk')
+        return LawCase.objects.get(id=lawcase_id)
+
+
 class LawCaseEdit(UpdateView):
     model = LawCase
     form_class = LawCaseUpdateForm
