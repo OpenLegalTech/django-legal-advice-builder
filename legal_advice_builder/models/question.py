@@ -163,6 +163,9 @@ class Question(MP_Node):
             }
         return {}
 
+    def clean_up_conditions(self, options):
+        self.conditions.exclude(if_value__in=options).delete()
+
     def get_if_text_by_type(self):
         if self.field_type in [self.SINGLE_OPTION,
                                self.MULTIPLE_OPTIONS,

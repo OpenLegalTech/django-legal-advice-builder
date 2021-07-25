@@ -214,6 +214,12 @@ class QuestionUpdateForm(forms.ModelForm):
                                        Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
 
+    def save(self, commit=True):
+        options = self.cleaned_data.get('options').keys()
+        question = super().save(commit=commit)
+        question.clean_up_conditions(options)
+        return question
+
 
 class QuestionCreateForm(forms.ModelForm):
     parent_question = fields.CharField(required=False,
