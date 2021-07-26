@@ -1,5 +1,6 @@
 import factory
 
+from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Document
 from legal_advice_builder.models import DocumentFieldType
 from legal_advice_builder.models import DocumentType
@@ -43,6 +44,14 @@ class LawCaseFactory(factory.django.DjangoModelFactory):
         model = LawCase
 
     title = factory.Faker('text')
+
+
+class AnswerFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = Answer
+
+    law_case = factory.SubFactory(LawCaseFactory)
 
 
 class QuestionaireFactory(factory.django.DjangoModelFactory):
