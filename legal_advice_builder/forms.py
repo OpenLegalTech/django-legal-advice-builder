@@ -18,6 +18,8 @@ from .models import Question
 from .models import Questionaire
 from .widgets import ChoiceWidget
 from .widgets import ConditionsWidget
+from .widgets import CustomCheckboxSelect
+from .widgets import CustomRadioSelect
 
 
 class DispatchQuestionFieldTypeMixin:
@@ -26,7 +28,7 @@ class DispatchQuestionFieldTypeMixin:
         if question.field_type in [question.SINGLE_OPTION, question.YES_NO]:
             form_fields['option'] = fields.ChoiceField(
                 choices=options.items(),
-                widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+                widget=CustomRadioSelect,
                 required=required,
                 label=question.text,
                 help_text=question.help_text
@@ -34,7 +36,7 @@ class DispatchQuestionFieldTypeMixin:
         elif question.field_type == question.MULTIPLE_OPTIONS:
             form_fields['option'] = fields.MultipleChoiceField(
                 choices=options.items(),
-                widget=forms.CheckboxSelectMultiple,
+                widget=CustomCheckboxSelect,
                 required=required,
                 label=question.text,
                 help_text=question.help_text
@@ -61,6 +63,14 @@ class DispatchQuestionFieldTypeMixin:
                 widget=forms.DateTimeInput(attrs={'type': 'date',
                                                   'class': 'form-control'})
             )
+
+
+class FormControllClassMixin:
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs = {'class': 'form-control'}
 
 
 class WizardForm(forms.Form, DispatchQuestionFieldTypeMixin):
@@ -199,7 +209,7 @@ class QuestionConditionForm(forms.ModelForm):
         return self.instance
 
 
-class QuestionUpdateForm(forms.ModelForm):
+class QuestionUpdateForm(FormControllClassMixin, forms.ModelForm):
 
     class Meta:
         model = Question
@@ -221,7 +231,7 @@ class QuestionUpdateForm(forms.ModelForm):
         return question
 
 
-class QuestionCreateForm(forms.ModelForm):
+class QuestionCreateForm(FormControllClassMixin, forms.ModelForm):
     parent_question = fields.CharField(required=False,
                                        widget=forms.HiddenInput)
 
@@ -237,7 +247,7 @@ class QuestionCreateForm(forms.ModelForm):
             self.fields['parent_question'].initial = self.parent_question
 
 
-class LawCaseCreateForm(forms.ModelForm):
+class LawCaseCreateForm(FormControllClassMixin, forms.ModelForm):
     document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all(),
                                            required=False)
 
@@ -246,14 +256,14 @@ class LawCaseCreateForm(forms.ModelForm):
         fields = ('title', 'document_type', 'description')
 
 
-class LawCaseUpdateForm(forms.ModelForm):
+class LawCaseUpdateForm(FormControllClassMixin, forms.ModelForm):
 
     class Meta:
         model = LawCase
         fields = ('title', 'description')
 
 
-class QuestionaireForm(forms.ModelForm):
+class QuestionaireForm(FormControllClassMixin, forms.ModelForm):
 
     class Meta:
         model = Questionaire

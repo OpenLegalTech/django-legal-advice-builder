@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/law_case_detail.html' %}
-{% load static crispy_forms_tags i18n %}
+{% load static i18n %}
 
 {% block extra_scripts %}
 <script src="{% static 'js/snippets/toggle_form.js' %}"></script>
@@ -37,14 +37,14 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col m-2 p-2">
-                            {{ questionaire_update_form.title | as_crispy_field }}
+                            {% include 'legal_advice_builder/admin/form_field.html' with field=questionaire_update_form.title %}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col border m-2 p-2">
                             <small>{{ questionaire_update_form.success_message.help_text }}</small>
                             <div class="my-2">
-                                {{ questionaire_update_form.success_message | as_crispy_field }}
+                                {% include 'legal_advice_builder/admin/form_field.html' with field=questionaire_update_form.success_message %}
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
         <form action="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}" method="post">
             <div class="modal-body">
             {% csrf_token %}
-            {{ question_create_form | crispy }}
+            {% include 'legal_advice_builder/admin/form.html' with form=question_create_form %}
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>

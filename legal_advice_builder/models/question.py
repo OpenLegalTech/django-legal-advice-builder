@@ -31,7 +31,8 @@ class Question(MP_Node):
         MULTIPLE_OPTIONS: 'bi bi-ui-checks',
         SINGLE_LINE: 'bi bi-cursor-text',
         FILE_UPLOAD: 'bi bi-file-arrow-up',
-        DATE: 'bi bi-calendar-event'
+        DATE: 'bi bi-calendar-event',
+        YES_NO: 'bi bi-circle-half'
     }
 
     questionaire = models.ForeignKey(Questionaire,
@@ -122,7 +123,7 @@ class Question(MP_Node):
                 'success', option=option, date=date, text=text)
             condition_failure = self.is_status_by_conditions(
                 'failure', option=option, date=date, text=text)
-            if condition_success or (not next and not condition_failure):
+            if condition_success or (not next and not condition_failure and not self.questionaire.law_case.document):
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,

@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/questionaire_detail.html' %}
-{% load crispy_forms_tags i18n %}
+{% load i18n %}
 
 {% block current_form %}
 <ul class="nav nav-pills justify-content-end" id="question" role="tablist">
@@ -29,7 +29,7 @@
                     <div class="col">
                         <div class="clearfix border p-3">
                             <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1 }} von {{ lawcase.questionaire_count }}: {{ question.questionaire }}</div>
-                            {{ question_preview_form | crispy }}
+                            {% include 'legal_advice_builder/admin/form.html' with form=question_preview_form %}
                             <div class="text-end mt-3">
                                 <input class="btn btn-primary btn-sm pull-right" type="submit" value="Weiter" />
                             </div>
@@ -50,14 +50,15 @@
         <form class=" p-3 border border-primary border-5" method="post">
             {% csrf_token %}
             <div class="my-3">
-                {{ form.text | as_crispy_field }}
+                {% include 'legal_advice_builder/admin/form_field.html' with field=form.text %}
             </div>
             <div class="my-3">
-                {{ form.field_type | as_crispy_field }}
+                {% include 'legal_advice_builder/admin/form_field.html' with field=form.type %}
             </div>
 
             {% if form.options %}
-            <div class="my-3">{{ form.options | as_crispy_field }}</div>
+            <label>{{ form.options.label }}</label>
+            <div class="my-3">{{ form.options }}</div>
                 {% if question.has_error %}
                 <div class="alert alert-danger">
                     <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
@@ -67,9 +68,7 @@
             {% endif %}
             {{ form.media }}
 
-            <div class="my-3">
-                {{ form.information | as_crispy_field }}
-            </div>
+            {% include 'legal_advice_builder/admin/form_field.html' with field=form.information %}
             <div class="text-end mt-3">
                 <input class="btn btn-primary btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
             </div>
@@ -78,7 +77,7 @@
     <div class="tab-pane fade" id="logic" role="tabpanel" aria-labelledby="logic-tab">
         <form class=" p-3 border border-primary border-5" method="post">
             {% csrf_token %}
-            {{ condition_form | crispy }}
+            {{ condition_form }}
             {{ condition_form.media }}
             <div class="text-end mt-3">
                 <input class="btn btn-primary btn-sm pull-right" type="submit" name="logic" value="{% trans 'Save' %}" />

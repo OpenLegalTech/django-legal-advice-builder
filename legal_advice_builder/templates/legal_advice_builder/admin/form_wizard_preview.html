@@ -1,5 +1,5 @@
 {% extends 'legal_advice_builder/admin/base.html' %}
-{% load i18n crispy_forms_tags %}
+{% load i18n %}
 
 {% block navbar %}
 <a class="navbar-brand" href="{% url 'legal_advice_builder:law-case-list' %}">
@@ -33,7 +33,7 @@
                     <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1}} von {{ step_count }}: {{ question.questionaire }}</div>
                     {% endif %}
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    {% include 'legal_advice_builder/admin/form.html' with form=form %}
                     <div class="text-end mt-3">
                         <input class="btn btn-primary btn-lg pull-right" type="submit" value="Weiter" />
                     </div>
@@ -81,7 +81,7 @@
                 {{ answer_form.media }}
                 <form method="post">
                 {% csrf_token %}
-                {{ answer_form|crispy }}
+                {% include 'legal_advice_builder/admin/form.html' with form=answer_form %}
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-3">
                     <input class="btn btn-primary btn-lg" type="submit" name="download" value="download" />
                     <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern" />

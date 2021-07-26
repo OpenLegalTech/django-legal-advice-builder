@@ -75,3 +75,11 @@ class ConditionsWidget(forms.TextInput):
             }
         })
         return context
+
+
+class CustomRadioSelect(forms.RadioSelect):
+    template_name = 'legal_advice_builder/admin/custom_select.html'
+
+
+class CustomCheckboxSelect(forms.CheckboxSelectMultiple):
+    template_name = 'legal_advice_builder/admin/custom_select.html'
