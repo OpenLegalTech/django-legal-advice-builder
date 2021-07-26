@@ -9,7 +9,7 @@
     </div>
     <table class="table">
       <tbody>
-        <template v-for="(value, name, index) in placeholders">
+        <template v-for="(value, name, index) in searchlist">
           <tr :key="`${index}`" v-if="value.indexOf(searchString) > -1">
             <td>
               {{ value }}
@@ -26,11 +26,11 @@
 export default {
   name: "placeholders",
   props: {
-    variables: Object,
+    placeholders: Object,
   },
   data: function () {
     return {
-      placeholders: this.variables,
+      searchlist: this.placeholders,
       searchString: ''
     }
   },

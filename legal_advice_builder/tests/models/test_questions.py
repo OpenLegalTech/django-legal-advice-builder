@@ -5,44 +5,10 @@ from freezegun import freeze_time
 
 from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Question
-from legal_advice_builder.models import Questionaire
 
-from .helpers import get_date_question
-from .helpers import get_single_option_question
-from .helpers import get_text_question
-
-
-@pytest.mark.django_db
-def test_lawcase(law_case_factory, questionaire_factory):
-
-    law_case = law_case_factory()
-    questionaire_1 = questionaire_factory(
-        law_case=law_case,
-        order=1
-    )
-    questionaire_factory(
-        law_case=law_case,
-        order=2
-    )
-    assert law_case.get_first_questionaire() == questionaire_1
-
-
-@pytest.mark.django_db
-def test_questionaires(law_case_factory, questionaire_factory):
-
-    law_case = law_case_factory()
-    questionaire_1 = questionaire_factory(
-        law_case=law_case,
-        order=1
-    )
-    questionaire_2 = questionaire_factory(
-        law_case=law_case,
-        order=2
-    )
-    questionaire_factory()
-    assert Questionaire.objects.all().count() == 3
-    assert questionaire_1.next() == questionaire_2
-    assert questionaire_2.next() is None
+from ..helpers import get_date_question
+from ..helpers import get_single_option_question
+from ..helpers import get_text_question
 
 
 @pytest.mark.django_db

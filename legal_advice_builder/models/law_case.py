@@ -55,11 +55,9 @@ class LawCase(models.Model):
                 order=index
             )
 
-    def get_rendered_template(self, answers):
-        return self.document.template_with_answers(answers)
-
     @property
-    def variables_for_template(self):
+    def placeholders_for_template(self):
+        """Returns placeholders used in documentform for vue component."""
         from .question import Question
         variables = {}
         questions = Question.objects.filter(questionaire__law_case=self)

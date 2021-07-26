@@ -222,15 +222,15 @@ class DocumentFormView(TemplateView):
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)
 
-    def get_variables(self):
+    def get_placeholders(self):
         if self.document:
-            return self.document.lawcase.variables_for_template
+            return self.document.lawcase.placeholders_for_template
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             'form': self.get_form(),
-            'variables': self.get_variables(),
+            'placeholders': self.get_placeholders(),
             'document': self.document,
             'lawcase': self.document.lawcase,
             'document_form': self.document_fields()

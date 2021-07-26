@@ -29,4 +29,4 @@ class Answer(models.Model):
 
     @property
     def template(self):
-        return self.law_case.get_rendered_template(self.answers)
+        return self.law_case.document.template_with_answers(self.answers)
