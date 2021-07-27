@@ -24,7 +24,7 @@ def get_single_option_question(questionaire=None, short_title=None):
     return res_dict
 
 
-def get_text_question(questionaire=None):
+def get_text_question(questionaire=None, short_title=None):
     res_dict = {
         'text': factory.Faker('text'),
         'field_type': Question.TEXT,
@@ -32,6 +32,10 @@ def get_text_question(questionaire=None):
     if questionaire:
         res_dict.update({
             'questionaire': questionaire
+        })
+    if short_title:
+        res_dict.update({
+            'short_title': short_title
         })
     return res_dict
 

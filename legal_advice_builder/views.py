@@ -212,13 +212,6 @@ class DocumentFormView(TemplateView):
             context
         ))
 
-    def get_questions_formset(self, data=None):
-        if self.document:
-            QuestionFormset = formset_factory(QuestionForm, extra=0)
-            formset = QuestionFormset(data=data,
-                                      initial=self.document.get_initial_questions_dict())
-            return formset
-
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)
 

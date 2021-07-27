@@ -3,6 +3,7 @@ import factory
 from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Document
+from legal_advice_builder.models import DocumentField
 from legal_advice_builder.models import DocumentFieldType
 from legal_advice_builder.models import DocumentType
 from legal_advice_builder.models import LawCase
@@ -37,6 +38,16 @@ class DocumentFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker('text')
     document_type = factory.SubFactory(DocumentTypeFactory)
+
+
+class DocumentFieldFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = DocumentField
+
+    field_type = factory.SubFactory(DocumentFieldTypeFactory)
+    document = factory.SubFactory(DocumentFactory)
+    content = factory.Faker('text')
 
 
 class LawCaseFactory(factory.django.DjangoModelFactory):
