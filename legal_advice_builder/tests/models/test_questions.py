@@ -171,3 +171,20 @@ def test_prepare_for_delete():
     assert not q3.get_children()
     assert q2.get_children().last() == q4
     assert Question.objects.get(id=q4.id).get_parent() == q2
+
+
+@pytest.mark.django_db
+def test_icon():
+    q1 = Question.add_root(**get_single_option_question())
+    for type in q1.FIELD_TYPES:
+        q1.field_type = type[0]
+        q1.save()
+        assert q1.icon is not None
+
+
+@pytest.mark.django_db
+def test_erros():
+    q1 = Question.add_root(**get_single_option_question())
+    q1.options = {}
+    q1.save()
+    assert q1.has_error
