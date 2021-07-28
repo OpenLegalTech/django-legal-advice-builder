@@ -13,3 +13,6 @@ __pycache__/
 /Legal_Advice_Builder.egg-info/*
 /Django_Legal_Advice_Builder.egg-info/*
 /node_modules/
+
+.coverage
+/htmlcov/*

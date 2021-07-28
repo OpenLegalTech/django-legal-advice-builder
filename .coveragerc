@@ -1,0 +1,11 @@
+[run]
+source = legal_advice_builder
+
+[report]
+omit =
+    */management/*
+    */migrations/*
+    */tests/*
+exclude_lines =
+    raise Exception
+    except ImportError:

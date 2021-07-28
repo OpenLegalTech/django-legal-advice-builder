@@ -8,6 +8,14 @@ from ..helpers import get_text_question
 
 
 @pytest.mark.django_db
+def test_str(law_case_factory):
+    law_case = law_case_factory(
+        title='Law Case'
+    )
+    assert str(law_case) == 'Law Case'
+
+
+@pytest.mark.django_db
 def test_get_first_questionaire(law_case_factory, questionaire_factory):
 
     law_case = law_case_factory()

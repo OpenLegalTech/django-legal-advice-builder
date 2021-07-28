@@ -9,6 +9,17 @@ from legal_advice_builder.models import Question
 from ..helpers import get_date_question
 from ..helpers import get_single_option_question
 from ..helpers import get_text_question
+from ..helpers import get_yes_no_question
+
+
+@pytest.mark.django_db
+def test_save(questionaire_factory):
+    qn = questionaire_factory()
+    q1 = Question.add_root(
+        **(get_yes_no_question(
+            questionaire=qn)))
+    q1.save()
+    assert list(q1.options.keys()) == ['yes', 'no']
 
 
 @pytest.mark.django_db
@@ -136,3 +147,27 @@ def test_question_conditions_date_deadline_expired():
 
         inserted_date = datetime.date(2020, 1, 21)
         assert question.is_status_by_conditions('failure', date=inserted_date)
+
+
+@pytest.mark.django_db
+def test_prepare_for_delete():
+
+    q1 = Question.add_root(
+        **(get_text_question()))
+    q1.add_child(
+        **(get_text_question()))
+
+    q1.prepare_for_delete()
+    assert not q1.get_children()
+
+    q2 = Question.add_root(
+        **(get_text_question()))
+    q3 = q2.add_child(
+        **(get_text_question()))
+    q4 = q3.add_child(
+        **(get_text_question()))
+
+    q3.prepare_for_delete()
+    assert not q3.get_children()
+    assert q2.get_children().last() == q4
+    assert Question.objects.get(id=q4.id).get_parent() == q2

@@ -6,6 +6,12 @@ from ..helpers import get_text_question
 
 
 @pytest.mark.django_db
+def test_string(document_factory):
+    document = document_factory(name='Document')
+    assert str(document) == 'Document'
+
+
+@pytest.mark.django_db
 def test_get_value_for_field(document_type_factory,
                              document_field_type_factory,
                              document_field_factory,
@@ -76,14 +82,21 @@ def test_get_initial_questions_dict(law_case_factory,
                                     document_factory):
 
     document_type = document_type_factory(
+        name='Letter',
         document_template='<div>{{ first_name }} {{ last_name }}</div>'
     )
 
+    assert str(document_type) == 'Letter'
+
     field_type_1 = document_field_type_factory(
         document_type=document_type,
-        name='First Name',
-        slug='first_name'
+        name='First Name'
     )
+    field_type_1.slug = ''
+    field_type_1.save()
+
+    assert str(field_type_1) == 'First Name'
+    assert field_type_1.slug == 'first_name'
 
     field_type_2 = document_field_type_factory(
         document_type=document_type,
@@ -114,25 +127,34 @@ def test_get_initial_questions_dict(law_case_factory,
         ))
     )
 
+    q2.add_child(
+        **(get_text_question(
+            short_title='city',
+            questionaire=questionaire_1
+        ))
+    )
+
     document.sample_answers = [
         {"question": str(q1.id), "text": "Mickey"},
         {"question": str(q2.id), "text": "Mouse"}
     ]
     document.save()
 
-    document_field_factory(
+    df = document_field_factory(
         document=document,
         field_type=field_type_1,
         content='{{ qn_1_first_name }}'
     )
 
+    assert str(df) == '{{ qn_1_first_name }}'
+
     document_field_factory(
         document=document,
         field_type=field_type_2,
-        content='{{ qn_1_last_name }}'
+        content='{{ qn_1_last_name }} {{ qn_1_city }}'
     )
 
-    assert len(document.get_initial_questions_dict()) == 2
+    assert len(document.get_initial_questions_dict()) == 3
     assert document.get_initial_questions_dict()[0].get('question') == str(q1.id)
     assert document.get_initial_questions_dict()[0].get('text') == 'Mickey'
 
