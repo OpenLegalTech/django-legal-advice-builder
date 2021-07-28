@@ -4,12 +4,8 @@
 {% block current_form %}
 <ul class="nav nav-pills justify-content-end" id="question" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button"
-            role="tab" aria-controls="preview" aria-selected="true">{% trans 'preview' %}</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button"
-            role="tab" aria-controls="content" aria-selected="true">{% trans 'base settings' %}</button>
+        <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button"
+            role="tab" aria-controls="preview" aria-selected="true">{% trans 'question' %}</button>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link position-relative" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button" role="tab" aria-controls="logic" aria-selected="false">
@@ -19,19 +15,21 @@
 </ul>
 
 <div class="tab-content" id="questionContent">
-    <div class="tab-pane fade" id="preview" role="tabpanel" aria-labelledby="preview-tab">
+    <div class="tab-pane fade show active" id="preview" role="tabpanel" aria-labelledby="preview-tab">
         <div class="p-3 border border-primary border-5">
             <div class="text-end">
+                <button class="btn btn-light btn-sm border btn pull-right" id="showQuestionDetailButton" style="display: none;" onclick="showQuestionDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
+                <button class="btn btn-light btn-sm border btn pull-right" id="showQuestionFormButton" onclick="showQuestionForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
                 <button class="btn btn-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionDeleteModal{{ question.id }}" type="button">{% trans 'delete' %}</button>
             </div>
-            <div class="mt-3">
-                <div class="row justify-content-center">
-                    <div class="col">
+            <div class="mt-3" id="question_detail">
+                <div class="row">
+                    <div class="col-12">
                         <div class="clearfix border p-3">
                             <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1 }} von {{ lawcase.questionaire_count }}: {{ question.questionaire }}</div>
                             {% include 'legal_advice_builder/admin/form.html' with form=question_preview_form %}
                             <div class="text-end mt-3">
-                                <input class="btn btn-primary btn-sm pull-right" type="submit" value="Weiter" />
+                                <input class="btn btn-primary btn-sm pull-right" disabled type="submit" value="Weiter" />
                             </div>
                         </div>
                         {% if question.information %}
@@ -44,35 +42,35 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-3" id="question_form" style="display: none;">
+                <form class="p-3" method="post">
+                    {% csrf_token %}
+                    <div class="my-3">
+                        {% include 'legal_advice_builder/admin/form_field.html' with field=form.text %}
+                    </div>
+                    <div class="my-3">
+                        {% include 'legal_advice_builder/admin/form_field.html' with field=form.type %}
+                    </div>
+
+                    {% if form.options %}
+                    <label>{{ form.options.label }}</label>
+                    <div class="my-3">{{ form.options }}</div>
+                        {% if question.has_error %}
+                        <div class="alert alert-danger">
+                            <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
+                            {% trans 'You picked a field type with options but have not added any options.' %}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    {{ form.media }}
+
+                    {% include 'legal_advice_builder/admin/form_field.html' with field=form.information %}
+                    <div class="text-end mt-3">
+                        <input class="btn btn-primary btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="contetn-tab">
-        <form class=" p-3 border border-primary border-5" method="post">
-            {% csrf_token %}
-            <div class="my-3">
-                {% include 'legal_advice_builder/admin/form_field.html' with field=form.text %}
-            </div>
-            <div class="my-3">
-                {% include 'legal_advice_builder/admin/form_field.html' with field=form.type %}
-            </div>
-
-            {% if form.options %}
-            <label>{{ form.options.label }}</label>
-            <div class="my-3">{{ form.options }}</div>
-                {% if question.has_error %}
-                <div class="alert alert-danger">
-                    <span class="badge bg-danger rounded-pill"><i class="bi bi-exclamation-lg"></i></span>
-                    {% trans 'You picked a field type with options but have not added any options.' %}
-                </div>
-                {% endif %}
-            {% endif %}
-            {{ form.media }}
-
-            {% include 'legal_advice_builder/admin/form_field.html' with field=form.information %}
-            <div class="text-end mt-3">
-                <input class="btn btn-primary btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
-            </div>
-        </form>
     </div>
     <div class="tab-pane fade" id="logic" role="tabpanel" aria-labelledby="logic-tab">
         <form class=" p-3 border border-primary border-5" method="post">
