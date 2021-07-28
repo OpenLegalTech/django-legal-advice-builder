@@ -138,3 +138,142 @@ def test_get_initial_questions_dict(law_case_factory,
 
     assert document.get_initial_questions_dict()[1].get('question') == str(q2.id)
     assert document.get_initial_questions_dict()[1].get('text') == 'Mouse'
+
+
+@pytest.mark.django_db
+def test_fields_for_context(document_type_factory,
+                            document_field_type_factory,
+                            document_field_factory,
+                            document_factory):
+
+    document_type = document_type_factory()
+    field_type_1 = document_field_type_factory(
+        slug='field_type_1'
+    )
+
+    document = document_factory(document_type=document_type)
+    document_field_factory(
+        document=document,
+        field_type=field_type_1,
+        content='<strong>{{ something }}</strong>'
+    )
+
+    assert len(document.fields_for_context().keys()) == 1
+    assert document.fields_for_context().get('field_type_1') == '<strong>{{ something }}</strong>'
+
+
+@pytest.mark.django_db
+def test_template(document_type_factory,
+                  document_field_type_factory,
+                  document_field_factory,
+                  document_factory):
+
+    document_type = document_type_factory(
+        document_template='<div>{{ first_name }} {{ last_name }}</div>'
+    )
+
+    field_type_1 = document_field_type_factory(
+        document_type=document_type,
+        name='First Name',
+        slug='first_name'
+    )
+
+    field_type_2 = document_field_type_factory(
+        document_type=document_type,
+        name='Last Name',
+        slug='last_name'
+    )
+
+    document = document_factory(document_type=document_type)
+
+    document_field_factory(
+        document=document,
+        field_type=field_type_1,
+        content='<p>{{ qn_1_first_name }}</p>'
+    )
+
+    document_field_factory(
+        document=document,
+        field_type=field_type_2,
+        content='<p>{{ qn_1_last_name }}</p>'
+    )
+
+    assert document.template == '<div><p>{{ qn_1_first_name }}</p> <p>{{ qn_1_last_name }}</p></div>'
+
+
+@pytest.mark.django_db
+def test_template_with_answers(law_case_factory,
+                               questionaire_factory,
+                               document_type_factory,
+                               document_field_type_factory,
+                               document_field_factory,
+                               document_factory,
+                               answer_factory):
+
+    document_type = document_type_factory(
+        document_template='<div>{{ first_name }} {{ last_name }}</div>'
+    )
+
+    field_type_1 = document_field_type_factory(
+        document_type=document_type,
+        name='First Name',
+        slug='first_name'
+    )
+
+    field_type_2 = document_field_type_factory(
+        document_type=document_type,
+        name='Last Name',
+        slug='last_name'
+    )
+
+    document = document_factory(document_type=document_type)
+
+    law_case = law_case_factory(
+        document=document
+    )
+    questionaire_1 = questionaire_factory(
+        short_title='qn_1',
+        law_case=law_case,
+        order=1
+    )
+    q1 = question = Question.add_root(
+        **(get_text_question(
+            short_title='first_name',
+            questionaire=questionaire_1
+        ))
+    )
+    q2 = question.add_child(
+        **(get_text_question(
+            short_title='last_name',
+            questionaire=questionaire_1
+        ))
+    )
+
+    answer = answer_factory(
+        law_case=law_case,
+        answers=[
+            {"question": str(q1.id), "text": "Mickey"},
+            {"question": str(q2.id), "text": "Mouse"}
+        ]
+    )
+
+    document_field_factory(
+        document=document,
+        field_type=field_type_1,
+        content='{{ answers.qn_1_first_name }}'
+    )
+
+    document_field_factory(
+        document=document,
+        field_type=field_type_2,
+        content='{{ answers.qn_1_last_name }}'
+    )
+
+    document.sample_answers = [
+        {"question": str(q1.id), "text": "Donald"},
+        {"question": str(q2.id), "text": "Duck"}
+    ]
+    document.save()
+
+    assert document.template_with_answers(answer.answers) == '<div>Mickey Mouse</div>'
+    assert document.template_with_sample_answers == '<div>Donald Duck</div>'
