@@ -46,7 +46,7 @@ class Document(models.Model):
         return initial_data
 
     def get_initial_questions_dict(self):
-        '''Used to display sampple answers in preview of document.'''
+        '''Used to display sample answers in preview of document.'''
         from legal_advice_builder.models import Question
         initial_data = []
         lawcase = self.lawcase

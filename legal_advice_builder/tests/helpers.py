@@ -8,9 +8,9 @@ def get_single_option_question(questionaire=None, short_title=None):
         'text': factory.Faker('text'),
         'field_type': Question.SINGLE_OPTION,
         'options': {
-            'yes': 'yes',
-            'no': 'no',
-            'maybe': 'maybe'
+            'yes': 'Yes',
+            'no': 'No',
+            'maybe': 'Maybe'
         }
     }
     if questionaire:

@@ -20,7 +20,6 @@ class Question(MP_Node):
         (SINGLE_OPTION, _('Pick one of multiple options')),
         (MULTIPLE_OPTIONS, _('Pick several of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
-        (FILE_UPLOAD, _('File Upload')),
         (DATE, _('Date')),
         (YES_NO, _('Yes/No'))
     ]
@@ -117,7 +116,7 @@ class Question(MP_Node):
         return False
 
     def get_status(self, option=None, text=None, date=None):
-        next = self.next(option, text)
+        next = self.next(option, text, date)
         if option or date or text:
             condition_success = self.is_status_by_conditions(
                 'success', option=option, date=date, text=text)
@@ -127,7 +126,7 @@ class Question(MP_Node):
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,
-                    'next': self.next(option, text, date)
+                    'next': next
                 }
             elif condition_failure:
                 return {
@@ -148,8 +147,6 @@ class Question(MP_Node):
         return self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS] and not self.options
 
     def get_unsure_message(self):
-        if self.unsure_message:
-            return self.unsure_message
         return self.questionaire.unsure_message
 
     def get_options_by_type(self):
@@ -179,7 +176,7 @@ class Question(MP_Node):
         return ''
 
     def get_options_names(self):
-        return ', '.join([key for key, value in self.options.items()])
+        return ', '.join(list(self.options.keys()))
 
     def get_dict_key(self, option=None, text=None, date=None):
         qn = self.questionaire

@@ -15,8 +15,9 @@
             </div>
             <div class="col">
                 <div class="text-end mt-3">
-                    <button class="btn btn-light border btn pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
-                    <button class="btn btn-light border btn pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                    <button class="btn btn-light border btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
+                    <button class="btn btn-light border btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                    <button class="btn btn-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionaireDeleteModal{{ questionaire.id }}" type="button">{% trans 'delete' %}</button>
                 </div>
             </div>
         </div>
@@ -100,4 +101,25 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="questionaireDeleteModal{{ questionaire.id }}" tabindex="-1"
+  aria-labelledby="questionaireDeleteModal{{ questionaire.id }}Label" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="questionaireDeleteModal{{ questionaire.id }}Label">{% blocktrans with title=questionaire.title %} Do you want to delete "{{ title }}"? {% endblocktrans %}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                      <form action="{% url 'legal_advice_builder:questionaire-delete' questionaire.id %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 {% endblock %}

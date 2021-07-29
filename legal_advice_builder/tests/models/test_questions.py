@@ -82,6 +82,66 @@ def test_question_next(law_case_factory, questionaire_factory):
     assert q2.next() is None
     assert q2.next(option='test') is None
 
+    law_case_2 = law_case_factory()
+    questionaire_3 = questionaire_factory(
+        law_case=law_case_2,
+        order=1
+    )
+
+    q2 = Question.add_root(
+        **(get_single_option_question(
+            questionaire=questionaire_3)))
+
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='unsure',
+        then_value='success'
+    )
+
+    assert q2.next(option='unsure') is None
+
+    law_case_3 = law_case_factory()
+    questionaire_4 = questionaire_factory(
+        law_case=law_case_3,
+        order=1
+    )
+    questionaire_5 = questionaire_factory(
+        law_case=law_case_3,
+        order=2
+    )
+
+    q3 = Question.add_root(
+        **(get_single_option_question(
+            questionaire=questionaire_4)))
+
+    q4 = Question.add_root(
+        **(get_single_option_question(
+            questionaire=questionaire_5)))
+
+    assert q3.next() == q4
+
+
+@pytest.mark.django_db
+def test_get_status(law_case_factory, questionaire_factory, ):
+    law_case = law_case_factory()
+    qn_1 = questionaire_factory(
+        law_case=law_case,
+        success_message='Success'
+    )
+
+    question = Question.add_root(
+        **(get_single_option_question(
+            questionaire=qn_1
+        ))
+    )
+
+    assert question.get_status(option='yes') == {
+        'success': True,
+        'message': 'Success',
+        'next': None
+    }
+
 
 @pytest.mark.django_db
 def test_question_conditions_date_deadline_running():
@@ -174,6 +234,49 @@ def test_prepare_for_delete():
 
 
 @pytest.mark.django_db
+def test_get_unsure_message(questionaire_factory):
+    qn = questionaire_factory(
+        unsure_message='unsure'
+    )
+    q = Question.add_root(
+        **(get_text_question(questionaire=qn)))
+    assert q.get_unsure_message() == 'unsure'
+
+
+@pytest.mark.django_db
+def test_get_options_by_type():
+    q1 = Question.add_root(**get_single_option_question())
+    for type in q1.FIELD_TYPES:
+        q1.field_type = type[0]
+        q1.save()
+        assert q1.get_options_by_type() is not None
+
+    for field_type in [q1.SINGLE_OPTION, q1.MULTIPLE_OPTIONS, q1.YES_NO]:
+        q1.field_type = field_type
+        q1.save()
+        assert list(q1.get_options_by_type().keys()) == ['is']
+
+
+@pytest.mark.django_db
+def test_get_if_text_by_type():
+    q1 = Question.add_root(**get_single_option_question())
+    for type in q1.FIELD_TYPES:
+        q1.field_type = type[0]
+        q1.save()
+        assert not q1.get_if_text_by_type() == ''
+
+    q1.field_type = 'test'
+    q1.save()
+    assert q1.get_if_text_by_type() == ''
+
+
+@pytest.mark.django_db
+def test_get_options_names():
+    q1 = Question.add_root(**get_single_option_question())
+    assert q1.get_options_names() == 'yes, no, maybe'
+
+
+@pytest.mark.django_db
 def test_icon():
     q1 = Question.add_root(**get_single_option_question())
     for type in q1.FIELD_TYPES:
@@ -188,3 +291,56 @@ def test_erros():
     q1.options = {}
     q1.save()
     assert q1.has_error
+
+
+@pytest.mark.django_db
+def test_clean_up_conditions():
+    q1 = Question.add_root(**get_single_option_question())
+
+    Condition.objects.create(
+        question=q1,
+        if_option='is',
+        if_value='maybe',
+        then_value='success'
+    )
+    assert q1.conditions.count() == 1
+    q1.options = {
+        'yes': 'yes',
+        'no': 'no',
+    }
+    q1.save()
+    q1.clean_up_conditions(list(q1.options.keys()))
+    assert q1.conditions.count() == 0
+
+
+@pytest.mark.django_db
+def test_get_dict_key(questionaire_factory):
+    qn = questionaire_factory(
+        short_title='qn'
+    )
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn
+    ))
+
+    assert q1.get_dict_key(option='yes') == ('qn_question_1', 'Yes')
+
+    q1.field_type = q1.MULTIPLE_OPTIONS
+    q1.save()
+
+    assert q1.get_dict_key(option=['yes', 'maybe']) == ('qn_question_1', ['Yes', 'Maybe'])
+
+    q2 = Question.add_root(**get_date_question(
+        questionaire=qn
+    ))
+
+    assert q2.get_dict_key(date='2021-05-10') == ('qn_question_2', '2021-05-10')
+
+
+@pytest.mark.django_db
+def test_string():
+    q1 = Question.add_root(**get_single_option_question())
+    assert str(q1) == '{} {} ({})'.format('', q1.text, q1.get_options_names())
+    q1.short_title = 'question'
+    q1.field_type = q1.TEXT
+    q1.save()
+    assert str(q1) == '{}: {}'.format('question', q1.text)
