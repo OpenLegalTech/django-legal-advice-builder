@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .document import Document
-from .template import LawCaseTemplate
 
 
 class LawCase(models.Model):
@@ -11,10 +10,6 @@ class LawCase(models.Model):
     extra_help = models.TextField(blank=True)
     allow_download = models.BooleanField(default=True)
     save_answers = models.BooleanField(default=True)
-    law_case_template = models.ForeignKey(LawCaseTemplate,
-                                          null=True,
-                                          blank=True,
-                                          on_delete=models.SET_NULL)
     document = models.OneToOneField(Document,
                                     null=True,
                                     blank=True,

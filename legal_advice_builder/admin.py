@@ -9,7 +9,6 @@ from .models import DocumentField
 from .models import DocumentFieldType
 from .models import DocumentType
 from .models import LawCase
-from .models import LawCaseTemplate
 from .models import Question
 from .models import Questionaire
 
@@ -58,4 +57,3 @@ admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType, DocumentTypeAdmin)
 admin.site.register(Answer)
 admin.site.register(LawCase)
-admin.site.register(LawCaseTemplate)
