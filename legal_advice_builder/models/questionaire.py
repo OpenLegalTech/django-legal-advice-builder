@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from . import LawCase
 
@@ -8,7 +9,11 @@ class Questionaire(models.Model):
                                  on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     short_title = models.CharField(max_length=50, blank=True)
-    success_message = models.TextField(blank=True)
+    success_message = models.TextField(blank=True, help_text=_('This message is '
+                                                               'shown if the user has '
+                                                               'reached the end '
+                                                               'of this questionaire '
+                                                               'successfully.'))
     unsure_message = models.TextField(blank=True)
     order = models.IntegerField()
 
@@ -37,8 +42,6 @@ class Questionaire(models.Model):
             return new_question
         else:
             return Question.add_root(**data)
-
-
 
     def next(self):
         return Questionaire.objects.filter(

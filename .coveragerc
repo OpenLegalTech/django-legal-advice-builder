@@ -6,6 +6,7 @@ omit =
     */management/*
     */migrations/*
     */tests/*
+    */urls.py
 exclude_lines =
     raise Exception
     except ImportError:

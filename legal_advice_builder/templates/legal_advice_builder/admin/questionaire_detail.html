@@ -112,7 +112,7 @@
               </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
-                      <form action="{% url 'legal_advice_builder:questionaire-delete' questionaire.id %}" method="post">
+                      <form action="" method="post">
                           {% csrf_token %}
                           <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
                       </form>

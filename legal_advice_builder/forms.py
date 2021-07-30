@@ -4,14 +4,11 @@ from django import forms
 from django.forms import fields
 from django.forms.models import model_to_dict
 from django.utils import dateformat
-from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
 
 from .models import Answer
 from .models import Condition
 from .models import Document
-from .models import DocumentField
-from .models import DocumentFieldType
 from .models import DocumentType
 from .models import LawCase
 from .models import Question
@@ -101,38 +98,6 @@ class RenderedDocumentForm(forms.ModelForm):
             self.fields['rendered_document'].widget = TinyMCE(
                 attrs={'cols': 80, 'rows': 30})
         self.fields['answer_id'].initial = self.instance.id
-
-
-class DocumentFieldForm(forms.Form):
-    field_type = fields.CharField(widget=forms.HiddenInput)
-    field_slug = fields.CharField(widget=forms.HiddenInput)
-    document = fields.CharField(widget=forms.HiddenInput)
-    content = fields.CharField(widget=TinyMCE(), required=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        field_type_id = self.initial.get('field_type')
-        if field_type_id:
-            field_type = DocumentFieldType.objects.get(id=field_type_id)
-            self.fields['content'].label = field_type.name
-            self.fields['content'].help_text = field_type.help_text
-
-    def save(self):
-        data = self.cleaned_data
-        content = data.pop('content')
-        document_id = data.pop('document')
-        field_type_id = data.pop('field_type')
-
-        document = Document.objects.get(id=document_id)
-        field_type = DocumentFieldType.objects.get(id=field_type_id)
-
-        field, created = DocumentField.objects.get_or_create(
-            field_type=field_type,
-            document=document
-        )
-        field.content = content
-        field.save()
-        return field
 
 
 class PrepareDocumentForm(forms.Form):
@@ -268,11 +233,3 @@ class QuestionaireForm(FormControllClassMixin, forms.ModelForm):
     class Meta:
         model = Questionaire
         fields = ('title', 'success_message')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['success_message'].help_text = _('This message is '
-                                                     'shown if the user has '
-                                                     'reached the end '
-                                                     'of this questionaire '
-                                                     'successfully.')
