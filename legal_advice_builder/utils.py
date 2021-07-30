@@ -1,5 +1,4 @@
 import bleach
-from django.conf import settings
 
 
 def generate_answers_dict_for_template(answers):
@@ -22,10 +21,6 @@ def clean_html_field(text, setting='default'):
                     'h2', 'h3', 'h4', 'h5']
     allowed_attrs = {'*': ['style']}
     allowed_styles = ['text-align']
-    if hasattr(settings, 'BLEACH_LIST'):
-        allowed_tags = settings.BLEACH_LIST[setting]['tags']
-        allowed_attrs = settings.BLEACH_LIST[setting]['attributes']
-        allowed_styles = settings.BLEACH_LIST[setting].get('styles', [])
     return bleach.clean(text,
                         tags=allowed_tags,
                         attributes=allowed_attrs,
