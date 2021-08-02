@@ -225,7 +225,16 @@ def test_form_wizard_initial_data(rf, law_case_factory, questionaire_factory):
         middleware.process_request(request)
         request.session.save()
         response = TestWizardView.as_view()(request)
-        assert not response.context_data.get('form').initial == {}
+        initial = response.context_data.get('form').initial
+        assert not initial == {}
+        initial_key = list(initial.keys())[0]
+        assert initial_key in ['option', 'text', 'date']
+        if 'option' in initial:
+            assert initial.get('option') == 'yes'
+        elif 'text' in initial:
+            assert initial.get('text') == 'yes'
+        elif 'date' in initial:
+            assert initial.get('date') == 'yes'
 
 
 @pytest.mark.django_db
@@ -290,3 +299,65 @@ def test_form_wizard_not_implemented_error(rf):
     request.session.save()
     with pytest.raises(Exception):
         TestWizardView.as_view()(request)
+
+
+@pytest.mark.django_db
+def test_form_wizard_update_answwer_for_download(rf, law_case_factory,
+                                                 questionaire_factory,
+                                                 answer_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory(
+        allow_download=True
+    )
+    qn1 = questionaire_factory(
+        success_message='Success qn1',
+        law_case=lc)
+    qn2 = questionaire_factory(
+        success_message='Success qn2',
+        law_case=lc)
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn1
+    ))
+    q2 = q1.add_child(**get_single_option_question(
+        questionaire=qn1
+    ))
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='yes',
+        then_value='success'
+    )
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='no',
+        then_value='failure'
+    )
+    q3 = Question.add_root(**get_single_option_question(
+        questionaire=qn2
+    ))
+
+    answer = answer_factory()
+    answers = [{'question': q1.id, 'option': 'yes'},
+               {'question': q2.id, 'option': 'yes'},
+               {'question': q3.id, 'option': 'yes'}
+               ]
+    answer.answers = answers
+    answer.save()
+
+    data = {'answer_id': answer.id, 'download': 'download'}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q3.id,
+        'answers': answers
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
