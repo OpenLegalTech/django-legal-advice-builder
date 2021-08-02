@@ -23,9 +23,10 @@ class GenrateFormWizardMixin:
         question_data = self._get_dict_entry_for_question(question)
         if question_data and 'initial' in question_data:
             text_types = [question.TEXT, question.SINGLE_LINE]
+            single_option_types = [question.SINGLE_OPTION, question.YES_NO]
             if question.field_type in text_types:
                 return {'text': question_data.get('initial')}
-            elif question.field_type == question.SINGLE_OPTION:
+            elif question.field_type in single_option_types:
                 return {'option': question_data.get('initial')}
             elif question.field_type == question.MULTIPLE_OPTIONS:
                 return {'option': question_data.get('initial')}
