@@ -190,9 +190,10 @@ class QuestionUpdateForm(FormControllClassMixin, forms.ModelForm):
             del self.fields['options']
 
     def save(self, commit=True):
-        options = self.cleaned_data.get('options').keys()
         question = super().save(commit=commit)
-        question.clean_up_conditions(options)
+        if 'options' in self.cleaned_data:
+            options = self.cleaned_data.get('options').keys()
+            question.clean_up_conditions(options)
         return question
 
 

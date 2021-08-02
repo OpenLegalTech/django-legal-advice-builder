@@ -396,7 +396,7 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
             args=[self.get_object().id])
 
     def post(self, request, *args, **kwargs):
-        if request.POST.get('logic'):
+        if 'logic' in request.POST:
             condition_form = QuestionConditionForm(instance=self.get_object(),
                                                    data=request.POST)
             if condition_form.is_valid():
@@ -410,7 +410,6 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
                 return HttpResponseRedirect(reverse(
                     'legal_advice_builder:questionaire-detail',
                     args=[self.get_object().questionaire.id]))
-
         return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
