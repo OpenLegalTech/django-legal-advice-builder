@@ -361,3 +361,96 @@ def test_form_wizard_update_answwer_for_download(rf, law_case_factory,
     }
     request.session.save()
     resp = TestWizardView.as_view()(request)
+    assert resp['content-type'] == 'application/pdf'
+
+    data = {'answer_id': answer.id}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q3.id,
+        'answers': answers
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+
+    lc.allow_download = False
+    lc.save()
+
+    data = {'answer_id': answer.id, 'download': 'download'}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q3.id,
+        'answers': answers
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    assert resp.status_code == 405
+
+
+@pytest.mark.django_db
+def test_form_wizard_post_nex(rf, law_case_factory,
+                              questionaire_factory,
+                              answer_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory(
+        allow_download=True
+    )
+    qn1 = questionaire_factory(
+        success_message='Success qn1',
+        law_case=lc)
+    qn2 = questionaire_factory(
+        success_message='Success qn2',
+        law_case=lc)
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn1
+    ))
+    q2 = q1.add_child(**get_single_option_question(
+        questionaire=qn1
+    ))
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='yes',
+        then_value='success'
+    )
+    Condition.objects.create(
+        question=q2,
+        if_option='is',
+        if_value='no',
+        then_value='failure'
+    )
+    q3 = Question.add_root(**get_single_option_question(
+        questionaire=qn2
+    ))
+
+    answer = answer_factory()
+    answers = [{'question': q1.id, 'option': 'yes'},
+               {'question': q2.id, 'option': 'yes'}
+               ]
+    answer.answers = answers
+    answer.save()
+
+    data = {'next': q3.id}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q2.id,
+        'answers': answers
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    assert resp.context_data.get('step_count') == 2
+    assert resp.context_data.get('question') == q3
+
