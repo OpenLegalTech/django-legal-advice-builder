@@ -165,10 +165,6 @@ class GeneratePDFDownloadMixin:
         template = self.get_lawcase().document.template_with_answers(answers)
         return self.get_context_data(template=template, **kwargs)
 
-    def render_download(self, answers=None, **kwargs):
-        context = self.get_template_with_context(answers)
-        return self.render_to_response(context)
-
     def get_filename(self):
         return 'download.pdf'
 

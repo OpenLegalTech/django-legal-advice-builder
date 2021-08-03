@@ -1,3 +1,4 @@
+import pytest
 from pytest_factoryboy import register
 
 from .factories import AnswerFactory
@@ -17,3 +18,10 @@ register(DocumentFieldTypeFactory)
 register(DocumentFactory)
 register(LawCaseFactory)
 register(QuestionaireFactory)
+
+
+@pytest.fixture
+def create_user(db, django_user_model):
+    def make_user(**kwargs):
+        return django_user_model.objects.create_user(**kwargs)
+    return make_user

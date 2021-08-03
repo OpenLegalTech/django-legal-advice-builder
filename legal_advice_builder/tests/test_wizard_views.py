@@ -1,14 +1,15 @@
 import pytest
 from django.contrib.sessions.middleware import SessionMiddleware
 
+from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
-
 from legal_advice_builder.models import LawCase
 from legal_advice_builder.models import Question
 from legal_advice_builder.views import FormWizardView
 
-from .helpers import get_single_option_question
+from .helpers import get_date_question
 from .helpers import get_question
+from .helpers import get_single_option_question
 
 
 def dummy_get_response(request):
@@ -302,9 +303,9 @@ def test_form_wizard_not_implemented_error(rf):
 
 
 @pytest.mark.django_db
-def test_form_wizard_update_answwer_for_download(rf, law_case_factory,
-                                                 questionaire_factory,
-                                                 answer_factory):
+def test_form_wizard_update_answer_for_download(rf, law_case_factory,
+                                                questionaire_factory,
+                                                answer_factory):
 
     class TestWizardView(FormWizardView):
 
@@ -393,64 +394,206 @@ def test_form_wizard_update_answwer_for_download(rf, law_case_factory,
 
 
 @pytest.mark.django_db
-def test_form_wizard_post_nex(rf, law_case_factory,
-                              questionaire_factory,
-                              answer_factory):
+def test_form_wizard_next_in_post(rf, law_case_factory,
+                                  document_type_factory,
+                                  document_factory,
+                                  questionaire_factory):
 
     class TestWizardView(FormWizardView):
 
         def get_lawcase(self):
             return LawCase.objects.all().first()
 
+    dt = document_type_factory(
+        document_template='<div>Test</div>'
+    )
+    d = document_factory(document_type=dt)
     lc = law_case_factory(
-        allow_download=True
+        allow_download=True,
+        save_answers=True,
+        document=d
     )
     qn1 = questionaire_factory(
         success_message='Success qn1',
         law_case=lc)
     qn2 = questionaire_factory(
-        success_message='Success qn2',
+        success_message='Success qn1',
         law_case=lc)
     q1 = Question.add_root(**get_single_option_question(
         questionaire=qn1
     ))
-    q2 = q1.add_child(**get_single_option_question(
-        questionaire=qn1
-    ))
-    Condition.objects.create(
-        question=q2,
-        if_option='is',
-        if_value='yes',
-        then_value='success'
-    )
-    Condition.objects.create(
-        question=q2,
-        if_option='is',
-        if_value='no',
-        then_value='failure'
-    )
-    q3 = Question.add_root(**get_single_option_question(
+    q2 = Question.add_root(**get_single_option_question(
         questionaire=qn2
     ))
 
-    answer = answer_factory()
-    answers = [{'question': q1.id, 'option': 'yes'},
-               {'question': q2.id, 'option': 'yes'}
-               ]
-    answer.answers = answers
-    answer.save()
-
-    data = {'next': q3.id}
+    data = {'next': q2.id}
     request = rf.post('/', data)
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
     request.session[praefix] = {
-        'current_question': q2.id,
-        'answers': answers
+        'current_question': q1.id,
+        'answers': [{'question': q1.id, 'option': 'yes'}]
     }
     request.session.save()
     resp = TestWizardView.as_view()(request)
-    assert resp.context_data.get('step_count') == 2
-    assert resp.context_data.get('question') == q3
+    assert resp.context_data.get('question') == q2
 
+
+@pytest.mark.django_db
+def test_form_wizard_render_done(rf, law_case_factory,
+                                 create_user,
+                                 document_type_factory,
+                                 document_factory,
+                                 questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    dt = document_type_factory(
+        document_template='<div>Test</div>'
+    )
+    d = document_factory(document_type=dt)
+    lc = law_case_factory(
+        allow_download=True,
+        save_answers=True,
+        document=d
+    )
+    qn1 = questionaire_factory(
+        success_message='Success qn1',
+        law_case=lc)
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn1
+    ))
+
+    data = {'question': q1.id, 'option': 'yes'}
+    request = rf.post('/', data)
+    user = create_user(email='foo@bar.com', password='bar', username='user')
+    request.user = user
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q1.id,
+        'answers': []
+    }
+    request.session.save()
+    assert Answer.objects.all().count() == 0
+    TestWizardView.as_view()(request)
+    assert Answer.objects.all().count() == 1
+
+
+@pytest.mark.django_db
+def test_form_wizard_test_download(rf, law_case_factory,
+                                   create_user,
+                                   document_type_factory,
+                                   document_factory,
+                                   questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    dt = document_type_factory(
+        document_template='<div>Test</div>'
+    )
+    d = document_factory(document_type=dt)
+    lc = law_case_factory(
+        allow_download=True,
+        save_answers=True,
+        document=d
+    )
+    qn1 = questionaire_factory(
+        success_message='Success qn1',
+        law_case=lc)
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn1
+    ))
+
+    data = {'question': q1.id, 'option': 'yes'}
+    request = rf.post('/', data)
+    user = create_user(email='foo@bar.com', password='bar', username='user')
+    request.user = user
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q1.id,
+        'answers': []
+    }
+    request.session.save()
+    assert Answer.objects.all().count() == 0
+    TestWizardView.as_view()(request)
+    assert Answer.objects.all().count() == 1
+
+    data = {'download': 'download', 'answer': Answer.objects.all().first().id}
+    request = rf.post('/', data)
+    request.user = user
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q1.id,
+        'answers': []
+    }
+    request.session.save()
+    TestWizardView.as_view()(request)
+
+
+@pytest.mark.django_db
+def test_form_wizard_test_invalid_form(rf, law_case_factory, questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory()
+    qn = questionaire_factory(law_case=lc)
+    q1 = Question.add_root(**get_single_option_question(
+        questionaire=qn
+    ))
+
+    data = {'question': q1.id, 'text': 'yes'}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q1.id,
+        'answers': []
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    assert 'option' in resp.context_data.get('form').errors
+
+
+@pytest.mark.django_db
+def test_form_wizard_test_date_formating(rf, law_case_factory, questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory()
+    qn = questionaire_factory(law_case=lc)
+    q1 = Question.add_root(**get_date_question(
+        questionaire=qn
+    ))
+
+    data = {'question': q1.id, 'date': '2021-10-10'}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = {
+        'current_question': q1.id,
+        'answers': []
+    }
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '2021-10-10'
