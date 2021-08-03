@@ -17,7 +17,9 @@
                 <div class="text-end mt-3">
                     <button class="btn btn-light border btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
                     <button class="btn btn-light border btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                    {% if lawcase.questionaire_set.all.count > 1 %}
                     <button class="btn btn-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionaireDeleteModal{{ questionaire.id }}" type="button">{% trans 'delete' %}</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -112,7 +114,7 @@
               </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
-                      <form action="" method="post">
+                      <form action="{% url 'legal_advice_builder:questionaire-delete' questionaire.id %}" method="post">
                           {% csrf_token %}
                           <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
                       </form>

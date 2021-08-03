@@ -1,7 +1,7 @@
-from html.parser import HTMLParser
 import json
-import pytest
+from html.parser import HTMLParser
 
+import pytest
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 
@@ -14,14 +14,15 @@ from legal_advice_builder.models import Question
 from legal_advice_builder.models import Questionaire
 from legal_advice_builder.views import DocumentFormView
 from legal_advice_builder.views import DocumentPreviewView
-from legal_advice_builder.views import PdfDownloadView
-from legal_advice_builder.views import QuestionDelete
-from legal_advice_builder.views import QuestionUpdate
-from legal_advice_builder.views import QuestionaireDetail
+from legal_advice_builder.views import LawCaseDelete
+from legal_advice_builder.views import LawCaseEdit
 from legal_advice_builder.views import LawCaseList
 from legal_advice_builder.views import LawCasePreview
-from legal_advice_builder.views import LawCaseEdit
-from legal_advice_builder.views import LawCaseDelete
+from legal_advice_builder.views import PdfDownloadView
+from legal_advice_builder.views import QuestionaireDeleteView
+from legal_advice_builder.views import QuestionaireDetail
+from legal_advice_builder.views import QuestionDelete
+from legal_advice_builder.views import QuestionUpdate
 
 from .helpers import get_single_option_question
 from .helpers import get_text_question
@@ -380,3 +381,31 @@ def test_question_update_view(rf, questionaire_factory):
     resp = QuestionUpdate.as_view()(request, pk=q2.id)
     assert resp.status_code == 200
     assert resp.context_data.get('questionaire') == qn
+
+
+@pytest.mark.django_db
+def test_questionaire_delete_view(rf, questionaire_factory,
+                                  law_case_factory):
+    lc = law_case_factory()
+    qn = questionaire_factory(
+        law_case=lc,
+        order=1
+    )
+    questionaire_factory(
+        law_case=lc,
+        order=2
+    )
+    questionaire_factory(
+        law_case=lc,
+        order=3
+    )
+
+    assert Questionaire.objects.all().count() == 3
+
+    request = rf.post('/', {})
+    setattr(request, 'session', 'session')
+    messages = FallbackStorage(request)
+    setattr(request, '_messages', messages)
+    resp = QuestionaireDeleteView.as_view()(request, pk=qn.id)
+    assert resp.status_code == 302
+    assert Questionaire.objects.all().count() == 2

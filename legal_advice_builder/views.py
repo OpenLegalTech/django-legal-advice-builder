@@ -364,6 +364,22 @@ class QuestionaireDetail(DetailView):
         return context
 
 
+class QuestionaireDeleteView(DeleteView):
+    model = Questionaire
+    success_message = _('Questionaire {} was removed successfully')
+
+    def get_success_url(self):
+        qn = self.get_object().law_case.questionaire_set.exclude(id=self.get_object().id).first()
+        return reverse('legal_advice_builder:questionaire-detail',
+                       args=[qn.id])
+
+    def delete(self, request, *args, **kwargs):
+        questionaire = self.get_object()
+        messages.success(self.request,
+                         self.success_message.format(questionaire.title))
+        return super().delete(request, *args, **kwargs)
+
+
 class QuestionDelete(DeleteView):
     model = Question
     success_message = _('Question {} was removed successfully')

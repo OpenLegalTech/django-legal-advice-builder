@@ -6,6 +6,7 @@ from .views import LawCaseDelete
 from .views import LawCaseEdit
 from .views import LawCaseList
 from .views import LawCasePreview
+from .views import QuestionaireDeleteView
 from .views import QuestionaireDetail
 from .views import QuestionDelete
 from .views import QuestionUpdate
@@ -17,6 +18,7 @@ urlpatterns = [
     path('<int:pk>/delete/', LawCaseDelete.as_view(), name='law-case-delete'),
     path('<int:pk>/preview/', LawCasePreview.as_view(), name='law-case-preview'),
     path('questionaire/<int:pk>/', QuestionaireDetail.as_view(), name='questionaire-detail'),
+    path('questionaire/<int:pk>/delete', QuestionaireDeleteView.as_view(), name='questionaire-delete'),
     path('question/<int:pk>/edit', QuestionUpdate.as_view(), name='question-update'),
     path('question/<int:pk>/delete', QuestionDelete.as_view(), name='question-delete'),
     path('<int:pk>/document/edit/', DocumentFormView.as_view(), name='document-update'),
