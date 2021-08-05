@@ -17,7 +17,11 @@
             <div class="mt-3 border p-3">
                 <div id="app">
                     {% csrf_token %}
+                    {% if document.document_type %}
                     {{ document_form | safe }}
+                    {% else %}
+                    <document-field-list></document-field-list>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -32,5 +36,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

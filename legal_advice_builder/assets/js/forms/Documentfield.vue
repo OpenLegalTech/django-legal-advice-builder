@@ -5,7 +5,7 @@
       @mouseleave="toggleHover"
       @click="toggleShowForm"
       v-bind:style="{ cursor: 'pointer' }"
-      class="bg-light position-relative"
+      class="bg-light position-relative my-2"
     >
       <span
         v-if="renderedContent == '' || hover"

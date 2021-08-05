@@ -11,7 +11,8 @@ from legal_advice_builder.utils import generate_answers_dict_for_template
 class Document(models.Model):
     name = models.CharField(max_length=200)
     document_type = models.ForeignKey('legal_advice_builder.DocumentType',
-                                      on_delete=models.CASCADE)
+                                      null=True,
+                                      on_delete=models.SET_NULL)
 
     recipient = models.TextField(blank=True)
     sender = models.TextField(blank=True)
@@ -33,16 +34,17 @@ class Document(models.Model):
     def get_initial_fields_dict(self):
         '''Used to create vue components in edit mode of document for each field'''
         initial_data = []
-        for field_type in self.document_type.field_types.all():
-            initial_data.append(
-                {
-                    'field_type': field_type.id,
-                    'field_slug': field_type.slug,
-                    'field_name': field_type.name,
-                    'document': self.id,
-                    'content': self.get_value_for_field(field_type)
-                }
-            )
+        if self.document_type:
+            for field_type in self.document_type.field_types.all():
+                initial_data.append(
+                    {
+                        'field_type': field_type.id,
+                        'field_slug': field_type.slug,
+                        'field_name': field_type.name,
+                        'document': self.id,
+                        'content': self.get_value_for_field(field_type)
+                    }
+                )
         return initial_data
 
     def get_initial_questions_dict(self):
@@ -79,21 +81,25 @@ class Document(models.Model):
 
     @property
     def template(self):
-        template = Template(self.document_type.document_template)
-        context = self.fields_for_context()
-        return template.render(Context(
-            context
-        ))
+        if self.document_type:
+            template = Template(self.document_type.document_template)
+            context = self.fields_for_context()
+            return template.render(Context(
+                context
+            ))
+        return ''
 
     def template_with_answers(self, answers):
-        template = Template(mark_safe(self.document_type.document_template))
-        context = self.fields_for_context()
-        base_template = template.render(Context(context))
-        result_template = Template(mark_safe(base_template))
-        result = result_template.render(Context(
-            {'answers': generate_answers_dict_for_template(answers)}
-        ))
-        return result
+        if self.document_type:
+            template = Template(mark_safe(self.document_type.document_template))
+            context = self.fields_for_context()
+            base_template = template.render(Context(context))
+            result_template = Template(mark_safe(base_template))
+            result = result_template.render(Context(
+                {'answers': generate_answers_dict_for_template(answers)}
+            ))
+            return result
+        return ''
 
     @property
     def template_with_sample_answers(self):
@@ -129,7 +135,8 @@ class DocumentFieldType(models.Model):
 
 class DocumentField(models.Model):
     field_type = models.ForeignKey('legal_advice_builder.DocumentFieldType',
-                                   on_delete=models.CASCADE)
+                                   null=True,
+                                   on_delete=models.SET_NULL)
     document = models.ForeignKey('legal_advice_builder.Document',
                                  related_name='fields',
                                  on_delete=models.CASCADE)
@@ -141,3 +148,17 @@ class DocumentField(models.Model):
     def save(self, *args, **kwargs):
         self.content = clean_html_field(self.content)
         return super().save(*args, **kwargs)
+
+
+class TextBlock(models.Model):
+    document = models.ForeignKey('legal_advice_builder.Document',
+                                 related_name='document_text_blocks',
+                                 on_delete=models.CASCADE)
+    document_fields = models.ForeignKey('legal_advice_builder.Document',
+                                        null=True,
+                                        related_name='field_text_blocks',
+                                        on_delete=models.CASCADE)
+    order = models.IntegerField()
+
+    class Meta:
+        ordering = ['order']

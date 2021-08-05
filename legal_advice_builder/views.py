@@ -11,6 +11,7 @@ from django.template import Template
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import FormView
@@ -18,6 +19,7 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
+from .forms import DocumentForm
 from .forms import LawCaseCreateForm
 from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
@@ -156,6 +158,30 @@ class DocumentPreviewView(TemplateView):
         return self.render_to_response(context)
 
 
+class DocumentCreateView(CreateView):
+    model = Document
+    form_class = DocumentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.law_case = self.get_law_case()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_law_case(self):
+        if 'pk' in self.kwargs:
+            pk = self.kwargs.get('pk')
+            return LawCase.objects.get(pk=pk)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.law_case.document = self.object
+        self.law_case.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:document-detail',
+                       args=[self.law_case.id])
+
+
 class DocumentFormView(TemplateView):
     template_name = 'legal_advice_builder/admin/document_form.html'
 
@@ -206,11 +232,13 @@ class DocumentFormView(TemplateView):
         return res
 
     def document_fields(self):
-        document_form = Template(self.get_document().document_type.document_template)
-        context = self.document_fields_templates()
-        return document_form.render(Context(
-            context
-        ))
+        if self.get_document().document_type:
+            document_form = Template(self.get_document().document_type.document_template)
+            context = self.document_fields_templates()
+            return document_form.render(Context(
+                context
+            ))
+        return ''
 
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)
@@ -359,7 +387,8 @@ class QuestionaireDetail(DetailView):
             'question_create_form': QuestionCreateForm(
                 parent_question=question.id if question else None),
             'questionaire_update_form': QuestionaireForm(instance=self.get_object()),
-            'lawcase': self.object.law_case
+            'lawcase': self.object.law_case,
+            'document_form': DocumentForm()
         })
         return context
 

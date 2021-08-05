@@ -100,6 +100,16 @@ class RenderedDocumentForm(forms.ModelForm):
         self.fields['answer_id'].initial = self.instance.id
 
 
+class DocumentForm(FormControllClassMixin, forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['name', 'document_type']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['document_type'].required = False
+
+
 class PrepareDocumentForm(forms.Form):
     name = forms.CharField(max_length=200)
 
