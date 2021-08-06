@@ -1,11 +1,12 @@
 <template>
   <div>
     <DocumentField
-      v-for="(field, index) in initial"
+      v-for="(field, index) in fieldlist"
       :key="`${name}-${index}`"
       :content="field.content"
       :document="field.document"
       :name="field.name"
+      :textblock="field.textblock"
     ></DocumentField>
     <div class="d-grid gap-2 mt-5">
       <button class="btn btn-primary btn-sm" @click="addField" type="button">
@@ -19,29 +20,28 @@
 import DocumentField from "./Documentfield.vue";
 export default {
   name: "documentfieldlist",
+  props: {
+    document: String,
+    fieldtypeid: String,
+    initial: Array
+  },
   components: {
     DocumentField,
   },
   data: function () {
     return {
-      initial: [
-        {
-          content: "hallo",
-          document: "document",
-          fieldtypeid: "3",
-          name: "name",
-        },
-      ],
-    };
+      fieldlist: this.initial,
+      name: 'name'
+    }
   },
   methods: {
     addField: function () {
       this.initial.push({
-        content: "hallo",
-        document: "document",
-        fieldtypeid: "3",
-        name: "name",
-      });
+        content: "",
+        document: this.document,
+        textblock: '',
+        name: this.name,
+      })
     },
   },
 };

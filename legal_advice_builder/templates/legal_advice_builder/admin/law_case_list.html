@@ -26,11 +26,6 @@
                             <a href="{% url 'legal_advice_builder:questionaire-detail' law_case.first_questionaire.id %}"
                                 class="text-decoration-none text-body">
                                 <h5 class="card-title">{{ law_case.title }}</h5>
-                                {% if law_case.document.document_type %}
-                                <h6 class="card-subtitle mb-2 text-muted">{% trans 'type'%}: {{ law_case.document.document_type }}</h6>
-                                {% else %}
-                                <h6 class="card-subtitle mb-2 text-muted">{% trans 'type'%}: {% trans 'without type'%}</h6>
-                                {% endif %}
                                 <p class="card-text">{{ law_case.description }}</p>
                             </a>
                         </div>

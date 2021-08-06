@@ -3,32 +3,9 @@ import factory
 from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Document
-from legal_advice_builder.models import DocumentField
-from legal_advice_builder.models import DocumentFieldType
-from legal_advice_builder.models import DocumentType
 from legal_advice_builder.models import LawCase
 from legal_advice_builder.models import Questionaire
-
-
-class DocumentTypeFactory(factory.django.DjangoModelFactory):
-
-    class Meta:
-        model = DocumentType
-
-    name = factory.Faker('text')
-    document_template = factory.Faker('text')
-
-
-class DocumentFieldTypeFactory(factory.django.DjangoModelFactory):
-
-    class Meta:
-        model = DocumentFieldType
-
-    document_type = factory.SubFactory(DocumentTypeFactory)
-    name = factory.Faker('text')
-    slug = factory.Faker('text')
-    help_text = factory.Faker('text')
-    required = True
+from legal_advice_builder.models import TextBlock
 
 
 class DocumentFactory(factory.django.DjangoModelFactory):
@@ -37,16 +14,15 @@ class DocumentFactory(factory.django.DjangoModelFactory):
         model = Document
 
     name = factory.Faker('text')
-    document_type = factory.SubFactory(DocumentTypeFactory)
 
 
-class DocumentFieldFactory(factory.django.DjangoModelFactory):
+class TextBlockFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = DocumentField
+        model = TextBlock
 
-    field_type = factory.SubFactory(DocumentFieldTypeFactory)
     document = factory.SubFactory(DocumentFactory)
+    order = factory.Faker('random_int')
     content = factory.Faker('text')
 
 

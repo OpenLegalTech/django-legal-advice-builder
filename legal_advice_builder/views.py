@@ -6,8 +6,6 @@ from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.template import Context
-from django.template import Template
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -35,11 +33,10 @@ from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
 from .models import Document
-from .models import DocumentField
-from .models import DocumentFieldType
 from .models import LawCase
 from .models import Question
 from .models import Questionaire
+from .models import TextBlock
 from .storage import SessionStorage
 
 
@@ -197,48 +194,21 @@ class DocumentFormView(TemplateView):
     def post(self, *args, **kwargs):
         data = json.loads(self.request.body)
         content = data.get('content')
-        document = data.get('document')
-        field_type_id = data.get('fieldtypeid')
-
+        textblock = data.get('textblock')
         document = self.document
-        field_type = DocumentFieldType.objects.get(id=field_type_id)
 
-        field, created = DocumentField.objects.get_or_create(
-            field_type=field_type,
-            document=document
-        )
-        field.content = content
-        field.save()
-
-        return JsonResponse({'content': field.content})
-
-    def document_fields_templates(self):
-        document_fields = self.document.get_initial_fields_dict()
-        res = {}
-        for field in document_fields:
-            key = field.get('field_slug')
-            document = field.get('document')
-            field_type_id = field.get('field_type')
-            field_name = field.get('field_name')
-            content = field.get('content').replace('{{', '[[').replace('}}', ']]')
-            vue_template = Template("<document-field content='{{ content }}' name='{{ field_name }}' "
-                                    "fieldtypeid='{{ field_type_id }}' document='{{ document }}'>"
-                                    "</document-field>")
-            context = {'content': content,
-                       'document': document,
-                       'field_name': field_name,
-                       'field_type_id': field_type_id}
-            res[key] = vue_template.render(Context(context))
-        return res
-
-    def document_fields(self):
-        if self.get_document().document_type:
-            document_form = Template(self.get_document().document_type.document_template)
-            context = self.document_fields_templates()
-            return document_form.render(Context(
-                context
-            ))
-        return ''
+        if not textblock:
+            textblock = TextBlock.objects.create(
+                document=document,
+                content=content,
+                order=document.document_text_blocks.count() + 1
+            )
+            return JsonResponse({'content': textblock.content, 'id': textblock.id})
+        else:
+            textblock = TextBlock.objects.get(id=textblock)
+            textblock.content = content
+            textblock.save()
+            return JsonResponse({'content': textblock.content, 'id': textblock.id})
 
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)
@@ -253,8 +223,7 @@ class DocumentFormView(TemplateView):
             'form': self.get_form(),
             'placeholders': self.get_placeholders(),
             'document': self.document,
-            'lawcase': self.document.lawcase,
-            'document_form': self.document_fields()
+            'lawcase': self.document.lawcase
         })
         return context
 
@@ -287,14 +256,8 @@ class LawCaseList(ListView, FormView):
 
     def form_valid(self, form):
         document = None
-        document_type = form.cleaned_data.pop('document_type')
         title = form.cleaned_data.get('title')
         description = form.cleaned_data.get('description')
-        if document_type:
-            document = Document.objects.create(
-                document_type=document_type,
-                name=title,
-            )
         law_case = LawCase.objects.create(
             title=title,
             document=document,
