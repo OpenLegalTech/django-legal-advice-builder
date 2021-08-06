@@ -6,11 +6,10 @@ from django.forms import formset_factory
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.template import Context
-from django.template import Template
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import FormView
@@ -18,6 +17,7 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
+from .forms import DocumentForm
 from .forms import LawCaseCreateForm
 from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
@@ -33,11 +33,10 @@ from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
 from .models import Document
-from .models import DocumentField
-from .models import DocumentFieldType
 from .models import LawCase
 from .models import Question
 from .models import Questionaire
+from .models import TextBlock
 from .storage import SessionStorage
 
 
@@ -156,6 +155,30 @@ class DocumentPreviewView(TemplateView):
         return self.render_to_response(context)
 
 
+class DocumentCreateView(CreateView):
+    model = Document
+    form_class = DocumentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.law_case = self.get_law_case()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_law_case(self):
+        if 'pk' in self.kwargs:
+            pk = self.kwargs.get('pk')
+            return LawCase.objects.get(pk=pk)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.law_case.document = self.object
+        self.law_case.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:document-detail',
+                       args=[self.law_case.id])
+
+
 class DocumentFormView(TemplateView):
     template_name = 'legal_advice_builder/admin/document_form.html'
 
@@ -171,46 +194,21 @@ class DocumentFormView(TemplateView):
     def post(self, *args, **kwargs):
         data = json.loads(self.request.body)
         content = data.get('content')
-        document = data.get('document')
-        field_type_id = data.get('fieldtypeid')
-
+        textblock = data.get('textblock')
         document = self.document
-        field_type = DocumentFieldType.objects.get(id=field_type_id)
 
-        field, created = DocumentField.objects.get_or_create(
-            field_type=field_type,
-            document=document
-        )
-        field.content = content
-        field.save()
-
-        return JsonResponse({'content': field.content})
-
-    def document_fields_templates(self):
-        document_fields = self.document.get_initial_fields_dict()
-        res = {}
-        for field in document_fields:
-            key = field.get('field_slug')
-            document = field.get('document')
-            field_type_id = field.get('field_type')
-            field_name = field.get('field_name')
-            content = field.get('content').replace('{{', '[[').replace('}}', ']]')
-            vue_template = Template("<document-field content='{{ content }}' name='{{ field_name }}' "
-                                    "fieldtypeid='{{ field_type_id }}' document='{{ document }}'>"
-                                    "</document-field>")
-            context = {'content': content,
-                       'document': document,
-                       'field_name': field_name,
-                       'field_type_id': field_type_id}
-            res[key] = vue_template.render(Context(context))
-        return res
-
-    def document_fields(self):
-        document_form = Template(self.get_document().document_type.document_template)
-        context = self.document_fields_templates()
-        return document_form.render(Context(
-            context
-        ))
+        if not textblock:
+            textblock = TextBlock.objects.create(
+                document=document,
+                content=content,
+                order=document.document_text_blocks.count() + 1
+            )
+            return JsonResponse({'content': textblock.content, 'id': textblock.id})
+        else:
+            textblock = TextBlock.objects.get(id=textblock)
+            textblock.content = content
+            textblock.save()
+            return JsonResponse({'content': textblock.content, 'id': textblock.id})
 
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)
@@ -225,8 +223,7 @@ class DocumentFormView(TemplateView):
             'form': self.get_form(),
             'placeholders': self.get_placeholders(),
             'document': self.document,
-            'lawcase': self.document.lawcase,
-            'document_form': self.document_fields()
+            'lawcase': self.document.lawcase
         })
         return context
 
@@ -259,14 +256,8 @@ class LawCaseList(ListView, FormView):
 
     def form_valid(self, form):
         document = None
-        document_type = form.cleaned_data.pop('document_type')
         title = form.cleaned_data.get('title')
         description = form.cleaned_data.get('description')
-        if document_type:
-            document = Document.objects.create(
-                document_type=document_type,
-                name=title,
-            )
         law_case = LawCase.objects.create(
             title=title,
             document=document,
@@ -359,7 +350,8 @@ class QuestionaireDetail(DetailView):
             'question_create_form': QuestionCreateForm(
                 parent_question=question.id if question else None),
             'questionaire_update_form': QuestionaireForm(instance=self.get_object()),
-            'lawcase': self.object.law_case
+            'lawcase': self.object.law_case,
+            'document_form': DocumentForm()
         })
         return context
 

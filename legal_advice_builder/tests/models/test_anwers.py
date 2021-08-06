@@ -36,29 +36,11 @@ def test_save(answer_factory):
 @pytest.mark.django_db
 def test_template(law_case_factory,
                   questionaire_factory,
-                  document_type_factory,
-                  document_field_type_factory,
-                  document_field_factory,
+                  text_block_factory,
                   document_factory,
                   answer_factory):
 
-    document_type = document_type_factory(
-        document_template='<p>{{ first_name }} {{ last_name }}</p>'
-    )
-
-    field_type_1 = document_field_type_factory(
-        document_type=document_type,
-        name='First Name',
-        slug='first_name'
-    )
-
-    field_type_2 = document_field_type_factory(
-        document_type=document_type,
-        name='Last Name',
-        slug='last_name'
-    )
-
-    document = document_factory(document_type=document_type)
+    document = document_factory()
 
     law_case = law_case_factory(
         document=document
@@ -89,20 +71,20 @@ def test_template(law_case_factory,
         ]
     )
 
-    document_field_factory(
+    text_block_factory(
         document=document,
-        field_type=field_type_1,
-        content='{{ answers.qn_1_first_name }}'
+        content='{{ answers.qn_1_first_name }}',
+        order=1
     )
 
-    document_field_factory(
+    text_block_factory(
         document=document,
-        field_type=field_type_2,
-        content='{{ answers.qn_1_last_name }}'
+        content='{{ answers.qn_1_last_name }}',
+        order=2
     )
 
-    assert answer.template == '<p>Mickey Mouse</p>'
+    assert answer.template == 'Mickey Mouse'
 
     answer.save_rendered_document()
 
-    assert answer.rendered_document == '<p>Mickey Mouse</p>'
+    assert answer.rendered_document == 'Mickey Mouse'

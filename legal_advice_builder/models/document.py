@@ -1,7 +1,8 @@
+import json
+
 from django.db import models
 from django.template import Context
 from django.template import Template
-from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
 
 from legal_advice_builder.utils import clean_html_field
@@ -10,9 +11,6 @@ from legal_advice_builder.utils import generate_answers_dict_for_template
 
 class Document(models.Model):
     name = models.CharField(max_length=200)
-    document_type = models.ForeignKey('legal_advice_builder.DocumentType',
-                                      on_delete=models.CASCADE)
-
     recipient = models.TextField(blank=True)
     sender = models.TextField(blank=True)
     date = models.CharField(blank=True, max_length=50)
@@ -24,26 +22,23 @@ class Document(models.Model):
     def __str__(self):
         return self.name
 
-    def get_value_for_field(self, field_type):
-        try:
-            return self.fields.get(field_type=field_type).content
-        except DocumentField.DoesNotExist:
-            return ''
-
     def get_initial_fields_dict(self):
         '''Used to create vue components in edit mode of document for each field'''
         initial_data = []
-        for field_type in self.document_type.field_types.all():
+        for text_block in self.document_text_blocks.all():
             initial_data.append(
                 {
-                    'field_type': field_type.id,
-                    'field_slug': field_type.slug,
-                    'field_name': field_type.name,
+                    'textblock': text_block.id,
+                    'content': text_block.content,
                     'document': self.id,
-                    'content': self.get_value_for_field(field_type)
+                    'name': 'name'
                 }
             )
         return initial_data
+
+    @property
+    def fields_dict(self):
+        return json.dumps(self.get_initial_fields_dict())
 
     def get_initial_questions_dict(self):
         '''Used to display sample answers in preview of document.'''
@@ -70,27 +65,15 @@ class Document(models.Model):
 
         return initial_data
 
-    def fields_for_context(self):
-        context = {}
-        for field in self.fields.all():
-            dict_key = field.field_type.slug
-            context[dict_key] = mark_safe(field.content)
-        return context
-
     @property
     def template(self):
-        template = Template(self.document_type.document_template)
-        context = self.fields_for_context()
-        return template.render(Context(
-            context
-        ))
+        content = ' '.join([text_field.content for text_field in self.document_text_blocks.all()])
+        return mark_safe(content)
 
     def template_with_answers(self, answers):
-        template = Template(mark_safe(self.document_type.document_template))
-        context = self.fields_for_context()
-        base_template = template.render(Context(context))
-        result_template = Template(mark_safe(base_template))
-        result = result_template.render(Context(
+        content = ' '.join([text_field.content for text_field in self.document_text_blocks.all()])
+        template = Template(mark_safe(content))
+        result = template.render(Context(
             {'answers': generate_answers_dict_for_template(answers)}
         ))
         return result
@@ -100,40 +83,15 @@ class Document(models.Model):
         return self.template_with_answers(self.sample_answers)
 
 
-class DocumentType(models.Model):
-    name = models.CharField(max_length=200)
-    document_template = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
-class DocumentFieldType(models.Model):
-    document_type = models.ForeignKey('legal_advice_builder.DocumentType',
-                                      related_name='field_types',
-                                      on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(blank=True)
-    help_text = models.CharField(max_length=500, blank=True)
-    required = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name).replace("-", "_")
-        super().save(*args, **kwargs)
-
-
-class DocumentField(models.Model):
-    field_type = models.ForeignKey('legal_advice_builder.DocumentFieldType',
-                                   on_delete=models.CASCADE)
+class TextBlock(models.Model):
     document = models.ForeignKey('legal_advice_builder.Document',
-                                 related_name='fields',
+                                 related_name='document_text_blocks',
                                  on_delete=models.CASCADE)
-    content = models.TextField()
+    order = models.IntegerField()
+    content = models.TextField(default='')
+
+    class Meta:
+        ordering = ['order']
 
     def __str__(self):
         return self.content

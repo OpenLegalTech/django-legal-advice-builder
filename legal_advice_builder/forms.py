@@ -9,7 +9,6 @@ from tinymce.widgets import TinyMCE
 from .models import Answer
 from .models import Condition
 from .models import Document
-from .models import DocumentType
 from .models import LawCase
 from .models import Question
 from .models import Questionaire
@@ -100,16 +99,19 @@ class RenderedDocumentForm(forms.ModelForm):
         self.fields['answer_id'].initial = self.instance.id
 
 
+class DocumentForm(FormControllClassMixin, forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['name']
+
+
 class PrepareDocumentForm(forms.Form):
     name = forms.CharField(max_length=200)
 
     def __init__(self, *args, **kwargs):
         self.document = kwargs.pop('document')
         super().__init__(*args, **kwargs)
-        if not self.document:
-            self.fields['document_type'] = forms.ModelChoiceField(
-                queryset=DocumentType.objects.all())
-        else:
+        if self.document:
             self.initial = model_to_dict(self.document)
 
     def save(self):
@@ -214,12 +216,10 @@ class QuestionCreateForm(FormControllClassMixin, forms.ModelForm):
 
 
 class LawCaseCreateForm(FormControllClassMixin, forms.ModelForm):
-    document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all(),
-                                           required=False)
 
     class Meta:
         model = LawCase
-        fields = ('title', 'document_type', 'description')
+        fields = ('title', 'description')
 
 
 class LawCaseUpdateForm(FormControllClassMixin, forms.ModelForm):

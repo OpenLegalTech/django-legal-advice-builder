@@ -5,7 +5,7 @@
       @mouseleave="toggleHover"
       @click="toggleShowForm"
       v-bind:style="{ cursor: 'pointer' }"
-      class="bg-light position-relative"
+      class="bg-light position-relative my-2"
     >
       <span
         v-if="renderedContent == '' || hover"
@@ -87,6 +87,7 @@ export default {
     content: String,
     document: String,
     fieldtypeid: String,
+    textblock: Number,
     name: String,
   },
   data: function () {
@@ -101,6 +102,7 @@ export default {
         .replaceAll("]]", "}}"),
       hover: false,
       showForm: false,
+      textblockid: this.textblock,
       renderedContentEdited: this.content
         .replaceAll("[[", "{{")
         .replaceAll("]]", "}}"),
@@ -143,6 +145,7 @@ export default {
         content: JSON.parse(JSON.stringify(this.renderedContentEdited)),
         document: this.document,
         fieldtypeid: this.fieldtypeid,
+        textblock: this.textblockid
       };
 
       const requestOptions = {
@@ -160,6 +163,7 @@ export default {
           this.renderedContent = data.content;
           this.renderedContentEdited = data.content;
           this.showForm = !this.showForm;
+          this.textblockid = data.id
         });
     },
   },

@@ -395,7 +395,6 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
 
 @pytest.mark.django_db
 def test_form_wizard_next_in_post(rf, law_case_factory,
-                                  document_type_factory,
                                   document_factory,
                                   questionaire_factory):
 
@@ -404,10 +403,7 @@ def test_form_wizard_next_in_post(rf, law_case_factory,
         def get_lawcase(self):
             return LawCase.objects.all().first()
 
-    dt = document_type_factory(
-        document_template='<div>Test</div>'
-    )
-    d = document_factory(document_type=dt)
+    d = document_factory()
     lc = law_case_factory(
         allow_download=True,
         save_answers=True,
@@ -443,7 +439,6 @@ def test_form_wizard_next_in_post(rf, law_case_factory,
 @pytest.mark.django_db
 def test_form_wizard_render_done(rf, law_case_factory,
                                  create_user,
-                                 document_type_factory,
                                  document_factory,
                                  questionaire_factory):
 
@@ -452,10 +447,7 @@ def test_form_wizard_render_done(rf, law_case_factory,
         def get_lawcase(self):
             return LawCase.objects.all().first()
 
-    dt = document_type_factory(
-        document_template='<div>Test</div>'
-    )
-    d = document_factory(document_type=dt)
+    d = document_factory()
     lc = law_case_factory(
         allow_download=True,
         save_answers=True,
@@ -488,7 +480,6 @@ def test_form_wizard_render_done(rf, law_case_factory,
 @pytest.mark.django_db
 def test_form_wizard_test_download(rf, law_case_factory,
                                    create_user,
-                                   document_type_factory,
                                    document_factory,
                                    questionaire_factory):
 
@@ -497,10 +488,7 @@ def test_form_wizard_test_download(rf, law_case_factory,
         def get_lawcase(self):
             return LawCase.objects.all().first()
 
-    dt = document_type_factory(
-        document_template='<div>Test</div>'
-    )
-    d = document_factory(document_type=dt)
+    d = document_factory()
     lc = law_case_factory(
         allow_download=True,
         save_answers=True,

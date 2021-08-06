@@ -1,5 +1,4 @@
 import json
-from html.parser import HTMLParser
 
 import pytest
 from django.contrib.messages.storage.fallback import FallbackStorage
@@ -8,10 +7,10 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Document
-from legal_advice_builder.models import DocumentField
 from legal_advice_builder.models import LawCase
 from legal_advice_builder.models import Question
 from legal_advice_builder.models import Questionaire
+from legal_advice_builder.models import TextBlock
 from legal_advice_builder.views import DocumentFormView
 from legal_advice_builder.views import DocumentPreviewView
 from legal_advice_builder.views import LawCaseDelete
@@ -33,37 +32,18 @@ def dummy_get_response(request):
 
 
 @pytest.mark.django_db
-def test_document_preview_view(rf, document_type_factory, document_factory,
-                               law_case_factory, document_field_type_factory,
-                               document_field_factory, questionaire_factory):
+def test_document_preview_view(rf, document_factory, law_case_factory,
+                               text_block_factory, questionaire_factory):
 
-    document_type = document_type_factory(
-        document_template='<div>{{ first_name }} {{ last_name }}</div>'
-    )
+    document = document_factory()
 
-    field_type_1 = document_field_type_factory(
-        document_type=document_type,
-        name='First Name',
-        slug='first_name'
-    )
-
-    field_type_2 = document_field_type_factory(
-        document_type=document_type,
-        name='Last Name',
-        slug='last_name'
-    )
-
-    document = document_factory(document_type=document_type)
-
-    document_field_factory(
+    text_block_factory(
         document=document,
-        field_type=field_type_1,
         content='<p>{{ qn_q1 }}</p>'
     )
 
-    document_field_factory(
+    text_block_factory(
         document=document,
-        field_type=field_type_2,
         content='<p>{{ qn_q2 }}</p>'
     )
 
@@ -101,37 +81,18 @@ def test_document_preview_view(rf, document_type_factory, document_factory,
 
 
 @pytest.mark.django_db
-def test_document_form_view(rf, document_type_factory, document_factory,
-                            law_case_factory, document_field_type_factory,
-                            document_field_factory):
+def test_document_form_view(rf, document_factory,
+                            law_case_factory, text_block_factory):
 
-    document_type = document_type_factory(
-        document_template='<div>{{ first_name }} {{ last_name }}</div>'
-    )
+    document = document_factory()
 
-    field_type_1 = document_field_type_factory(
-        document_type=document_type,
-        name='First Name',
-        slug='first_name'
-    )
-
-    field_type_2 = document_field_type_factory(
-        document_type=document_type,
-        name='Last Name',
-        slug='last_name'
-    )
-
-    document = document_factory(document_type=document_type)
-
-    df1 = document_field_factory(
+    tb1 = text_block_factory(
         document=document,
-        field_type=field_type_1,
         content='<p>{{ qn_q1 }}</p>'
     )
 
-    document_field_factory(
+    text_block_factory(
         document=document,
-        field_type=field_type_2,
         content='<p>{{ qn_q2 }}</p>'
     )
 
@@ -139,40 +100,16 @@ def test_document_form_view(rf, document_type_factory, document_factory,
     data = {
         'content': '<p>{{ qn_q1 }} test</p>',
         'document': document.id,
-        'fieldtypeid': field_type_1.id
+        'textblock': tb1.id
     }
 
     request = rf.post('/', json.dumps(data), content_type='application/json')
     DocumentFormView.as_view()(request, pk=law_case.id)
-    assert DocumentField.objects.get(id=df1.id).content == '<p>{{ qn_q1 }} test</p>'
+    assert TextBlock.objects.get(id=tb1.id).content == '<p>{{ qn_q1 }} test</p>'
 
     request = rf.get('/')
     response = DocumentFormView.as_view()(request, pk=law_case.id)
     assert 'document' in response.context_data
-    assert 'document_form' in response.context_data
-
-    class TestHTMLParser(HTMLParser):
-
-        def __init__(self):
-            super().__init__(convert_charrefs=True)
-            self.reset()
-            self.NEWTAGS = []
-            self.NEWATTRS = []
-
-        def handle_starttag(self, tag, attrs):
-            self.NEWTAGS.append(tag)
-            if attrs:
-                self.NEWATTRS.append(attrs)
-
-    parser = TestHTMLParser()
-    parser.feed(response.context_data.get('document_form'))
-    assert parser.NEWTAGS.count('document-field') == 2
-    content = DocumentField.objects.get(id=df1.id).content
-    parser_content = dict(parser.NEWATTRS[0])
-    assert parser_content.get('content') == content.replace(
-        '{{', '[[').replace('}}', ']]')
-    assert parser_content.get('document') == str(document.id)
-    assert parser_content.get('name') == field_type_1.name
 
 
 @pytest.mark.django_db
@@ -196,11 +133,9 @@ def test_pdf_download_view(rf, answer_factory):
 
 
 @pytest.mark.django_db
-def test_law_case_list_view(rf, law_case_factory, document_type_factory):
+def test_law_case_list_view(rf, law_case_factory):
     law_case_factory()
     law_case_factory()
-
-    dt = document_type_factory()
 
     request = rf.get('/')
     view_response = LawCaseList.as_view()(request)
@@ -209,7 +144,6 @@ def test_law_case_list_view(rf, law_case_factory, document_type_factory):
     LawCase.objects.all().count() == 2
 
     data = {
-        'document_type': dt.id,
         'title': 'New Lawcase'
     }
 

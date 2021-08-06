@@ -49,6 +49,10 @@ class Question(MP_Node):
 
     information = models.TextField(blank=True)
 
+    @property
+    def conditions(self):
+        return self.question_condition
+
     def save(self, *args, **kwargs):
         if self.field_type == self.YES_NO:
             self.options = {

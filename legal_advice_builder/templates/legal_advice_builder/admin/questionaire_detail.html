@@ -85,41 +85,40 @@
 
 <div class="modal fade" id="newQuestionForm" tabindex="-1" aria-labelledby="newQuestionFormLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newQuestionFormLabel">{% trans 'Add new question' %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% include 'legal_advice_builder/admin/form.html' with form=question_create_form %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+                    <button type="submit" name="question_create" class="btn btn-primary">{% trans 'Save' %}</button>
+                </div>
+            </form>
         </div>
-        <form action="{% url 'legal_advice_builder:questionaire-detail' questionaire.id %}" method="post">
-            <div class="modal-body">
-            {% csrf_token %}
-            {% include 'legal_advice_builder/admin/form.html' with form=question_create_form %}
+    </div>
+</div>
+
+<div class="modal fade" id="questionaireDeleteModal{{ questionaire.id }}" tabindex="-1" aria-labelledby="questionaireDeleteModal{{ questionaire.id }}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="questionaireDeleteModal{{ questionaire.id }}Label">{% blocktrans with title=questionaire.title %} Do you want to delete "{{ title }}"? {% endblocktrans %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
-            <button type="submit" name="question_create" class="btn btn-primary">{% trans 'Save' %}</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                <form action="{% url 'legal_advice_builder:questionaire-delete' questionaire.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
+                </form>
             </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="questionaireDeleteModal{{ questionaire.id }}" tabindex="-1"
-  aria-labelledby="questionaireDeleteModal{{ questionaire.id }}Label" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="questionaireDeleteModal{{ questionaire.id }}Label">{% blocktrans with title=questionaire.title %} Do you want to delete "{{ title }}"? {% endblocktrans %}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
-                      <form action="{% url 'legal_advice_builder:questionaire-delete' questionaire.id %}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
-                      </form>
-                  </div>
-              </div>
+        </div>
           </div>
       </div>
   </div>

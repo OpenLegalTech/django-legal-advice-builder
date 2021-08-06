@@ -30,18 +30,12 @@ def test_rendered_document_form(answer_factory):
 
 
 @pytest.mark.django_db
-def test_prepare_docuement_form(document_factory,
-                                document_type_factory):
+def test_prepare_docuement_form(document_factory):
 
-    dt = document_type_factory()
-    document = document_factory(
-        document_type=dt
-    )
-    assert 'document_type' in PrepareDocumentForm(document=None).fields
-    assert 'document_type' not in PrepareDocumentForm(document=document).fields
+    document = document_factory()
     assert PrepareDocumentForm(document=document).initial == model_to_dict(document)
 
-    data = {'document_type': dt.id, 'name': 'Document'}
+    data = {'name': 'Document'}
 
     assert Document.objects.all().count() == 1
     update_document_form = PrepareDocumentForm(document=document, data=data)
