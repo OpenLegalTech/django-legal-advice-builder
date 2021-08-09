@@ -6,20 +6,10 @@
       @click="toggleShowForm"
       v-bind:style="{ cursor: 'pointer' }"
       class="bg-light position-relative my-2"
+      :class="{
+        'text-black-50': this.newQuestion !== '' && this.newIfValue !== '',
+      }"
     >
-      <span
-        v-if="renderedContent == '' || hover"
-        class="
-          position-absolute
-          badge
-          rounded-pill
-          bg-white
-          text-body
-          document-edit-button
-        "
-      >
-        <i class="bi bi-pen-fill"></i> edit
-      </span>
       <div
         v-if="renderedContent == '' && !showForm"
         class="position-absolute top-50 start-50 translate-middle"
@@ -33,44 +23,96 @@
         v-html="renderedContent"
       ></div>
     </div>
-    <div v-if="showForm" class="bg-light p-3">
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-1">
+
+    <div v-if="showForm" class="card">
+      <div class="card-header text-end">
         <span
           @click="toggleShowForm"
-          :style="{cursor: 'pointer'}"
+          :style="{ cursor: 'pointer' }"
           class="badge rounded-pill bg-white text-body mb-2"
         >
-          <i class="bi bi-x-circle"></i> done
+          <i class="bi bi-x-circle"></i> close
         </span>
       </div>
-      <editor
-        v-model="renderedContentEdited"
-        :init="{
-          height: this.formheight,
-          menubar: false,
-          entity_encoding: 'raw',
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-          ],
-          toolbar:
-            'undo redo | formatselect | bold italic | \
+      <div class="card-body">
+        <small v-if="showForm && !showConditionForm"
+          >This textblock is always displayed
+          <span
+            @click="toggleConditionShowForm"
+            :style="{ cursor: 'pointer' }"
+            class="badge rounded-pill bg-primary"
+            >Change</span
+          ></small
+        >
+        <small v-if="showForm && showConditionForm"
+          >Show this textblock only when the answer to the question
+        </small>
+        <div v-if="showForm && showConditionForm">
+          <div class="row g-3 mb-3">
+            <div class="col-sm-7">
+              <select
+                class="form-select"
+                v-model="newQuestion"
+                @change="options = getOptions()"
+              >
+                <option
+                  v-for="(question, index) in questions"
+                  :value="question.id"
+                  :key="`${index}`"
+                >
+                  {{ question.text }}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-3" v-if="newQuestion !== ''">
+              <select class="form-select" v-model="newIfValue">
+                <option
+                  v-for="(optionValue, optionKey, index) in options"
+                  :value="optionValue"
+                  :key="`${index}`"
+                >
+                  {{ optionValue }}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm" v-if="newQuestion !== ''">
+              <button @click="resetCondition" class="btn btn-primary">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <editor
+          v-model="renderedContentEdited"
+          :init="{
+            height: this.formheight,
+            menubar: false,
+            entity_encoding: 'raw',
+            plugins: [
+              'advlist autolink lists link image charmap print preview anchor',
+              'searchreplace visualblocks code fullscreen',
+              'insertdatetime media table paste code help wordcount',
+            ],
+            toolbar:
+              'undo redo | formatselect | bold italic | \
            alignleft aligncenter alignright alignjustify | \
            bullist numlist outdent indent | removeformat | help',
-        }"
-      />
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-1">
-        <button
-          class="btn btn-primary btn-sm me-md-2"
-          @click="cancel"
-          type="button"
-        >
-          cancel
-        </button>
-        <button class="btn btn-primary btn-sm" @click="save" type="button">
-          save
-        </button>
+          }"
+        />
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+          <button
+            class="btn btn-primary btn-sm me-md-2"
+            @click="cancel"
+            type="button"
+          >
+            cancel
+          </button>
+          <button class="btn btn-primary btn-sm" @click="save" type="button">
+            save
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -85,10 +127,13 @@ export default {
   },
   props: {
     content: String,
-    document: String,
-    fieldtypeid: String,
+    document: Number,
     textblock: Number,
     name: String,
+    if_option: String,
+    if_value: String,
+    question: String,
+    questions: Array,
   },
   data: function () {
     this.$root.csrfToken = document.querySelector(
@@ -97,25 +142,36 @@ export default {
 
     return {
       formheight: 40,
-      renderedContent: this.content
-        .replaceAll("[[", "{{")
-        .replaceAll("]]", "}}"),
+      renderedContent: this.content,
       hover: false,
       showForm: false,
+      showConditionForm: !this.if_value == "",
       textblockid: this.textblock,
-      renderedContentEdited: this.content
-        .replaceAll("[[", "{{")
-        .replaceAll("]]", "}}"),
+      renderedContentEdited: this.content,
+      newQuestion: this.question,
+      newIfValue: this.if_value,
+      options: {},
     };
   },
   mounted() {
     this.formheight = this.matchHeight();
+    this.options = this.getOptions();
   },
   methods: {
     matchHeight: function () {
       if (this.$refs.contentBox) {
         return this.$refs.contentBox.clientHeight + 100;
       }
+    },
+    getOptions: function () {
+      if (this.newQuestion !== "" && this.questions.length > 0) {
+        for (let i = 0; i < this.questions.length; i++) {
+          if (this.questions[i].id.toString() == this.newQuestion) {
+            return this.questions[i].options;
+          }
+        }
+      }
+      return {};
     },
     getformStyles: function () {
       return { height: `${this.formheight}px` };
@@ -129,12 +185,19 @@ export default {
     getEmptyContentPlaceholder: function () {
       return `< ${this.name} >`;
     },
+    resetCondition: function () {
+      this.newQuestion = "";
+      this.newIfValue = "";
+    },
     toggleHover: function () {
       this.hover = !this.hover;
     },
     toggleShowForm: function () {
       this.showForm = !this.showForm;
       this.hover = false;
+    },
+    toggleConditionShowForm: function () {
+      this.showConditionForm = !this.showConditionForm;
     },
     cancel: function () {
       this.showForm = !this.showForm;
@@ -144,8 +207,9 @@ export default {
       const data = {
         content: JSON.parse(JSON.stringify(this.renderedContentEdited)),
         document: this.document,
-        fieldtypeid: this.fieldtypeid,
-        textblock: this.textblockid
+        textblock: this.textblockid,
+        question: this.newQuestion,
+        if_value: this.newIfValue,
       };
 
       const requestOptions = {
@@ -163,7 +227,7 @@ export default {
           this.renderedContent = data.content;
           this.renderedContentEdited = data.content;
           this.showForm = !this.showForm;
-          this.textblockid = data.id
+          this.textblockid = data.id;
         });
     },
   },

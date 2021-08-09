@@ -37,6 +37,7 @@ from .models import LawCase
 from .models import Question
 from .models import Questionaire
 from .models import TextBlock
+from .models import TextBlockCondition
 from .storage import SessionStorage
 
 
@@ -196,6 +197,8 @@ class DocumentFormView(TemplateView):
         content = data.get('content')
         textblock = data.get('textblock')
         document = self.document
+        question = data.get('question')
+        if_value = data.get('if_value')
 
         if not textblock:
             textblock = TextBlock.objects.create(
@@ -203,12 +206,20 @@ class DocumentFormView(TemplateView):
                 content=content,
                 order=document.document_text_blocks.count() + 1
             )
-            return JsonResponse({'content': textblock.content, 'id': textblock.id})
         else:
             textblock = TextBlock.objects.get(id=textblock)
             textblock.content = content
             textblock.save()
-            return JsonResponse({'content': textblock.content, 'id': textblock.id})
+            textblock.text_block_conditions.all().delete()
+        if question and if_value:
+            TextBlockCondition.objects.create(
+                text_block=textblock,
+                if_option='is',
+                if_value=if_value,
+                question=Question.objects.get(id=question)
+            )
+
+        return JsonResponse({'content': textblock.content, 'id': textblock.id})
 
     def get_form(self, data=None):
         return PrepareDocumentForm(document=self.document, data=data)

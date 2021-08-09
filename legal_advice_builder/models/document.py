@@ -3,6 +3,7 @@ import json
 from django.db import models
 from django.template import Context
 from django.template import Template
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 
 from legal_advice_builder.utils import clean_html_field
@@ -23,33 +24,51 @@ class Document(models.Model):
         return self.name
 
     def get_initial_fields_dict(self):
-        '''Used to create vue components in edit mode of document for each field'''
+        '''Used to create vue component in edit mode of document for each textblock'''
         initial_data = []
         for text_block in self.document_text_blocks.all():
-            initial_data.append(
-                {
-                    'textblock': text_block.id,
-                    'content': text_block.content,
-                    'document': self.id,
-                    'name': 'name'
-                }
-            )
+            text_block_dict = {
+                'textblock': text_block.id,
+                'content': text_block.content,
+                'document': self.id,
+                'name': 'name',
+                'question': '',
+                'if_option': '',
+                'if_value': ''
+            }
+            if text_block.text_block_conditions.all():
+                condition = text_block.text_block_conditions.first()
+                text_block_dict.update({
+                    'question': condition.question.id,
+                    'if_option': condition.if_option,
+                    'if_value': condition.if_value
+                })
+            initial_data.append(text_block_dict)
         return initial_data
 
-    @property
+    @cached_property
     def fields_dict(self):
         return json.dumps(self.get_initial_fields_dict())
 
+    @cached_property
+    def questions(self):
+        from legal_advice_builder.models import Question
+        return Question.objects.filter(questionaire__law_case=self.lawcase)
+
+    @property
+    def options_questions(self):
+        from legal_advice_builder.models import Question
+        questions = self.questions.filter(
+            field_type__in=[Question.SINGLE_OPTION, Question.YES_NO, Question.MULTIPLE_OPTIONS]
+        )
+        return list(questions.values('id', 'text', 'options'))
+
     def get_initial_questions_dict(self):
         '''Used to display sample answers in preview of document.'''
-        from legal_advice_builder.models import Question
         initial_data = []
-        lawcase = self.lawcase
-        questions = Question.objects.filter(questionaire__law_case=lawcase)
-
         answers_questions = [int(answer.get('question')) for answer in self.sample_answers]
 
-        for question in questions:
+        for question in self.questions:
             if question.get_dict_key()[0] in self.template:
                 if question.id not in answers_questions:
                     initial_data.append(
@@ -65,13 +84,13 @@ class Document(models.Model):
 
         return initial_data
 
-    @property
+    @cached_property
     def template(self):
-        content = ' '.join([text_field.content for text_field in self.document_text_blocks.all()])
+        content = ' '.join([text_field.content_with_condition for text_field in self.document_text_blocks.all()])
         return mark_safe(content)
 
     def template_with_answers(self, answers):
-        content = ' '.join([text_field.content for text_field in self.document_text_blocks.all()])
+        content = ' '.join([text_field.content_with_condition for text_field in self.document_text_blocks.all()])
         template = Template(mark_safe(content))
         result = template.render(Context(
             {'answers': generate_answers_dict_for_template(answers)}
@@ -99,3 +118,14 @@ class TextBlock(models.Model):
     def save(self, *args, **kwargs):
         self.content = clean_html_field(self.content)
         return super().save(*args, **kwargs)
+
+    @property
+    def content_with_condition(self):
+        if self.text_block_conditions.first():
+            condition = self.text_block_conditions.first()
+            question_string = condition.question.get_dict_key()[0]
+            string_with_condition = '{{% if answers.{} == "{}" %}} {} {{% endif %}}'.format(
+                question_string, condition.if_value, self.content)
+            return string_with_condition
+        else:
+            return self.content

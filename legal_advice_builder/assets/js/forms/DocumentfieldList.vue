@@ -7,6 +7,10 @@
       :document="field.document"
       :name="field.name"
       :textblock="field.textblock"
+      :question="field.question.toString()"
+      :if_option="field.if_option"
+      :if_value="field.if_value"
+      :questions="questions"
     ></DocumentField>
     <div class="d-grid gap-2 mt-5">
       <button class="btn btn-primary btn-sm" @click="addField" type="button">
@@ -21,9 +25,9 @@ import DocumentField from "./Documentfield.vue";
 export default {
   name: "documentfieldlist",
   props: {
-    document: String,
-    fieldtypeid: String,
-    initial: Array
+    document: Number,
+    initial: Array,
+    questions: Array
   },
   components: {
     DocumentField,
@@ -39,8 +43,11 @@ export default {
       this.initial.push({
         content: "",
         document: this.document,
-        textblock: '',
         name: this.name,
+        textblock: '',
+        question: '',
+        if_option: '',
+        if_value: ''
       })
     },
   },

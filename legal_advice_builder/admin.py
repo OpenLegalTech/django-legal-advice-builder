@@ -9,6 +9,7 @@ from .models import LawCase
 from .models import Question
 from .models import Questionaire
 from .models import TextBlock
+from .models import TextBlockCondition
 
 
 class ConditionInline(admin.TabularInline):
@@ -29,9 +30,32 @@ class QuestionaireAdmin(admin.ModelAdmin):
     list_filter = ('law_case', )
 
 
+class TextBlockInline(admin.TabularInline):
+    model = TextBlock
+
+
+class DocumentAdmin(admin.ModelAdmin):
+    inlines = [
+        TextBlockInline,
+    ]
+    model = Document
+
+
+class TextBlockConditionInline(admin.TabularInline):
+    model = TextBlockCondition
+
+
+class TextBlockAdmin(admin.ModelAdmin):
+    list_filter = ('document', )
+    inlines = [
+        TextBlockConditionInline,
+    ]
+    model = TextBlock
+
+
 admin.site.register(Questionaire, QuestionaireAdmin)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Document)
+admin.site.register(Document, DocumentAdmin)
+admin.site.register(TextBlock, TextBlockAdmin)
 admin.site.register(Answer)
 admin.site.register(LawCase)
-admin.site.register(TextBlock)

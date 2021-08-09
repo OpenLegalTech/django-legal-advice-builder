@@ -61,6 +61,5 @@ class TextBlockCondition(AbstractCondition):
         default_related_name = 'text_block_condition'
 
     def __str__(self):
-        return 'if answer {} "{}" then {}'.format(self.if_option,
-                                                  self.if_value,
-                                                  self.then_value)
+        return 'Display textblock if answer "{}" "{}"'.format(self.if_option,
+                                                              self.if_value)
