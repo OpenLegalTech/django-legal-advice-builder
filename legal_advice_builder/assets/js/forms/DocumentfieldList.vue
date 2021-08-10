@@ -13,8 +13,8 @@
       :questions="questions"
     ></DocumentField>
     <div class="d-grid gap-2 mt-5">
-      <button class="btn btn-primary btn-sm" @click="addField" type="button">
-        Button
+      <button class="btn btn-primary" @click="addField" type="button">
+        <i class="bi bi-plus"></i> Add text block
       </button>
     </div>
   </div>

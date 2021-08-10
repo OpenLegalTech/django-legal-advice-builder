@@ -10,12 +10,11 @@
       <div
         v-if="this.newQuestion !== '' && this.newIfValue !== '' && !showForm"
         class="
-          opacity-50
           position-absolute
           top-50
           start-50
           translate-middle
-          bg-dark
+          bg-secondary
           text-white
           p-1
         "
@@ -44,12 +43,12 @@
       <div class="card-body bg-light">
         <div
           v-if="showForm && !showConditionForm && !newQuestion && !newIfValue"
-          class="opacity-50 bg-dark text-white p-2"
+          class="bg-secondary text-white p-2"
         >
           <small>Condition</small>
           <p class="mb-0">This textblock is always displayed</p>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-            <button @click="toggleConditionShowForm" class="btn btn-dark border btn-sm" type="button">
+            <button @click="toggleConditionShowForm" class="btn btn-outline-light btn-sm" type="button">
               <i class="bi bi-pencil-fill"></i>
             </button>
           </div>
@@ -57,13 +56,13 @@
 
         <div
           v-if="showForm && !showConditionForm && newQuestion && newIfValue"
-          class="opacity-50 bg-dark text-white p-2"
+          class="bg-secondary text-white p-2"
         >
           <small>Condition</small>
           <p class="mb-0">{{ this.getText() }} - {{ this.newIfValue }}</p>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-            <button @click="resetCondition" class="btn btn-dark border btn-sm me-md-1" type="button"><i class="bi bi-trash"></i></button>
-            <button @click="toggleConditionShowForm" class="btn btn-dark border btn-sm" type="button">
+            <button @click="resetCondition" class="btn btn-outline-light btn-sm me-md-1" type="button"><i class="bi bi-trash"></i></button>
+            <button @click="toggleConditionShowForm" class="btn btn-outline-light btn-sm" type="button">
               <i class="bi bi-pencil-fill"></i>
             </button>
           </div>
@@ -123,7 +122,7 @@
         />
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
           <button
-            class="btn btn-primary btn-sm me-md-2"
+            class="btn btn-outline-danger btn-sm me-md-2"
             @click="cancel"
             type="button"
           >

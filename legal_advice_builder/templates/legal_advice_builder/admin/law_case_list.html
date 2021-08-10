@@ -91,10 +91,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-link" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                        <button type="button" class="btn btn-link btn-sm" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
                         <form action="{% url 'legal_advice_builder:law-case-delete' law_case.id %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-primary" value="DELETE">{% trans 'delete' %}</button>
+                            <button type="submit" class="btn btn-primary btn-sm" value="DELETE">{% trans 'delete' %}</button>
                         </form>
                     </div>
                 </div>
@@ -119,8 +119,8 @@
                     {% include 'legal_advice_builder/admin/form.html' with form=law_case_form.1 %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'close' %}</button>
-                    <button type="submit" class="btn btn-primary">{% trans 'save' %}</button>
+                    <button type="button" class="btn btn-link btn-sm" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                    <button type="submit" class="btn btn-primary btn-sm">{% trans 'save' %}</button>
                 </div>
             </form>
         </div>
@@ -141,8 +141,8 @@
                     {% include 'legal_advice_builder/admin/form.html' with form=form %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
-                    <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+                    <button type="button" class="btn btn-link btn-sm" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                    <button type="submit" class="btn btn-primary btn-sm">{% trans 'Save' %}</button>
                 </div>
             </form>
         </div>

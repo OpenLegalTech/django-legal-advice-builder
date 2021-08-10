@@ -3,7 +3,7 @@
 
 {% block main_content %}
 <div class="row">
-    <div class="col">
+    <div class="col-8">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
             <a href="{% url  'legal_advice_builder:document-update' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'edit document template' %}</a>
         </div>
@@ -15,7 +15,7 @@
     </div>
 
 
-    <div class="col">
+    <div class="col-4">
         <form method="post" class="clearfix">
             {% csrf_token %}
             {{ questions_formset.management_form }}
@@ -27,7 +27,7 @@
             </div>
             {% endfor %}
             <div class="text-end mt-3">
-                <input class="btn btn-primary btn-lg pull-right" type="submit" value="{% trans 'Save' %}" />
+                <input class="btn btn-primary btn-sm pull-right" type="submit" value="{% trans 'Save' %}" />
             </div>
         </form>
     </div>

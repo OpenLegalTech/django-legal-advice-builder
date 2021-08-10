@@ -15,10 +15,10 @@
             </div>
             <div class="col">
                 <div class="text-end mt-3">
-                    <button class="btn btn-light border btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
-                    <button class="btn btn-light border btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                    <button class="btn btn-secondary text-white btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
+                    <button class="btn btn-secondary text-white btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
                     {% if lawcase.questionaire_set.all.count > 1 %}
-                    <button class="btn btn-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionaireDeleteModal{{ questionaire.id }}" type="button">{% trans 'delete' %}</button>
+                    <button class="btn btn-outline-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionaireDeleteModal{{ questionaire.id }}" type="button"><i class="bi bi-trash"></i>{% trans 'delete' %}</button>
                     {% endif %}
                 </div>
             </div>
