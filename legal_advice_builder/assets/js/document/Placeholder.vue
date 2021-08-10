@@ -4,17 +4,32 @@
       <input
         type="text"
         v-model="searchString"
+        placeholder="Type to search for question or placeholder ..."
         class="form-control"
       />
     </div>
     <table class="table">
       <tbody>
         <template v-for="(value, name, index) in searchlist">
-          <tr :key="`${index}`" v-if="value.indexOf(searchString) > -1">
+          <tr
+            :key="`${index}`"
+            v-if="
+              value.indexOf(searchString) > -1 ||
+              name.indexOf(searchString) > -1
+            "
+          >
             <td>
-              {{ value }}
+              {{ value }}<br />
+              <small>{{ fullVariable(name) }}</small>
             </td>
-            <td><button class="btn btn-light" @click="copyToClipboard(fullVariable(name))"><i class="bi bi-clipboard" ></i></button></td>
+            <td>
+              <button
+                class="btn btn-light"
+                @click="copyToClipboard(fullVariable(name))"
+              >
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </td>
           </tr>
         </template>
       </tbody>
@@ -31,16 +46,16 @@ export default {
   data: function () {
     return {
       searchlist: this.placeholders,
-      searchString: ''
-    }
+      searchString: "",
+    };
   },
   methods: {
     fullVariable(variable) {
-      return `{{ answers.${variable} }}`
+      return `{{ answers.${variable} }}`;
     },
     copyToClipboard(name) {
-      navigator.clipboard.writeText(name)
-    }
-  }
-}
+      navigator.clipboard.writeText(name);
+    },
+  },
+};
 </script>
