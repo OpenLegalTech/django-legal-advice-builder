@@ -27,7 +27,11 @@
         </div>
 
         <div class="col-4">
-            <div class="mt-3 sticky-top">
+            <h2>{% trans 'Placeholders' %}</h2>
+            <div class="alert alert-light mb-0" role="alert">
+                {% trans 'Click on '%} <i class="bi bi-clipboard"></i> {% trans 'to copy placeholder.'%}
+              </div>
+            <div class="sticky-top">
                 <div id="placeholders" class="sticky-top pt-3">
                     <placeholders
                         :placeholders="{{ placeholders }}"
