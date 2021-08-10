@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.db import models
@@ -78,10 +79,13 @@ class Document(models.Model):
                     )
                 else:
                     index = answers_questions.index(question.id)
+                    answer = self.sample_answers[index]
+                    if 'date' in answer and answer.get('date'):
+                        date = datetime.datetime.strptime(answer.get('date'), '%d.%m.%Y').date()
+                        answer['date'] = date.strftime('%Y-%m-%d')
                     initial_data.append(
-                        self.sample_answers[index]
+                        answer
                     )
-
         return initial_data
 
     @cached_property
