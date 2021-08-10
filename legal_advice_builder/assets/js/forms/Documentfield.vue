@@ -6,15 +6,22 @@
       @click="toggleShowForm"
       v-bind:style="{ cursor: 'pointer' }"
       class="bg-light position-relative my-2"
-      :class="{
-        'text-black-50': this.newQuestion !== '' && this.newIfValue !== '',
-      }"
     >
       <div
-        v-if="renderedContent == '' && !showForm"
-        class="position-absolute top-50 start-50 translate-middle"
+        v-if="this.newQuestion !== '' && this.newIfValue !== '' && !showForm"
+        class="
+          opacity-50
+          position-absolute
+          top-50
+          start-50
+          translate-middle
+          bg-dark
+          text-white
+          p-1
+        "
       >
-        {{ this.getEmptyContentPlaceholder() }}
+        <small>Condition</small>
+        <p class="mb-0">{{ this.getText() }} - {{ this.newIfValue }}</p>
       </div>
       <div
         v-if="!showForm"
@@ -25,25 +32,43 @@
     </div>
 
     <div v-if="showForm" class="card">
-      <div class="card-header text-end">
+      <div class="card-header text-end p-1 border-0">
         <span
           @click="toggleShowForm"
           :style="{ cursor: 'pointer' }"
-          class="badge rounded-pill bg-white text-body mb-2"
+          class="badge rounded-pill bg-transparent text-body"
         >
-          <i class="bi bi-x-circle"></i> close
+          <i class="bi bi-x-lg"></i>
         </span>
       </div>
-      <div class="card-body">
-        <small v-if="showForm && !showConditionForm"
-          >This textblock is always displayed
-          <span
-            @click="toggleConditionShowForm"
-            :style="{ cursor: 'pointer' }"
-            class="badge rounded-pill bg-primary"
-            >Change</span
-          ></small
+      <div class="card-body bg-light">
+        <div
+          v-if="showForm && !showConditionForm && !newQuestion && !newIfValue"
+          class="opacity-50 bg-dark text-white p-2"
         >
+          <small>Condition</small>
+          <p class="mb-0">This textblock is always displayed</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+            <button @click="toggleConditionShowForm" class="btn btn-dark border btn-sm" type="button">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </div>
+
+        <div
+          v-if="showForm && !showConditionForm && newQuestion && newIfValue"
+          class="opacity-50 bg-dark text-white p-2"
+        >
+          <small>Condition</small>
+          <p class="mb-0">{{ this.getText() }} - {{ this.newIfValue }}</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+            <button @click="resetCondition" class="btn btn-dark border btn-sm me-md-1" type="button"><i class="bi bi-trash"></i></button>
+            <button @click="toggleConditionShowForm" class="btn btn-dark border btn-sm" type="button">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </div>
+
         <small v-if="showForm && showConditionForm"
           >Show this textblock only when the answer to the question
         </small>
@@ -75,15 +100,10 @@
                 </option>
               </select>
             </div>
-            <div class="col-sm" v-if="newQuestion !== ''">
-              <button @click="resetCondition" class="btn btn-primary">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
           </div>
         </div>
       </div>
-      <div class="card-body">
+      <div class="card-body bg-light">
         <editor
           v-model="renderedContentEdited"
           :init="{
@@ -145,7 +165,7 @@ export default {
       renderedContent: this.content,
       hover: false,
       showForm: false,
-      showConditionForm: !this.if_value == "",
+      showConditionForm: false,
       textblockid: this.textblock,
       renderedContentEdited: this.content,
       newQuestion: this.question,
@@ -168,6 +188,16 @@ export default {
         for (let i = 0; i < this.questions.length; i++) {
           if (this.questions[i].id.toString() == this.newQuestion) {
             return this.questions[i].options;
+          }
+        }
+      }
+      return {};
+    },
+    getText: function () {
+      if (this.newQuestion !== "" && this.questions.length > 0) {
+        for (let i = 0; i < this.questions.length; i++) {
+          if (this.questions[i].id.toString() == this.newQuestion) {
+            return this.questions[i].text;
           }
         }
       }

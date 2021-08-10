@@ -57,7 +57,6 @@ class TextBlockCondition(AbstractCondition):
                                    on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ['question', 'if_value']
         default_related_name = 'text_block_condition'
 
     def __str__(self):
