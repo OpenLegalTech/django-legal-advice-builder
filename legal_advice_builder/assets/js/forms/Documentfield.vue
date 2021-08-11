@@ -20,7 +20,6 @@
           translate-middle
         "
         role="group"
-        aria-label="Basic example"
       >
         <button
           title="edit text"
@@ -48,31 +47,41 @@
       </div>
 
       <div
-        v-if="newQuestion && newIfValue && hover && !showForm && !showConditionForm"
+        v-if="
+          newQuestion && newIfValue && hover && !showForm && !showConditionForm
+        "
         class="
           position-absolute
           btn-group
           border
-          top-100 start-50 translate-middle
+          top-100
+          start-50
+          translate-middle
         "
         role="group"
-        aria-label="Basic example"
       >
-        <button
-          title="edit condition"
-          type="button"
-          @click="toggleConditionShowForm"
-          class="btn bg-white text-body btn-sm"
+        <div
+          class="
+            alert alert-primary
+            d-flex
+            align-items-center
+            rounded-0
+            mb-0
+            p-1
+          "
+          role="alert"
         >
-          {{ this.getText() }} - {{ this.newIfValue }}
-        </button>
+          <div><small>{{ this.getText() }} - {{ this.newIfValue }}</small></div>
+        </div>
       </div>
 
       <div
         v-if="!showForm && !showConditionForm"
         :style="getContentStyles()"
         ref="contentBox"
-        :class="{'border-start border-end mx-3 px-3': newIfValue && newQuestion}"
+        :class="{
+          'border-start border-end mx-3 px-3': newIfValue && newQuestion,
+        }"
         v-html="renderedContent"
       ></div>
 
@@ -114,17 +123,23 @@
             class="alert alert-primary d-flex align-items-center rounded-0"
             role="alert"
           >
-            <p v-if="!newIfValue">This Textblock is always displayed.</p>
-            <p v-if="newQuestion && newIfValue">This Textblock only displayed when the answer to "{{ this.getText() }}" is  "{{ this.newIfValue }}".</p>
+            <p v-if="!newQuestion">This Textblock is always displayed.</p>
+            <p v-if="newQuestion">
+              This Textblock only displayed when the answer to "{{
+                this.getText()
+              }}" is "{{ this.newIfValue }}".
+            </p>
           </div>
           <div>
             <div class="row g-3 mb-3 mx-1">
-              <div class="col-sm-7">
+              <div class="col-sm-3">Display textblock if answer to question:</div>
+              <div class="col-sm-3">
                 <select
                   class="form-select"
                   v-model="newQuestion"
                   @change="options = getOptions()"
                 >
+                  <option value="" selected disabled hidden>Pick Question ...</option>
                   <option
                     v-for="(question, index) in questions"
                     :value="question.id"
@@ -134,8 +149,10 @@
                   </option>
                 </select>
               </div>
+              <div class="col-sm-3" v-if="newQuestion !== ''">is</div>
               <div class="col-sm-3" v-if="newQuestion !== ''">
                 <select class="form-select" v-model="newIfValue">
+                  <option value="" selected disabled hidden>Pick Option ...</option>
                   <option
                     v-for="(optionValue, optionKey, index) in options"
                     :value="optionValue"
@@ -144,15 +161,6 @@
                     {{ optionValue }}
                   </option>
                 </select>
-              </div>
-              <div class="col-sm-3" v-if="newQuestion !== ''">
-                <button
-                  @click="resetCondition"
-                  class="btn btn-outline-light btn-sm me-md-1"
-                  type="button"
-                >
-                  <i class="bi bi-trash"></i>
-                </button>
               </div>
             </div>
           </div>
@@ -164,6 +172,14 @@
             type="button"
           >
             cancel
+          </button>
+           <button
+            v-if="newQuestion && newIfValue"
+            class="btn btn-outline-light btn-sm me-md-2"
+            @click="resetCondition"
+            type="button"
+          >
+            <i class="bi bi-trash"></i>
           </button>
           <button class="btn btn-success btn-sm" @click="save" type="button">
             save
@@ -254,6 +270,7 @@ export default {
     resetCondition: function () {
       this.newQuestion = "";
       this.newIfValue = "";
+      this.save();
     },
     toggleHover: function () {
       this.hover = !this.hover;
