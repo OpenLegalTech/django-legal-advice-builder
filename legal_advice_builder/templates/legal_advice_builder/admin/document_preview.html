@@ -25,9 +25,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-heading{{ forloop.counter }}">
                         <button class="accordion-button bg-white text-body" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ forloop.counter }}">
-                          {% for field in form.visible_fields %}
-                          {{ field.label }}
-                          {% endfor %}
+                            {{ form.visible_fields.0.label }}
                         </button>
                       </h2>
                       <div id="panelsStayOpen-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ forloop.counter }}">
