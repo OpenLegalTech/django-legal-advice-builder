@@ -4,11 +4,11 @@
 {% block current_form %}
 <ul class="nav nav-pills justify-content-end" id="question" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button"
+        <button class="nav-link active rounded-0" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button"
             role="tab" aria-controls="preview" aria-selected="true">{% trans 'question' %}</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link position-relative" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button" role="tab" aria-controls="logic" aria-selected="false">
+        <button class="nav-link position-relative rounded-0" id="logic-tab" data-bs-toggle="tab" data-bs-target="#logic" type="button" role="tab" aria-controls="logic" aria-selected="false">
             {% trans 'logic' %} ({{ question.conditions.count }})
         </button>
     </li>
@@ -20,7 +20,7 @@
             <div class="text-end">
                 <button class="btn btn-light btn-sm border btn pull-right" id="showQuestionDetailButton" style="display: none;" onclick="showQuestionDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
                 <button class="btn btn-light btn-sm border btn pull-right" id="showQuestionFormButton" onclick="showQuestionForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
-                <button class="btn btn-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionDeleteModal{{ question.id }}" type="button">{% trans 'delete' %}</button>
+                <button class="btn btn-outline-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionDeleteModal{{ question.id }}" type="button">{% trans 'delete' %}</button>
             </div>
             <div class="mt-3" id="question_detail">
                 <div class="row">
@@ -66,7 +66,7 @@
 
                     {% include 'legal_advice_builder/admin/form_field.html' with field=form.information %}
                     <div class="text-end mt-3">
-                        <input class="btn btn-primary btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
+                        <input class="btn btn-success btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />
                     </div>
                 </form>
             </div>

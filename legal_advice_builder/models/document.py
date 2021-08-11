@@ -81,7 +81,7 @@ class Document(models.Model):
                     index = answers_questions.index(question.id)
                     answer = self.sample_answers[index]
                     if 'date' in answer and answer.get('date'):
-                        date = datetime.datetime.strptime(answer.get('date'), '%d.%m.%Y').date()
+                        date = datetime.datetime.strptime(answer.get('date'), '%m.%d.%Y').date()
                         answer['date'] = date.strftime('%Y-%m-%d')
                     initial_data.append(
                         answer

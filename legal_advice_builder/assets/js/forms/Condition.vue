@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div v-if="Object.keys(ifoptions).length > 1 && (questiontype == 'SO' || questiontype == 'MO')" class="row justify-content-start">
+    <div v-if="Object.keys(ifoptions).length > 1 && (questiontype == 'SO' || questiontype == 'MO' || questiontype == 'DT')" class="row justify-content-start">
       <div class="col-xxl-6">
           <select class="form-select" v-model="newIfOption" @change="onChange">
               <option value="" selected disabled hidden>Bedingung</option>

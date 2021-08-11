@@ -10,9 +10,9 @@
 {% block main_content %}
     <div class="row mb-3">
        <div class="col-8">
-            <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
-                <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'view preview' %}</a>
-            </div> -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end py-3">
+                <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'test document' %}</a>
+            </div>
             <div class="border">
                 <div id="app">
                     {% csrf_token %}

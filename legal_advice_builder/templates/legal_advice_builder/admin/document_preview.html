@@ -16,6 +16,7 @@
 
 
     <div class="col-4">
+        {% if questions_formset|length > 0 %}
         <h2>{% trans 'Test Answers' %}</h2>
         <form method="post" class="clearfix">
             {% csrf_token %}
@@ -37,10 +38,11 @@
                 {% endfor %}
             </div>
             <div class="text-end mt-3">
-                <input class="btn btn-primary btn-sm pull-right" type="submit" value="{% trans 'Save' %}" />
+                <input class="btn btn-success btn-sm pull-right" type="submit" value="{% trans 'Save' %}" />
             </div>
         </form>
     </div>
+    {% endif %}
 
 </div>
 {% endblock %}

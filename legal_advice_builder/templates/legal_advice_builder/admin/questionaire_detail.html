@@ -15,8 +15,8 @@
             </div>
             <div class="col">
                 <div class="text-end mt-3">
-                    <button class="btn btn-secondary text-white btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
-                    <button class="btn btn-secondary text-white btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" id="showDetailButton" style="display: none;" onclick="showQuestionaireDetail()" type="button"><i class="bi bi-check"></i> {% trans 'done' %}</button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" id="showFormButton" onclick="showQuestionaireForm()" type="button"><i class="bi bi-pencil"></i> {% trans 'edit' %}</button>
                     {% if lawcase.questionaire_set.all.count > 1 %}
                     <button class="btn btn-outline-danger btn-sm pull-right" data-bs-toggle="modal" data-bs-target="#questionaireDeleteModal{{ questionaire.id }}" type="button"><i class="bi bi-trash"></i>{% trans 'delete' %}</button>
                     {% endif %}
@@ -65,7 +65,7 @@
                 <ul class="list-group">
                     {% for question in questionaire.questions %}
                         <a href="{% url 'legal_advice_builder:question-update' question.id %}"
-                        class="list-group-item position-relative list-group-item-action border-0 border-bottom border {% if object == question %}active{% endif %}"
+                        class="list-group-item position-relative list-group-item-action border-0 border-bottom border rounded-0 {% if object == question %}active{% endif %}"
                         >
                             <i class="{{ question.icon }}"></i> {{ question.text }}
                             {% if question.has_error %}
@@ -96,8 +96,8 @@
                     {% include 'legal_advice_builder/admin/form.html' with form=question_create_form %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
-                    <button type="submit" name="question_create" class="btn btn-primary">{% trans 'Save' %}</button>
+                    <button type="button" class="btn btn-link btn-sm" data-bs-dismiss="modal">{% trans 'cancel' %}</button>
+                    <button type="submit" name="question_create" class="btn btn-success btn-sm">{% trans 'Save' %}</button>
                 </div>
             </form>
         </div>

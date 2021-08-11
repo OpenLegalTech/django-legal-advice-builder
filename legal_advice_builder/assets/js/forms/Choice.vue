@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="col-2">
-      <button class="btn btn-danger" @click="deleteChoice">Delete</button>
+      <button class="btn btn-sm btn-outline-danger" @click="deleteChoice">Delete</button>
     </div>
   </div>
 </template>
