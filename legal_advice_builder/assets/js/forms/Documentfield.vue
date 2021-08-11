@@ -3,7 +3,6 @@
     <div
       @mouseenter="toggleHover"
       @mouseleave="toggleHover"
-      v-bind:style="{ cursor: 'pointer' }"
       class="position-relative my-2 px-3 pt-3 pb-1"
       :class="{
         'bg-light': hover && !showForm && !showConditionForm,
@@ -49,9 +48,31 @@
       </div>
 
       <div
+        v-if="newQuestion && newIfValue && hover && !showForm && !showConditionForm"
+        class="
+          position-absolute
+          btn-group
+          border
+          top-100 start-50 translate-middle
+        "
+        role="group"
+        aria-label="Basic example"
+      >
+        <button
+          title="edit condition"
+          type="button"
+          @click="toggleConditionShowForm"
+          class="btn bg-white text-body btn-sm"
+        >
+          {{ this.getText() }} - {{ this.newIfValue }}
+        </button>
+      </div>
+
+      <div
         v-if="!showForm && !showConditionForm"
         :style="getContentStyles()"
         ref="contentBox"
+        :class="{'border-start border-end mx-3 px-3': newIfValue && newQuestion}"
         v-html="renderedContent"
       ></div>
 
