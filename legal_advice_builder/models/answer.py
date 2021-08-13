@@ -12,7 +12,6 @@ class Answer(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True)
-    message = models.TextField(blank=True)
     rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
 
     def __str__(self):

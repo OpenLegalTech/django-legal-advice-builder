@@ -13,12 +13,6 @@ from legal_advice_builder.utils import generate_answers_dict_for_template
 
 class Document(models.Model):
     name = models.CharField(max_length=200)
-    recipient = models.TextField(blank=True)
-    sender = models.TextField(blank=True)
-    date = models.CharField(blank=True, max_length=50)
-    subject = models.CharField(blank=True, max_length=200)
-    signature = models.TextField(blank=True)
-
     sample_answers = models.JSONField(null=True, default=dict, blank=True)
 
     def __str__(self):
@@ -125,8 +119,8 @@ class TextBlock(models.Model):
 
     @property
     def content_with_condition(self):
-        if self.text_block_conditions.first():
-            condition = self.text_block_conditions.first()
+        condition = self.text_block_conditions.first()
+        if condition:
             question_string = condition.question.get_dict_key()[0]
             string_with_condition = '{{% if answers.{} == "{}" %}} {} {{% endif %}}'.format(
                 question_string, condition.if_value, self.content)

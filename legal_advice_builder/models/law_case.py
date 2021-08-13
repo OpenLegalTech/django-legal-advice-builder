@@ -7,7 +7,6 @@ from .document import Document
 class LawCase(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    extra_help = models.TextField(blank=True)
     allow_download = models.BooleanField(default=True)
     save_answers = models.BooleanField(default=True)
     document = models.OneToOneField(Document,

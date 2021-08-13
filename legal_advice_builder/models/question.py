@@ -46,7 +46,6 @@ class Question(MP_Node):
         default=SINGLE_OPTION,
     )
     help_text = models.CharField(max_length=200, blank=True)
-
     information = models.TextField(blank=True)
 
     @property
