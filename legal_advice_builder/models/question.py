@@ -90,9 +90,6 @@ class Question(MP_Node):
                 if conditions:
                     condition = conditions.first()
                     return condition.then_question
-        next_questions_by_condition = self.conditions.filter(then_value='question', then_question__isnull=False)
-        if next_questions_by_condition:
-            return next_questions_by_condition.first().then_question
         if self.get_children():
             return self.get_children().first()
         elif self.questionaire.next():
