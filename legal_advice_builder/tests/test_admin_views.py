@@ -4,6 +4,16 @@ import pytest
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 
+from legal_advice_builder.admin_views import DocumentFormView
+from legal_advice_builder.admin_views import DocumentPreviewView
+from legal_advice_builder.admin_views import LawCaseDelete
+from legal_advice_builder.admin_views import LawCaseEdit
+from legal_advice_builder.admin_views import LawCaseList
+from legal_advice_builder.admin_views import LawCasePreview
+from legal_advice_builder.admin_views import QuestionaireDeleteView
+from legal_advice_builder.admin_views import QuestionaireDetail
+from legal_advice_builder.admin_views import QuestionDelete
+from legal_advice_builder.admin_views import QuestionUpdate
 from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
 from legal_advice_builder.models import Document
@@ -11,17 +21,7 @@ from legal_advice_builder.models import LawCase
 from legal_advice_builder.models import Question
 from legal_advice_builder.models import Questionaire
 from legal_advice_builder.models import TextBlock
-from legal_advice_builder.views import DocumentFormView
-from legal_advice_builder.views import DocumentPreviewView
-from legal_advice_builder.views import LawCaseDelete
-from legal_advice_builder.views import LawCaseEdit
-from legal_advice_builder.views import LawCaseList
-from legal_advice_builder.views import LawCasePreview
 from legal_advice_builder.views import PdfDownloadView
-from legal_advice_builder.views import QuestionaireDeleteView
-from legal_advice_builder.views import QuestionaireDetail
-from legal_advice_builder.views import QuestionDelete
-from legal_advice_builder.views import QuestionUpdate
 
 from .helpers import get_single_option_question
 from .helpers import get_text_question

@@ -1,16 +1,16 @@
 from django.urls import path
 
-from .views import DocumentCreateView
-from .views import DocumentFormView
-from .views import DocumentPreviewView
-from .views import LawCaseDelete
-from .views import LawCaseEdit
-from .views import LawCaseList
-from .views import LawCasePreview
-from .views import QuestionaireDeleteView
-from .views import QuestionaireDetail
-from .views import QuestionDelete
-from .views import QuestionUpdate
+from .admin_views import DocumentCreateView
+from .admin_views import DocumentFormView
+from .admin_views import DocumentPreviewView
+from .admin_views import LawCaseDelete
+from .admin_views import LawCaseEdit
+from .admin_views import LawCaseList
+from .admin_views import LawCasePreview
+from .admin_views import QuestionaireDeleteView
+from .admin_views import QuestionaireDetail
+from .admin_views import QuestionDelete
+from .admin_views import QuestionUpdate
 
 app_name = 'legal_advice_builder'
 urlpatterns = [
