@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/OpenLegalTech/django-legal-advice-builder/badge.svg)](https://coveralls.io/github/OpenLegalTech/django-legal-advice-builder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/OpenLegalTech/django-legal-advice-builder/blob/main/LICENSE)
 
-Django Legal Advice Builder is an app that you can add to your existing Django Project in order to generate questionaires and documents based. Basically it implements the three following functionalities:
+Django Legal Advice Builder is an app that you can add to your existing Django Project in order to generate multi step forms and and documents based on the users input. Basically it implements the three following functionalities:
 
 1. UI to create questionaires with questions and branching
 2. UI to create documents with textblocks that can include answers of the users and that can be displayed or not displayed based on the user's answer.
