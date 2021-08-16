@@ -38,7 +38,7 @@ urlpatterns = [
 
 4) To add Questionaire urls 
     * add a view that inherits from FormWizardView and 
-    * overwrites def get_lawcase()
+    * overwrites `get_lawcase()`
     * overwrite `legal_advice_builder/form_wizard.html`
 
 
