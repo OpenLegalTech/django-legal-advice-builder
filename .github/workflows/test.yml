@@ -27,7 +27,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=119 --statistics
     - name: Test with pytest
       run: |
-        python -m pytest --cov=./django-legal-advice-builder --cov-report xml
+        pytest --cov
     - name: Coveralls
       run: |
         python -m pip install coveralls==2.2
