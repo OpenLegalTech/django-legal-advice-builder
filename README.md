@@ -34,5 +34,28 @@ urlpatterns = [
     path('advice-builder', include('legal_advice_builder.urls')),
     ...
 ]
+```
+
+4) To add Questionaire urls 
+    * add a view that inherits from FormWizardView and 
+    * overwrites def get_lawcase(self)
+    * overwrite `legal_advice_builder/form_wizard.html`
+
+
+e.g. like this:
+```
+from legal_advice_builder.models import LawCase
+from legal_advice_builder.views import FormWizardView
+...
+class LawCaseForm(FormWizardView):
+
+    def get_lawcase(self):
+        pk = self.kwargs.get('pk')
+        return LawCase.objects.get(pk=pk)  
+```
+
+
+
+
 
 
