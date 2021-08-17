@@ -339,8 +339,10 @@ def test_get_dict_key(questionaire_factory):
 @pytest.mark.django_db
 def test_string():
     q1 = Question.add_root(**get_single_option_question())
-    assert str(q1) == '{} {} ({})'.format('', q1.text, q1.get_options_names())
+    q1.text = 'test'
+    q1.save()
+    assert str(q1) == 'test'
     q1.short_title = 'question'
     q1.field_type = q1.TEXT
     q1.save()
-    assert str(q1) == '{}: {}'.format('question', q1.text)
+    assert str(q1) == 'test'

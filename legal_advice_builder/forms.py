@@ -68,10 +68,10 @@ class FormControllClassMixin:
         super().__init__(*args, **kwargs)
         for field in self.fields:
             widget = self.fields[field].widget
-            if hasattr(widget, 'input_type') and not widget.input_type == 'checkbox':
-                self.fields[field].widget.attrs = {'class': 'form-control'}
             if hasattr(widget, 'input_type') and widget.input_type == 'checkbox':
                 self.fields[field].widget.attrs = {'class': 'form-check-input'}
+            else:
+                self.fields[field].widget.attrs = {'class': 'form-control'}
 
 
 class WizardForm(forms.Form, DispatchQuestionFieldTypeMixin):
