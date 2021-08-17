@@ -4,6 +4,7 @@ from django import forms
 from django.forms import fields
 from django.forms.models import model_to_dict
 from django.utils import dateformat
+from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
 
 from .models import Answer
@@ -66,7 +67,11 @@ class FormControllClassMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs = {'class': 'form-control'}
+            widget = self.fields[field].widget
+            if hasattr(widget, 'input_type') and not widget.input_type == 'checkbox':
+                self.fields[field].widget.attrs = {'class': 'form-control'}
+            if hasattr(widget, 'input_type') and widget.input_type == 'checkbox':
+                self.fields[field].widget.attrs = {'class': 'form-check-input'}
 
 
 class WizardForm(forms.Form, DispatchQuestionFieldTypeMixin):
@@ -141,19 +146,37 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
             return dateformat.format(date, "m.d.Y")
 
 
-class QuestionConditionForm(forms.ModelForm):
+class QuestionConditionForm(FormControllClassMixin, forms.ModelForm):
     conditions = forms.CharField(required=False)
 
     class Meta:
         model = Question
-        fields = ('conditions',)
+        fields = ('next_question', 'is_last', 'conditions')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(
             question=self.instance)
+        if not self.instance.is_option_question():
+            other_questions = self.instance.questionaire.questions
+            default_next = self.instance.get_children().first()
+            if default_next:
+                other_questions = other_questions.exclude(id=default_next.id)
+                self.fields['next_question'].empty_label = default_next.text
+            self.fields['next_question'].queryset = other_questions.exclude(
+                id=self.instance.id)
+            self.fields['next_question'].required = False
+            self.fields['is_last'].label = _('Jump to next questionaire after this question.')
+        else:
+            del self.fields['next_question']
+            del self.fields['is_last']
 
     def save(self, commit=True):
+        if 'is_last' in self.cleaned_data:
+            self.instance.is_last = self.cleaned_data['is_last']
+        if 'next_question' in self.cleaned_data:
+            self.instance.next_question = self.cleaned_data['next_question']
+        self.instance.save()
         if self.cleaned_data['conditions']:
             self.instance.conditions.all().delete()
             conditions = json.loads(self.cleaned_data.pop('conditions'))
