@@ -40,6 +40,7 @@
         <button
           title="delete textblock"
           type="button"
+          @click="deleteField"
           class="btn bg-white text-body btn-sm"
         >
           <i class="bi bi-trash"></i>
@@ -200,12 +201,13 @@ export default {
   props: {
     content: String,
     document: Number,
-    textblock: Number,
+    textblock: [Number, String],
+    listindex: Number,
     name: String,
     if_option: String,
     if_value: String,
     question: String,
-    questions: Array,
+    questions: Array
   },
   data: function () {
     this.$root.csrfToken = document.querySelector(
@@ -213,10 +215,10 @@ export default {
     ).value;
 
     return {
-      formheight: 40,
+      formheight: 140,
       renderedContent: this.content,
       hover: false,
-      showForm: false,
+      showForm: this.textblock == '',
       showConditionForm: false,
       textblockid: this.textblock,
       renderedContentEdited: this.content,
@@ -289,6 +291,11 @@ export default {
       this.newQuestion = this.question;
       this.newIfValue = this.if_value;
       this.renderedContentEdited = this.renderedContent;
+    },
+    deleteField: function() {
+      this.renderedContentEdited = ''
+      this.save()
+      this.$emit('deleteField', this.listindex, this.textblock)
     },
     save: function () {
       const data = {

@@ -2,7 +2,8 @@
   <div>
     <DocumentField
       v-for="(field, index) in fieldlist"
-      :key="`${name}-${index}`"
+      :listindex="index"
+      :key="`${field.textblock}-${index}`"
       :content="field.content"
       :document="field.document"
       :name="field.name"
@@ -11,6 +12,7 @@
       :if_option="field.if_option"
       :if_value="field.if_value"
       :questions="questions"
+      @deleteField="deleteField"
     ></DocumentField>
     <div class="d-grid gap-2 mt-5 mx-3 mb-3">
       <button class="btn btn-primary" @click="addField" type="button">
@@ -47,9 +49,12 @@ export default {
         textblock: '',
         question: '',
         if_option: '',
-        if_value: ''
+        if_value: '',
       })
     },
+    deleteField: function (index, textblock) {
+      this.$delete(this.fieldlist, index);
+    }
   },
 };
 </script>

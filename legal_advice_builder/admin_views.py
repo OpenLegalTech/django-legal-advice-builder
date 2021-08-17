@@ -191,9 +191,12 @@ class DocumentFormView(TemplateView):
             )
         else:
             textblock = TextBlock.objects.get(id=textblock)
-            textblock.content = content
-            textblock.save()
-            textblock.text_block_conditions.all().delete()
+            if content:
+                textblock.content = content
+                textblock.save()
+                textblock.text_block_conditions.all().delete()
+            else:
+                textblock.delete()
         if question and if_value:
             TextBlockCondition.objects.create(
                 text_block=textblock,
@@ -341,5 +344,6 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
                 initial={'question': self.get_object().id}),
             'questionaire_update_form': QuestionaireForm(
                 instance=self.get_object().questionaire),
+            'document_form': DocumentForm()
         })
         return context
