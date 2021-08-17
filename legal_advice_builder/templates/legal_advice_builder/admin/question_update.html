@@ -75,7 +75,7 @@
     <div class="tab-pane fade" id="logic" role="tabpanel" aria-labelledby="logic-tab">
         <form class=" p-3 border border-primary border-5" method="post">
             {% csrf_token %}
-            {{ condition_form }}
+            {% include 'legal_advice_builder/admin/form.html' with form=condition_form %}
             {{ condition_form.media }}
             <div class="text-end mt-3">
                 <input class="btn btn-primary btn-sm pull-right" type="submit" name="logic" value="{% trans 'Save' %}" />

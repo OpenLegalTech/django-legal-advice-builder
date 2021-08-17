@@ -18,7 +18,6 @@ class Question(MP_Node):
     FIELD_TYPES = [
         (TEXT, _('Long multiline Text input')),
         (SINGLE_OPTION, _('Pick one of multiple options')),
-        (MULTIPLE_OPTIONS, _('Pick several of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
         (DATE, _('Date')),
         (YES_NO, _('Yes/No'))
@@ -47,10 +46,16 @@ class Question(MP_Node):
     )
     help_text = models.CharField(max_length=200, blank=True)
     information = models.TextField(blank=True)
+    next_question = models.ForeignKey('legal_advice_builder.Question', null=True,
+                                      on_delete=models.SET_NULL)
+    is_last = models.BooleanField(default=False)
 
     @property
     def conditions(self):
         return self.question_condition
+
+    def is_option_question(self):
+        return self.field_type in [self.SINGLE_OPTION, self.YES_NO, self.MULTIPLE_OPTIONS]
 
     def save(self, *args, **kwargs):
         if self.field_type == self.YES_NO:
@@ -74,7 +79,7 @@ class Question(MP_Node):
                 child.move(new_parent, pos='last-child')
                 child.refresh_from_db()
 
-    def next(self, option=None, text=None, date=None):
+    def check_for_success(self, option=None, text=None, date=None):
         if option or date or text:
             if self.is_status_by_conditions('success', option, date, text):
                 if self.questionaire.next():
@@ -90,6 +95,19 @@ class Question(MP_Node):
                 if conditions:
                     condition = conditions.first()
                     return condition.then_question
+        return False
+
+    def next(self, option=None, text=None, date=None):
+        next_by_condition = self.check_for_success(option=option, text=text, date=date)
+        if next_by_condition is not False:
+            return next_by_condition
+        if self.next_question:
+            return self.next_question
+        if self.is_last:
+            if self.questionaire.next():
+                return self.questionaire.next().get_first_question()
+            else:
+                return None
         if self.get_children():
             return self.get_children().first()
         elif self.questionaire.next():
@@ -125,7 +143,9 @@ class Question(MP_Node):
                 'success', option=option, date=date, text=text)
             condition_failure = self.is_status_by_conditions(
                 'failure', option=option, date=date, text=text)
-            if condition_success or (not next and not condition_failure and not self.questionaire.law_case.document):
+            if (condition_success or
+               (not next and not condition_failure and not self.questionaire.law_case.document) or
+               self.is_last):
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,
@@ -198,11 +218,4 @@ class Question(MP_Node):
         return '{}_{}'.format(qn_key, question_key), value
 
     def __str__(self):
-        short_title = self.short_title if self.short_title else ''
-        if self.field_type == self.SINGLE_OPTION:
-            return '{} {} ({})'.format(
-                short_title,
-                self.text,
-                self.get_options_names())
-        else:
-            return '{}: {}'.format(short_title, self.text)
+        return self.text
