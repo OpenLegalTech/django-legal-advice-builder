@@ -258,6 +258,11 @@ class QuestionaireForm(FormControllClassMixin, forms.ModelForm):
         model = Questionaire
         fields = ('title', 'success_message')
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.instance.law_case.questionaire_count() <= 1:
+            del self.fields['title']
+
 
 class QuestionaireCreateForm(FormControllClassMixin, forms.ModelForm):
 

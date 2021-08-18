@@ -12,6 +12,7 @@
         </li>
     </ul>
 </div>
+{% if lawcase.questions > 0 %}
 <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -19,6 +20,7 @@
         </li>
     </ul>
 </div>
+{% endif %}
 
 {% endblock %}
 
@@ -32,6 +34,7 @@
                 {% trans 'Questionaires' %}
             </div>
             <ul class="list-group list-group-flush">
+                {% if lawcase.questionaire_set.count > 1 %}
                 {% for qn in lawcase.questionaire_set.all %}
                 <a class="list-group-item {% if questionaire == qn %}active{% endif %}"
                     href="{% url 'legal_advice_builder:questionaire-detail' qn.id %}">
@@ -41,8 +44,9 @@
                     {% endif %}
                 </a>
                 {% endfor %}
+                {% endif %}
             </ul>
-            <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionaireForm">{% trans 'Add questionaire' %}</button>
+            <button class="btn btn-link btn-sm mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionaireForm">{% trans 'Add questionaire' %}</button>
         </div>
 
         <div class="card mt-3 ">
@@ -54,7 +58,7 @@
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="list-group-item"><i class="bi bi-file-earmark-text"></i> {% trans 'Template' %}</a>
             </ul>
             {% else %}
-            <button class="btn btn-primary mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newDocumentForm">{% trans 'Add document' %}</button>
+            <button class="btn btn-link btn-sm mx-1 my-3" type="button" data-bs-toggle="modal" data-bs-target="#newDocumentForm">{% trans 'Add document' %}</button>
             {% endif %}
         </div>
 

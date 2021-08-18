@@ -10,8 +10,10 @@
     <div class="bg-light p-3 mb-3 border-bottom">
         <div class="row">
             <div class="col">
+                {% if lawcase.questionaire_set.count > 1 %}
                 <small>{% trans 'Questionaire' %}</small>
                 <h1 class="fs-3">{{ questionaire.title }}</h1>
+                {% endif %}
             </div>
             <div class="col">
                 <div class="text-end mt-3">
@@ -29,8 +31,10 @@
                     <small>{{ questionaire_update_form.success_message.help_text }}</small>
                     <div class="my-2">
                       <div class="alert alert-success mt-3" role="alert">
+                        {% if lawcase.questionaire_set.count > 1 %}  
                         <div class="mb-3 fw-bold pb-2">Schritt {{ current_step|add:1}} von {{ lawcase.questionaire_count }}: {{ questionaire }} <i class="bi bi-check-lg"></i></div>
-                          <div>{{ questionaire.success_message }}</div>
+                        {% endif %}
+                        <div>{{ questionaire.success_message }}</div>
                         </div>
                     </div>
                 </div>
@@ -38,11 +42,13 @@
             <div class="row" id="questionaire_form" style="display: none;">
                 <form method="post">
                     {% csrf_token %}
+                    {% if lawcase.questionaire_set.count > 1 %}
                     <div class="row">
                         <div class="col m-2 p-2">
                             {% include 'legal_advice_builder/admin/form_field.html' with field=questionaire_update_form.title %}
                         </div>
                     </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col border m-2 p-2">
                             <small>{{ questionaire_update_form.success_message.help_text }}</small>
@@ -52,13 +58,14 @@
                         </div>
                     </div>
                     <div class="text-end mt-3">
-                        <input class="btn btn-primary btn pull-right" type="submit" name="questionaire_update" value="{% trans 'Save' %}" />
+                        <input class="btn btn-success btn-sm pull-right" type="submit" name="questionaire_update" value="{% trans 'Save' %}" />
                     </div>
                 </form>
             </div>
         </div>
     </div>
     <div class="p-3">
+        {% if questionaire.questions.count > 0 %}
         <h2 class="fs-3">{% trans 'Questions' %}</h2>
         <div class="row">
             <div class="col-4 pe-0" style="margin-top: 2.5rem;">
@@ -80,6 +87,15 @@
                 {% block current_form %}{% endblock %}
             </div>
         </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#newQuestionForm"><i class="bi bi-plus"></i>{% trans 'Add question' %}</button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 

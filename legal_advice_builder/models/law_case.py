@@ -38,21 +38,14 @@ class LawCase(models.Model):
     def questionaire_count(self):
         return self.questionaire_set.count()
 
+    def questions_count(self):
+        return Question.objects.filter(questionaire__law_case=self).count()
+
     def generate_default_questionaires(self):
-        qn = Questionaire.objects.create(
+        Questionaire.objects.create(
             law_case=self,
             title=_('Unnamed Questionaire'),
             order=0
-        )
-        Question.add_root(
-            questionaire=qn,
-            text=_('your question here'),
-            field_type=Question.SINGLE_OPTION,
-            options={
-                'options_1': str(_('Option 1')),
-                'options_2': str(_('Option 2')),
-                'options_3': str(_('Option 3'))
-            }
         )
 
     @property

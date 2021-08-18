@@ -7,11 +7,13 @@ class Questionaire(models.Model):
                                  on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     short_title = models.CharField(max_length=50, blank=True)
-    success_message = models.TextField(blank=True, help_text=_('This message is '
-                                                               'shown if the user has '
-                                                               'reached the end '
-                                                               'of this questionaire '
-                                                               'successfully.'))
+    success_message = models.TextField(blank=True,
+                                       default=_('your message here ...'),
+                                       help_text=_('This message is '
+                                                   'shown if the user has '
+                                                   'answered all '
+                                                   'questions '
+                                                   'successfully.'))
     unsure_message = models.TextField(blank=True)
     order = models.IntegerField()
 

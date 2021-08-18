@@ -26,11 +26,10 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="clearfix border p-3">
+                            {% if lawcase.questionaire_set.count > 1 %}
                             <div class="mb-3 fw-bold border-bottom pb-2">Schritt {{ current_step|add:1 }} von {{ lawcase.questionaire_count }}: {{ question.questionaire }}</div>
+                            {% endif %}
                             {% include 'legal_advice_builder/admin/form.html' with form=question_preview_form %}
-                            <div class="text-end mt-3">
-                                <input class="btn btn-primary btn-sm pull-right" type="submit" value="Weiter" />
-                            </div>
                         </div>
                         {% if question.information %}
                             <div class="card mt-5 alert-info">

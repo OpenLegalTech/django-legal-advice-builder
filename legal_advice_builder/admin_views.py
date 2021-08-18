@@ -51,8 +51,8 @@ class LawCaseList(ListView, FormView):
         )
         law_case.generate_default_questionaires()
         return HttpResponseRedirect(reverse(
-            'legal_advice_builder:question-update',
-                                    args=[law_case.get_first_question().id]))
+            'legal_advice_builder:questionaire-detail',
+                                    args=[law_case.get_first_questionaire().id]))
 
     def get_update_forms(self):
         update_forms = []

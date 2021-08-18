@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-18 15:07+0200\n"
+"POT-Creation-Date: 2021-08-18 16:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,25 +42,9 @@ msgstr "Erfolg: Springe zum nächsten Abschnitt."
 msgid "Rendered Document"
 msgstr "Fertiges Dokument"
 
-#: models/law_case.py:46
+#: models/law_case.py:47
 msgid "Unnamed Questionaire"
 msgstr "Unbenannter Formularabschnitt"
-
-#: models/law_case.py:51
-msgid "your question here"
-msgstr "Frage anlegen"
-
-#: models/law_case.py:54
-msgid "Option 1"
-msgstr "Option 1"
-
-#: models/law_case.py:55
-msgid "Option 2"
-msgstr "Option 2"
-
-#: models/law_case.py:56
-msgid "Option 3"
-msgstr "Option 3"
 
 #: models/question.py:17
 msgid "Long multiline Text input"
@@ -110,13 +94,16 @@ msgstr "Wenn die Antwort auf diese Frage lautet:"
 msgid "If after the date given as answer a timespan of:"
 msgstr "Wenn nach dem Datum, dass als Antwort gegeben wurde, ein Zeitraum von:"
 
-#: models/questionaire.py:10
+#: models/questionaire.py:11
+msgid "your message here ..."
+msgstr "Ihr Text hier ..."
+
+#: models/questionaire.py:12
 msgid ""
-"This message is shown if the user has reached the end of this questionaire "
-"successfully."
+"This message is shown if the user has answered all questions successfully."
 msgstr ""
-"Diese Meldung wird angezeigt, wenn der Formularabschnitt erfolgreich "
-"durchlaufen wurde."
+"Diese Meldung wird angezeigt, wenn alle Fragen erfolgreich "
+"beantwortet wurden."
 
 #: templates/legal_advice_builder/admin/document_form.html:14
 msgid "test document"
@@ -143,13 +130,13 @@ msgid "Test Answers"
 msgstr "Test Antwort"
 
 #: templates/legal_advice_builder/admin/document_preview.html:41
-#: templates/legal_advice_builder/admin/law_case_detail.html:86
-#: templates/legal_advice_builder/admin/law_case_detail.html:108
+#: templates/legal_advice_builder/admin/law_case_detail.html:90
+#: templates/legal_advice_builder/admin/law_case_detail.html:112
 #: templates/legal_advice_builder/admin/law_case_list.html:145
 #: templates/legal_advice_builder/admin/question_update.html:69
 #: templates/legal_advice_builder/admin/question_update.html:81
-#: templates/legal_advice_builder/admin/questionaire_detail.html:55
-#: templates/legal_advice_builder/admin/questionaire_detail.html:100
+#: templates/legal_advice_builder/admin/questionaire_detail.html:61
+#: templates/legal_advice_builder/admin/questionaire_detail.html:116
 msgid "Save"
 msgstr "Speichern"
 
@@ -163,41 +150,41 @@ msgstr "Alle Formulare"
 msgid "back to edit"
 msgstr "Formular bearbeiten"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:18
+#: templates/legal_advice_builder/admin/law_case_detail.html:19
 #: templates/legal_advice_builder/admin/law_case_list.html:51
 msgid "preview"
 msgstr "Vorschau ansehen"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:32
+#: templates/legal_advice_builder/admin/law_case_detail.html:34
 msgid "Questionaires"
 msgstr "Formularabschnitte"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:45
+#: templates/legal_advice_builder/admin/law_case_detail.html:49
 msgid "Add questionaire"
 msgstr "Formularabschnitt anlegen"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:50
+#: templates/legal_advice_builder/admin/law_case_detail.html:54
 msgid "Document"
 msgstr "Dokument"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:54
+#: templates/legal_advice_builder/admin/law_case_detail.html:58
 msgid "Template"
 msgstr "Vorlage"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:57
+#: templates/legal_advice_builder/admin/law_case_detail.html:61
 msgid "Add document"
 msgstr "Dokument hinzufügen"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:76
-#: templates/legal_advice_builder/admin/law_case_detail.html:98
+#: templates/legal_advice_builder/admin/law_case_detail.html:80
+#: templates/legal_advice_builder/admin/law_case_detail.html:102
 msgid "Add new document"
 msgstr "Neues Dokument anlegen"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:85
+#: templates/legal_advice_builder/admin/law_case_detail.html:89
 msgid "Cancel"
 msgstr "abbrechen"
 
-#: templates/legal_advice_builder/admin/law_case_detail.html:107
+#: templates/legal_advice_builder/admin/law_case_detail.html:111
 msgid "Close"
 msgstr "Schließen"
 
@@ -226,7 +213,7 @@ msgstr[1] ""
 
 #: templates/legal_advice_builder/admin/law_case_list.html:58
 #: templates/legal_advice_builder/admin/question_update.html:22
-#: templates/legal_advice_builder/admin/questionaire_detail.html:19
+#: templates/legal_advice_builder/admin/questionaire_detail.html:21
 msgid "edit"
 msgstr "bearbeiten"
 
@@ -234,14 +221,14 @@ msgstr "bearbeiten"
 #: templates/legal_advice_builder/admin/law_case_list.html:97
 #: templates/legal_advice_builder/admin/question_update.html:23
 #: templates/legal_advice_builder/admin/question_update.html:99
-#: templates/legal_advice_builder/admin/questionaire_detail.html:21
-#: templates/legal_advice_builder/admin/questionaire_detail.html:118
+#: templates/legal_advice_builder/admin/questionaire_detail.html:23
+#: templates/legal_advice_builder/admin/questionaire_detail.html:134
 msgid "delete"
 msgstr "Löschen"
 
 #: templates/legal_advice_builder/admin/law_case_list.html:90
 #: templates/legal_advice_builder/admin/question_update.html:92
-#: templates/legal_advice_builder/admin/questionaire_detail.html:111
+#: templates/legal_advice_builder/admin/questionaire_detail.html:127
 #, python-format
 msgid " Do you want to delete \"%(title)s\"? "
 msgstr " Wollen Sie \"%(title)s\" löschen? "
@@ -250,8 +237,8 @@ msgstr " Wollen Sie \"%(title)s\" löschen? "
 #: templates/legal_advice_builder/admin/law_case_list.html:122
 #: templates/legal_advice_builder/admin/law_case_list.html:144
 #: templates/legal_advice_builder/admin/question_update.html:96
-#: templates/legal_advice_builder/admin/questionaire_detail.html:99
 #: templates/legal_advice_builder/admin/questionaire_detail.html:115
+#: templates/legal_advice_builder/admin/questionaire_detail.html:131
 msgid "cancel"
 msgstr "abbrechen"
 
@@ -272,7 +259,7 @@ msgid "logic"
 msgstr "Logik"
 
 #: templates/legal_advice_builder/admin/question_update.html:21
-#: templates/legal_advice_builder/admin/questionaire_detail.html:18
+#: templates/legal_advice_builder/admin/questionaire_detail.html:20
 msgid "done"
 msgstr "fertig"
 
@@ -280,19 +267,20 @@ msgstr "fertig"
 msgid "You picked a field type with options but have not added any options."
 msgstr "Für diese Frage müssen Sie noch Optionen angeben."
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:13
+#: templates/legal_advice_builder/admin/questionaire_detail.html:14
 msgid "Questionaire"
 msgstr "Formularabschnitt"
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:62
+#: templates/legal_advice_builder/admin/questionaire_detail.html:69
 msgid "Questions"
 msgstr "Fragen"
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:76
+#: templates/legal_advice_builder/admin/questionaire_detail.html:83
+#: templates/legal_advice_builder/admin/questionaire_detail.html:94
 msgid "Add question"
 msgstr "Frage anlegen"
 
-#: templates/legal_advice_builder/admin/questionaire_detail.html:90
+#: templates/legal_advice_builder/admin/questionaire_detail.html:106
 msgid "Add new question"
 msgstr "Neue Frage anlegen"
 
@@ -331,6 +319,15 @@ msgstr "Jahren"
 #: widgets.py:74
 msgid "then"
 msgstr "dann"
+
+#~ msgid "Option 1"
+#~ msgstr "Option 1"
+
+#~ msgid "Option 2"
+#~ msgstr "Option 2"
+
+#~ msgid "Option 3"
+#~ msgstr "Option 3"
 
 #~ msgid "verify"
 #~ msgstr "Berechtigung Prüfen"
