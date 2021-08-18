@@ -214,10 +214,11 @@ def test_law_case_delete_view(rf, law_case_factory):
 @pytest.mark.django_db
 def test_questionaire_detail_view(rf, questionaire_factory):
     qn = questionaire_factory()
+    questionaire_factory(law_case=qn.law_case)
 
     request = rf.get('/')
     resp = QuestionaireDetail.as_view()(request, pk=qn.id)
-    assert resp.context_data.get('current_step') == 0
+    assert resp.context_data.get('current_step') == 1
     data = {
         'parent_question': '',
         'text': 'New Question',
@@ -269,6 +270,7 @@ def test_question_delete_view(rf, questionaire_factory):
 @pytest.mark.django_db
 def test_question_update_view(rf, questionaire_factory):
     qn = questionaire_factory()
+    questionaire_factory(law_case=qn.law_case)
     q1 = Question.add_root(
         **get_single_option_question(questionaire=qn)
     )
