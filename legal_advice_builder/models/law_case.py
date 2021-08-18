@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .document import Document
+from .question import Question
+from .questionaire import Questionaire
 
 
 class LawCase(models.Model):
@@ -20,6 +22,9 @@ class LawCase(models.Model):
     def get_first_questionaire(self):
         return self.questionaire_set.first()
 
+    def get_first_question(self):
+        return self.questionaire_set.first().get_first_question()
+
     @property
     def first_questionaire(self):
         return self.get_first_questionaire()
@@ -34,25 +39,25 @@ class LawCase(models.Model):
         return self.questionaire_set.count()
 
     def generate_default_questionaires(self):
-        questionaire_list = [
-            {'title': _('Questionaire 1')},
-        ]
-        from .questionaire import Questionaire
-        if self.document:
-            questionaire_list = [
-                {'title': _('verify')},
-                {'title': _('personal data')}]
-        for index, questionaire in enumerate(questionaire_list):
-            Questionaire.objects.create(
-                law_case=self,
-                title=questionaire.get('title'),
-                order=index
-            )
+        qn = Questionaire.objects.create(
+            law_case=self,
+            title=_('Unnamed Questionaire'),
+            order=0
+        )
+        Question.add_root(
+            questionaire=qn,
+            text=_('your question here'),
+            field_type=Question.SINGLE_OPTION,
+            options={
+                'options_1': str(_('Option 1')),
+                'options_2': str(_('Option 2')),
+                'options_3': str(_('Option 3'))
+            }
+        )
 
     @property
     def placeholders_for_template(self):
         """Returns placeholders used in documentform for vue component."""
-        from .question import Question
         variables = {}
         questions = Question.objects.filter(questionaire__law_case=self)
         for question in questions:

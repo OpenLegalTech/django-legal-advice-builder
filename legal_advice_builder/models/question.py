@@ -2,8 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
-from .questionaire import Questionaire
-
 
 class Question(MP_Node):
 
@@ -33,7 +31,7 @@ class Question(MP_Node):
         YES_NO: 'bi bi-circle-half'
     }
 
-    questionaire = models.ForeignKey(Questionaire,
+    questionaire = models.ForeignKey('legal_advice_builder.Questionaire',
                                      null=True,
                                      on_delete=models.CASCADE)
     short_title = models.CharField(max_length=50, blank=True)

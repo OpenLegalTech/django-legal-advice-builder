@@ -7,6 +7,7 @@ from .admin_views import LawCaseDelete
 from .admin_views import LawCaseEdit
 from .admin_views import LawCaseList
 from .admin_views import LawCasePreview
+from .admin_views import QuestionaireCreate
 from .admin_views import QuestionaireDeleteView
 from .admin_views import QuestionaireDetail
 from .admin_views import QuestionDelete
@@ -19,6 +20,7 @@ urlpatterns = [
     path('<int:pk>/delete/', LawCaseDelete.as_view(), name='law-case-delete'),
     path('<int:pk>/preview/', LawCasePreview.as_view(), name='law-case-preview'),
     path('<int:pk>/document/create/', DocumentCreateView.as_view(), name='document-create'),
+    path('<int:pk>/questionaire/create/', QuestionaireCreate.as_view(), name='questionaire-create'),
     path('questionaire/<int:pk>/', QuestionaireDetail.as_view(), name='questionaire-detail'),
     path('questionaire/<int:pk>/delete', QuestionaireDeleteView.as_view(), name='questionaire-delete'),
     path('question/<int:pk>/edit', QuestionUpdate.as_view(), name='question-update'),

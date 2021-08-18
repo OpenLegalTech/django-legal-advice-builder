@@ -81,7 +81,7 @@ def test_generate_default_questionaires(law_case_factory, document_factory):
     document = document_factory()
     law_case = law_case_factory(document=document)
     law_case.generate_default_questionaires()
-    assert law_case.questionaire_count() == 2
+    assert law_case.questionaire_count() == 1
 
 
 @pytest.mark.django_db

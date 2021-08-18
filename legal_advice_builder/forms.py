@@ -257,3 +257,10 @@ class QuestionaireForm(FormControllClassMixin, forms.ModelForm):
     class Meta:
         model = Questionaire
         fields = ('title', 'success_message')
+
+
+class QuestionaireCreateForm(FormControllClassMixin, forms.ModelForm):
+
+    class Meta:
+        model = Questionaire
+        fields = ('title',)

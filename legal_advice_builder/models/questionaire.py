@@ -1,11 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from . import LawCase
-
 
 class Questionaire(models.Model):
-    law_case = models.ForeignKey(LawCase,
+    law_case = models.ForeignKey('legal_advice_builder.LawCase',
                                  on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     short_title = models.CharField(max_length=50, blank=True)

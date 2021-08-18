@@ -19,6 +19,7 @@ from .forms import DocumentForm
 from .forms import LawCaseCreateForm
 from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
+from .forms import QuestionaireCreateForm
 from .forms import QuestionaireForm
 from .forms import QuestionConditionForm
 from .forms import QuestionCreateForm
@@ -50,8 +51,8 @@ class LawCaseList(ListView, FormView):
         )
         law_case.generate_default_questionaires()
         return HttpResponseRedirect(reverse(
-            'legal_advice_builder:questionaire-detail',
-                                    args=[law_case.first_questionaire.id]))
+            'legal_advice_builder:question-update',
+                                    args=[law_case.get_first_question().id]))
 
     def get_update_forms(self):
         update_forms = []
@@ -137,7 +138,8 @@ class DocumentPreviewView(TemplateView):
         context.update({
             'document': self.document,
             'questions_formset': self.get_questions_formset(),
-            'lawcase': self.document.lawcase
+            'lawcase': self.document.lawcase,
+            'questionaire_form': QuestionaireCreateForm()
         })
         return context
 
@@ -220,7 +222,8 @@ class DocumentFormView(TemplateView):
             'form': self.get_form(),
             'placeholders': self.get_placeholders(),
             'document': self.document,
-            'lawcase': self.document.lawcase
+            'lawcase': self.document.lawcase,
+            'questionaire_form': QuestionaireCreateForm()
         })
         return context
 
@@ -260,9 +263,30 @@ class QuestionaireDetail(DetailView):
                 parent_question=question.id if question else None),
             'questionaire_update_form': QuestionaireForm(instance=self.get_object()),
             'lawcase': self.object.law_case,
-            'document_form': DocumentForm()
+            'document_form': DocumentForm(),
+            'questionaire_form': QuestionaireCreateForm()
         })
         return context
+
+
+class QuestionaireCreate(CreateView):
+    model = Questionaire
+    form_class = QuestionaireCreateForm
+
+    def get_success_url(self):
+        return reverse('legal_advice_builder:questionaire-detail',
+                       args=[self.object.id])
+
+    def get_object(self):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        return LawCase.objects.get(id=pk)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.law_case = self.get_object()
+        self.object.order = self.get_object().questionaire_count()
+        self.object.save()
+        return super().form_valid(form)
 
 
 class QuestionaireDeleteView(DeleteView):
@@ -344,6 +368,7 @@ class QuestionUpdate(SuccessMessageMixin, UpdateView):
                 initial={'question': self.get_object().id}),
             'questionaire_update_form': QuestionaireForm(
                 instance=self.get_object().questionaire),
-            'document_form': DocumentForm()
+            'document_form': DocumentForm(),
+            'questionaire_form': QuestionaireCreateForm()
         })
         return context
