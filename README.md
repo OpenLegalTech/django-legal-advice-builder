@@ -13,11 +13,11 @@ For a quickstart just to see what the project is about you can pull and install 
 
 To add the legal-advice-app to your Django Project you need to:
 
-1) install the app to your projects environment
+### 1) install the app to your projects environment
 ```
 pip install git+https://github.com/OpenLegalTech/django-legal-advice-builder.git
 ```
-2) Add the app and some other required apps to your django settings file
+### 2) Add the app and some other required apps to your django settings file
 ```
 INSTALLED_APPS = [
     ...
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     ...
 ]
 ```
-3) Add the legal-advice-builder urls to your urls.py
+### 3) Add the legal-advice-builder urls to your urls.py
 ```
 urlpatterns = [
     ...
@@ -35,8 +35,9 @@ urlpatterns = [
     ...
 ]
 ```
+Per default only users who have access to the django admin (have the `flag is_staff`) are allowed to access those urls. If you want to change this, please checkout 5).
 
-4) To add Questionaire urls 
+### 4) To add Questionaire urls 
     * add a view that inherits from FormWizardView and 
     * overwrites `get_lawcase()`
     * overwrite `legal_advice_builder/form_wizard.html`
@@ -54,8 +55,24 @@ class LawCaseForm(FormWizardView):
         return LawCase.objects.get(pk=pk)  
 ```
 
+### 5) Customize Access to Legal Advice Builder Adminarea
 
+If you don't do anything only users who have access to the django admin (have the `flag is_staff`) have access to the urls that you added in step 3.
 
+To change this, add a mixin that inherits from [`django.contrib.auth.mixins.UserPassesTestMixin`](https://docs.djangoproject.com/en/3.2/topics/auth/default/#django.contrib.auth.mixins.UserPassesTestMixin) and overwrite `test_func` with your custom permission code.
 
+Then add the full import path to your django settings as `LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN`
 
+For example, if you wanted to have every user have access to the admin you could create a new Mixin
+```
+from django.contrib.auth.mixins import UserPassesTestMixin
 
+class AllowAccessToAdminToEveryonaMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+```
+then add the following line to your django settings.
+
+```
+LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN = '<your-import-path-to-mixin>.AllowAccessToAdminToEveryonaMixin'
+```
