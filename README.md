@@ -69,7 +69,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 class AllowAccessToAdminToEveryonaMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user.is_staff
+        return True
 ```
 then add the following line to your django settings.
 
