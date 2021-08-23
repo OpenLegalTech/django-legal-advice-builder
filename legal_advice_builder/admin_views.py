@@ -1,11 +1,13 @@
 import json
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
@@ -33,8 +35,14 @@ from .models import TextBlock
 from .models import TextBlockCondition
 from .views import FormWizardView
 
+try:
+    PermissionMixin = import_string(
+        settings.LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN)
+except (AttributeError):
+    from .permissions import DefaultAccessToAdminMixin as PermissionMixin
 
-class LawCaseList(ListView, FormView):
+
+class LawCaseList(PermissionMixin, ListView, FormView):
     template_name = 'legal_advice_builder/admin/law_case_list.html'
     form_class = LawCaseCreateForm
 
