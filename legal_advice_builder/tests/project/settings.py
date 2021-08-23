@@ -53,6 +53,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'legal_advice_demo.wsgi.application'
 
+LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN = 'legal_advice_builder.tests.permissions.AlwaysAllowToAccessToAdminMixin'
+
 
 DATABASES = {
     'default': {
