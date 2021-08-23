@@ -1,11 +1,13 @@
 import json
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
@@ -33,8 +35,14 @@ from .models import TextBlock
 from .models import TextBlockCondition
 from .views import FormWizardView
 
+try:
+    PermissionMixin = import_string(
+        settings.LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN)
+except (AttributeError):
+    from .permissions import DefaultAccessToAdminMixin as PermissionMixin
 
-class LawCaseList(ListView, FormView):
+
+class LawCaseList(PermissionMixin, ListView, FormView):
     template_name = 'legal_advice_builder/admin/law_case_list.html'
     form_class = LawCaseCreateForm
 
@@ -70,7 +78,7 @@ class LawCaseList(ListView, FormView):
         return context
 
 
-class LawCaseEdit(UpdateView):
+class LawCaseEdit(PermissionMixin, UpdateView):
     model = LawCase
     form_class = LawCaseUpdateForm
 
@@ -78,7 +86,7 @@ class LawCaseEdit(UpdateView):
         return reverse('legal_advice_builder:law-case-list')
 
 
-class LawCaseDelete(DeleteView):
+class LawCaseDelete(PermissionMixin, DeleteView):
     model = LawCase
     success_message = _('Lawcase "%(title)s" was removed successfully')
 
@@ -94,7 +102,7 @@ class LawCaseDelete(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class LawCasePreview(FormWizardView):
+class LawCasePreview(PermissionMixin, FormWizardView):
     template_name = 'legal_advice_builder/admin/form_wizard_preview.html'
 
     def get_lawcase(self):
@@ -102,7 +110,7 @@ class LawCasePreview(FormWizardView):
         return LawCase.objects.get(id=lawcase_id)
 
 
-class DocumentCreateView(CreateView):
+class DocumentCreateView(PermissionMixin, CreateView):
     model = Document
     form_class = DocumentForm
 
@@ -126,7 +134,7 @@ class DocumentCreateView(CreateView):
                        args=[self.law_case.id])
 
 
-class DocumentPreviewView(TemplateView):
+class DocumentPreviewView(PermissionMixin, TemplateView):
     template_name = 'legal_advice_builder/admin/document_preview.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -165,7 +173,7 @@ class DocumentPreviewView(TemplateView):
         return self.render_to_response(context)
 
 
-class DocumentFormView(TemplateView):
+class DocumentFormView(PermissionMixin, TemplateView):
     template_name = 'legal_advice_builder/admin/document_form.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -228,7 +236,7 @@ class DocumentFormView(TemplateView):
         return context
 
 
-class QuestionaireDetail(DetailView):
+class QuestionaireDetail(PermissionMixin, DetailView):
     template_name = 'legal_advice_builder/admin/questionaire_detail.html'
     model = Questionaire
 
@@ -269,7 +277,7 @@ class QuestionaireDetail(DetailView):
         return context
 
 
-class QuestionaireCreate(CreateView):
+class QuestionaireCreate(PermissionMixin, CreateView):
     model = Questionaire
     form_class = QuestionaireCreateForm
 
@@ -289,7 +297,7 @@ class QuestionaireCreate(CreateView):
         return super().form_valid(form)
 
 
-class QuestionaireDeleteView(DeleteView):
+class QuestionaireDeleteView(PermissionMixin, DeleteView):
     model = Questionaire
     success_message = _('Questionaire {} was removed successfully')
 
@@ -305,7 +313,7 @@ class QuestionaireDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class QuestionDelete(DeleteView):
+class QuestionDelete(PermissionMixin, DeleteView):
     model = Question
     success_message = _('Question {} was removed successfully')
 
@@ -325,7 +333,7 @@ class QuestionDelete(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class QuestionUpdate(SuccessMessageMixin, UpdateView):
+class QuestionUpdate(PermissionMixin, SuccessMessageMixin, UpdateView):
     template_name = 'legal_advice_builder/admin/question_update.html'
     model = Question
     form_class = QuestionUpdateForm
