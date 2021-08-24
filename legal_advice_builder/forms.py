@@ -168,7 +168,7 @@ class QuestionConditionForm(FormControllClassMixin, forms.ModelForm):
 
     def get_default_next_initial(self):
         if self.instance.id:
-            if self.instance.is_last:
+            if self.instance.is_last or not self.instance.get_children():
                 return 'next'
             elif self.instance.next_question:
                 return self.instance.next_question.id
@@ -246,7 +246,6 @@ class QuestionUpdateForm(FormControllClassMixin, forms.ModelForm):
         self.fields['options'].widget = ChoiceWidget()
         question = self.instance
         if question.field_type not in [Question.SINGLE_OPTION,
-                                       Question.YES_NO,
                                        Question.MULTIPLE_OPTIONS]:
             del self.fields['options']
 

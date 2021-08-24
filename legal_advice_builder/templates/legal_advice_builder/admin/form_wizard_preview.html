@@ -69,7 +69,9 @@
 
             {% if failure %}
                 <div class="alert alert-danger mt-5" role="alert">
+                    {% if step_count > 1 %}
                     <div class="mb-3 fw-bold pb-2">Schritt {{ current_step|add:1}} von {{ step_count }}: {{ question.questionaire }} <i class="bi bi-x-lg"></i></div>
+                    {% endif %}
                     <div>{{ message }}</div>
                 </div>
             {% endif %}
