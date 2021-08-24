@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -7,6 +8,8 @@ from .questionaire import Questionaire
 
 
 class LawCase(models.Model):
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     allow_download = models.BooleanField(default=True)

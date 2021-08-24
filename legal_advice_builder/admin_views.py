@@ -57,6 +57,9 @@ class LawCaseList(PermissionMixin, ListView, FormView):
             document=document,
             description=description
         )
+        if self.request.user.is_authenticated:
+            law_case.creator = self.request.user
+            law_case.save()
         law_case.generate_default_questionaires()
         return HttpResponseRedirect(reverse(
             'legal_advice_builder:questionaire-detail',
