@@ -17,6 +17,11 @@
       :periodoptions="periodoptions"
       @conditionUpdated="conditionUpdated"
     ></Condition>
+    <div v-if="!isOptionQuestion()" class="d-grid gap-2">
+      <button @click="addCondition" class="btn btn-primary" type="button">
+        Add condition
+      </button>
+    </div>
   </div>
 </template>
 
@@ -82,7 +87,11 @@ export default {
         };
         this.formData.push(emptyCondition)
       }
-    } else if (this.questiontype == "DT" && this.formData.length == 0) {
+    }
+  },
+  methods: {
+    addCondition: function () {
+      if (this.questiontype == "DT") {
         const emptyCondition = {
           if_option: "",
           question: this.questions,
@@ -90,7 +99,7 @@ export default {
           then_value: "question",
         };
         this.formData.push(emptyCondition)
-    } else if (this.questiontype == "TX" || this.questiontype == "SL") {
+      } else if (this.questiontype == "TX" || this.questiontype == "SL") {
         const emptyCondition = {
           if_option: "is",
           question: this.questions,
@@ -98,9 +107,14 @@ export default {
           then_value: "question",
         };
         this.formData.push(emptyCondition)
-    }
-  },
-  methods: {
+      }
+      this.$forceUpdate();
+    },
+    isOptionQuestion: function () {
+      return (this.questiontype == "SO" ||
+      this.questiontype == "MO" ||
+      this.questiontype == "YN")
+    },
     updateFormField: function () {
       document.getElementsByName(this.name)[0].value = JSON.stringify(
         this.formData

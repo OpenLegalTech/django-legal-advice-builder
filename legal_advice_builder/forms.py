@@ -148,35 +148,71 @@ class QuestionForm(forms.Form, DispatchQuestionFieldTypeMixin):
 
 class QuestionConditionForm(FormControllClassMixin, forms.ModelForm):
     conditions = forms.CharField(required=False)
+    default_next = forms.ChoiceField()
 
     class Meta:
         model = Question
-        fields = ('next_question', 'is_last', 'conditions')
+        fields = ('default_next', 'conditions')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields['conditions'].widget = ConditionsWidget(
             question=self.instance)
         if not self.instance.is_option_question():
-            other_questions = self.instance.questionaire.questions
-            default_next = self.instance.get_children().first()
-            if default_next:
-                other_questions = other_questions.exclude(id=default_next.id)
-                self.fields['next_question'].empty_label = default_next.text
-            self.fields['next_question'].queryset = other_questions.exclude(
-                id=self.instance.id)
-            self.fields['next_question'].required = False
-            self.fields['is_last'].label = _('Jump to next questionaire after this question.')
+            self.fields['default_next'].choices = self.get_choices()
+            self.fields['default_next'].initial = self.get_default_next_initial()
+            self.fields['default_next'].label = _('After this Question always ...')
+            self.fields['conditions'].label = _('except for ...')
         else:
-            del self.fields['next_question']
-            del self.fields['is_last']
+            del self.fields['default_next']
+
+    def get_default_next_initial(self):
+        if self.instance.id:
+            if self.instance.is_last:
+                return 'next'
+            elif self.instance.next_question:
+                return self.instance.next_question.id
+            else:
+                return 'default'
+
+    def get_next_questionaire_choice(self):
+        questionaire = self.instance.questionaire
+        if questionaire.next():
+            return ('next', _('Jump to next questionaire'))
+        else:
+            if questionaire.law_case.document:
+                return ('next', _('Show result document'))
+            else:
+                return ('next', _('Show success message'))
+
+    def get_choices(self):
+        options = []
+        other_questions = self.instance.questionaire.questions
+        default_next = self.instance.get_children().first()
+        if default_next:
+            other_questions = other_questions.exclude(id=default_next.id)
+            options.append(('default', _('Go to: {}').format(default_next.text)))
+        options = options + [(question.id, _('Jump to: {}').format(question.text)) for question in other_questions]
+        options.append(self.get_next_questionaire_choice())
+        return options
+
+    def save_default_next(self):
+        if 'default_next' in self.cleaned_data:
+            default_next = self.cleaned_data.get('default_next')
+            if default_next == 'next':
+                self.instance.next_question = None
+                self.instance.is_last = True
+            elif default_next == 'default':
+                self.instance.is_last = False
+                self.instance.next_question = None
+            else:
+                self.instance.is_last = False
+                next_question = Question.objects.get(id=default_next)
+                self.instance.next_question = next_question
+            self.instance.save()
 
     def save(self, commit=True):
-        if 'is_last' in self.cleaned_data:
-            self.instance.is_last = self.cleaned_data['is_last']
-        if 'next_question' in self.cleaned_data:
-            self.instance.next_question = self.cleaned_data['next_question']
-        self.instance.save()
+        self.save_default_next()
         if self.cleaned_data['conditions']:
             self.instance.conditions.all().delete()
             conditions = json.loads(self.cleaned_data.pop('conditions'))
