@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 
@@ -148,6 +149,7 @@ def test_law_case_list_view(rf, law_case_factory):
     }
 
     request = rf.post('/', data)
+    request.user = AnonymousUser()
     LawCaseList.as_view()(request)
     LawCase.objects.all().count() == 3
 
