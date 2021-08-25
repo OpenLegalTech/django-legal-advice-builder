@@ -76,3 +76,4 @@ then add the following line to your django settings.
 ```
 LEGAL_ADVICE_BUILDER_PERMISSION_MIXIN = '<your-import-path-to-mixin>.AllowAccessToAdminToEveryonaMixin'
 ```
+Check the [Demo Project](https://github.com/OpenLegalTech/legal-advice-demo) for reference.
