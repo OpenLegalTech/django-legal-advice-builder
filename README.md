@@ -6,7 +6,7 @@ Django Legal Advice Builder is a django app the can be used to create, edit and 
 
 1. UI to create questionaires with questions and branching
 2. UI to create documents with textblocks that can include answers of the users and that can be displayed or not displayed based on the user's answer.
-3. UI to display questioniares
+3. UI to display questioniares and documents (can also be downloaded as PDF)
 
 ## How to get startet
 For a quickstart just to see what the project is about you can pull and install the [demo repository](https://github.com/OpenLegalTech/legal-advice-demo).
