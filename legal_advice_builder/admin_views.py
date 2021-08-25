@@ -91,7 +91,7 @@ class LawCaseEdit(PermissionMixin, UpdateView):
 
 class LawCaseDelete(PermissionMixin, DeleteView):
     model = LawCase
-    success_message = _('Lawcase "%(title)s" was removed successfully')
+    success_message = _('Lawcase "{}" was removed successfully')
 
     def get_success_url(self):
         return reverse('legal_advice_builder:law-case-list')
@@ -101,7 +101,7 @@ class LawCaseDelete(PermissionMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
-        messages.success(self.request, self.success_message % obj.__dict__)
+        messages.success(self.request, self.success_message.format(obj.title))
         return super().delete(request, *args, **kwargs)
 
 

@@ -4,7 +4,7 @@
       <input
         type="text"
         v-model="searchString"
-        placeholder="Type to search for question or placeholder ..."
+        placeholder="Nach Platzhalter suchen ..."
         class="form-control"
       />
     </div>

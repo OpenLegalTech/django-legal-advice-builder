@@ -16,7 +16,7 @@
     ></DocumentField>
     <div class="d-grid gap-2 mt-5 mx-3 mb-3">
       <button class="btn btn-primary" @click="addField" type="button">
-        <i class="bi bi-plus"></i> Add text block
+        <i class="bi bi-plus"></i> Textblock hinzufügen
       </button>
     </div>
   </div>

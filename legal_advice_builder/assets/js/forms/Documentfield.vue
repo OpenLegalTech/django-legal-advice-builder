@@ -22,7 +22,7 @@
         role="group"
       >
         <button
-          title="edit text"
+          title="text bearbeiten"
           type="button"
           @click="toggleShowForm"
           class="btn bg-white text-body btn-sm"
@@ -30,7 +30,7 @@
           <i class="bi bi-pencil"></i>
         </button>
         <button
-          title="edit condition"
+          title="Bedingung editieren"
           type="button"
           @click="toggleConditionShowForm"
           class="btn bg-white text-body btn-sm"
@@ -38,7 +38,7 @@
           <i class="bi bi-option"></i>
         </button>
         <button
-          title="delete textblock"
+          title="Textblock löschen"
           type="button"
           @click="deleteField"
           class="btn bg-white text-body btn-sm"
@@ -110,10 +110,10 @@
             @click="cancel"
             type="button"
           >
-            cancel
+            abbrechen
           </button>
           <button class="btn btn-success btn-sm" @click="save" type="button">
-            save
+            sichern
           </button>
         </div>
       </div>
@@ -124,23 +124,23 @@
             class="alert alert-primary d-flex align-items-center rounded-0"
             role="alert"
           >
-            <p v-if="!newQuestion">This Textblock is always displayed.</p>
+            <p v-if="!newQuestion">Dieser Textblock wird immer angezeigt.</p>
             <p v-if="newQuestion">
-              This Textblock only displayed when the answer to "{{
+              Dieser Textblock wird nur angezeigt wend die Antwort auf "{{
                 this.getText()
               }}" is "{{ this.newIfValue }}".
             </p>
           </div>
           <div>
             <div class="row g-3 mb-3 mx-1">
-              <div class="col-sm-3">Display textblock if answer to question:</div>
+              <div class="col-sm-3">Zeige Textblock wenn die Antwort auf die Frage:</div>
               <div class="col-sm-3">
                 <select
                   class="form-select"
                   v-model="newQuestion"
                   @change="options = getOptions()"
                 >
-                  <option value="" selected disabled hidden>Pick Question ...</option>
+                  <option value="" selected disabled hidden>Frage auswählen ...</option>
                   <option
                     v-for="(question, index) in questions"
                     :value="question.id"
@@ -150,10 +150,10 @@
                   </option>
                 </select>
               </div>
-              <div class="col-sm-3" v-if="newQuestion !== ''">is</div>
+              <div class="col-sm-3" v-if="newQuestion !== ''">ist</div>
               <div class="col-sm-3" v-if="newQuestion !== ''">
                 <select class="form-select" v-model="newIfValue">
-                  <option value="" selected disabled hidden>Pick Option ...</option>
+                  <option value="" selected disabled hidden>Antwortmöglichkeit auswählen ...</option>
                   <option
                     v-for="(optionValue, optionKey, index) in options"
                     :value="optionValue"
@@ -172,7 +172,7 @@
             @click="cancel"
             type="button"
           >
-            cancel
+            abbrechen
           </button>
            <button
             v-if="newQuestion && newIfValue"
@@ -183,7 +183,7 @@
             <i class="bi bi-trash"></i>
           </button>
           <button class="btn btn-success btn-sm" @click="save" type="button">
-            save
+            sichern
           </button>
         </div>
       </div>

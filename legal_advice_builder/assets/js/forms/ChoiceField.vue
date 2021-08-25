@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="col-2">
-        <button class="btn btn-primary btn-sm" @click.prevent="addChoice">Add</button>
+        <button class="btn btn-primary btn-sm" @click.prevent="addChoice">Hinzufügen</button>
       </div>
     </div>
   </div>
