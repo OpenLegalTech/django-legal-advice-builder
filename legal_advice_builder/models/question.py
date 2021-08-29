@@ -143,7 +143,7 @@ class Question(MP_Node):
                 'failure', option=option, date=date, text=text)
             if (condition_success or
                (not next and not condition_failure and not self.questionaire.law_case.document) or
-               self.is_last):
+               (self.is_last and not condition_failure)):
                 return {
                     'success': True,
                     'message': self.questionaire.success_message,
