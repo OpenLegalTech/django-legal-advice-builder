@@ -38,11 +38,21 @@ class ConditionsWidget(forms.TextInput):
         return self.question.get_options_by_type()
 
     def get_then_options(self):
-        return {
-            'success': str(_('success: Jump to next questionaire.')),
+        res = {
             'failure': str(_('failure: show failure message')),
-            'question': str(_('jump to question:'))
         }
+        if self.get_other_questions():
+            res['question'] = str(_('jump to question:'))
+
+        questionaire = self.question.questionaire
+        if questionaire.next():
+            res['success'] = str(_('Jump to next questionaire'))
+        else:
+            if questionaire.law_case.document:
+                res['success'] = str(_('Show result document'))
+            else:
+                res['success'] = str(_('Show success message'))
+        return res
 
     def get_period_options(self):
         return {
