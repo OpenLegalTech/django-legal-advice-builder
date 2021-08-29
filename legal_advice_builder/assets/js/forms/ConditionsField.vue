@@ -16,6 +16,7 @@
       :questiontype="questiontype"
       :periodoptions="periodoptions"
       @conditionUpdated="conditionUpdated"
+      @conditionDeleted="conditionDeleted"
     ></Condition>
     <div v-if="!isOptionQuestion()" class="d-grid gap-2">
       <button @click="addCondition" class="btn btn-primary" type="button">
@@ -122,6 +123,11 @@ export default {
     },
     conditionUpdated: function (newValue, listIndex) {
       this.formData.splice(listIndex, 1, newValue);
+      this.updateFormField();
+      this.$forceUpdate();
+    },
+    conditionDeleted: function (listIndex) {
+      this.formData.splice(listIndex, 1);
       this.updateFormField();
       this.$forceUpdate();
     },

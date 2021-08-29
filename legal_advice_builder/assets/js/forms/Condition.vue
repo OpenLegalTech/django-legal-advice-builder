@@ -1,5 +1,5 @@
 <template>
-  <div class="alert p-3 mb-3 " :class="{'alert-dark': this.newValue=='',
+  <div class="alert alert-dismissible p-3 mb-3 " :class="{'alert-dark': this.newValue=='',
                                         'alert-info': this.newValue=='question',
                                         'alert-success': this.newValue=='success',
                                         'alert-danger': this.newValue=='failure'}">
@@ -94,6 +94,7 @@
         </div>
     </div>
 
+  <button type="button" @click="deleteCondition" class="btn-close" aria-label="Close"></button>
   </div>
 
 
@@ -166,6 +167,9 @@ export default {
       }
       this.newCondition['message'] = this.newMessage
       this.$emit('conditionUpdated', this.newCondition, this.listIndex)
+    },
+    deleteCondition () {
+      this.$emit('conditionDeleted', this.listIndex)
     }
   }
 };
