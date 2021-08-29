@@ -21,7 +21,7 @@ def test_conditions_widget(questionaire_factory):
     assert len(cw.get_other_questions()) == 1
     assert cw.create_conditions_dict() == []
     assert not cw.get_if_options() == ''
-    assert list(cw.get_then_options().keys()) == ['success', 'failure', 'question']
+    assert list(cw.get_then_options().keys()) == ['failure', 'question', 'success']
     assert list(cw.get_period_options().keys()) == ['days', 'months', 'years']
     assert cw.get_default_next() == q_2.id
 

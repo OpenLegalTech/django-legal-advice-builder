@@ -94,7 +94,7 @@
         </div>
     </div>
 
-  <button type="button" @click="deleteCondition" class="btn-close" aria-label="Close"></button>
+  <button v-if="questiontype == 'SL' || questiontype == 'TX' || questiontype == 'DT'" type="button" @click="deleteCondition" class="btn-close" aria-label="Close"></button>
   </div>
 
 
@@ -121,7 +121,10 @@ export default {
     let unit = ''
     let period = ''
     const jumpToQuestion = this.condition.then_question ? this.condition.then_question : this.defaultnext
-    const newValue = this.condition.then_value ? this.condition.then_value : 'question'
+    let newValue = this.condition.then_value
+    if (this.defaultnext) {
+      newValue = 'question'
+    }
 
     if (this.questiontype == 'DT' && this.condition.if_value !== '') {
       unit = this.condition.if_value.split('_')[0]
