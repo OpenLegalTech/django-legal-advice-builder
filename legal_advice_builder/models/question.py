@@ -44,7 +44,7 @@ class Question(MP_Node):
     )
     help_text = models.CharField(max_length=200, blank=True)
     information = models.TextField(blank=True)
-    next_question = models.ForeignKey('legal_advice_builder.Question', null=True,
+    next_question = models.ForeignKey('legal_advice_builder.Question', null=True, blank=True,
                                       on_delete=models.SET_NULL)
     is_last = models.BooleanField(default=False)
 
