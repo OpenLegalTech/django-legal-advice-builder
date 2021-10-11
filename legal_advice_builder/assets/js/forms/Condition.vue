@@ -122,7 +122,7 @@ export default {
     let period = ''
     const jumpToQuestion = this.condition.then_question ? this.condition.then_question : this.defaultnext
     let newValue = this.condition.then_value
-    if (this.defaultnext) {
+    if (newValue == '' && this.defaultnext) {
       newValue = 'question'
     }
 
