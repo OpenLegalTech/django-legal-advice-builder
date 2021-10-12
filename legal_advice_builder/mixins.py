@@ -5,6 +5,7 @@ from django.utils import dateformat
 
 from .models import Answer
 from .models import Question
+from .signals import answer_created
 
 
 class GenrateFormWizardMixin:
@@ -125,6 +126,7 @@ class GenerateEditableDocumentMixin:
             law_case=self.get_lawcase(),
             answers=answers,
         )
+        answer_created.send(sender=answer)
         if self.request.user.is_authenticated:
             answer.creator = self.request.user
             answer.save()

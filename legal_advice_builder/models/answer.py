@@ -13,6 +13,7 @@ class Answer(models.Model):
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True)
     rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
+    extra_info = models.JSONField(default=dict, blank=True, null=True)
 
     def __str__(self):
         return self.law_case.title
