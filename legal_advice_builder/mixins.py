@@ -172,7 +172,12 @@ class GeneratePDFDownloadMixin:
 
     def get_pdf_bytes(self, html_string):
         doc = wp.HTML(string=html_string)
-        return doc.write_pdf()
+        return doc.write_pdf(stylesheets=[
+            wp.CSS(string='body { font-family: sans-serif !important }'),
+            wp.CSS(string='@page { size: A4; margin: 2cm }'),
+            wp.CSS(string='body { font-size: 14px !important }'),
+            wp.CSS(string='body { line-height: 1.5 !important }')
+        ])
 
     def render_download_response(self, answers, answer=None):
         html_string = ''
