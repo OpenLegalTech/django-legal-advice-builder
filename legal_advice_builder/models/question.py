@@ -16,6 +16,7 @@ class Question(MP_Node):
     FIELD_TYPES = [
         (TEXT, _('Long multiline Text input')),
         (SINGLE_OPTION, _('Pick one of multiple options')),
+        (MULTIPLE_OPTIONS, _('Pick multiple of multiple options')),
         (SINGLE_LINE, _('Short single line text input')),
         (DATE, _('Date')),
         (YES_NO, _('Yes/No'))
