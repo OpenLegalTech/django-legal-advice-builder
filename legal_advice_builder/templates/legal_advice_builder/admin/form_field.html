@@ -4,7 +4,9 @@
     <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
 </div>
 {% else %}
+{% if not hide_label %}
 <label>{{ field.label }}</label>
+{% endif %}
 <div class="form-group mb-3">
     {{ field }}
 </div>
