@@ -5,6 +5,7 @@
   "main": "legal_advice_builder.js",
   "scripts": {
     "build": "webpack --config webpack.common.js --mode development",
+    "prod": "webpack --config webpack.common.js --mode production",
     "watch": "webpack --config webpack.common.js --watch --mode development"
   },
   "repository": {
