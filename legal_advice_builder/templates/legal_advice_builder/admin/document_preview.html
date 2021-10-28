@@ -31,7 +31,7 @@
                       </h2>
                       <div id="panelsStayOpen-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ forloop.counter }}">
                         <div class="accordion-body">
-                            {% include 'legal_advice_builder/admin/form.html' with form=form %}
+                            {% include 'legal_advice_builder/admin/form.html' with form=form hide_labels=True %}
                         </div>
                       </div>
                 </div>

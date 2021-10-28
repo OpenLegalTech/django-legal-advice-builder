@@ -1,0 +1,14 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block content %}
+  {{ block.super }}
+  <div>
+    <form method="post" action="{% url 'admin:legal_advice_builder-admin_upload' %}" enctype="multipart/form-data">{% csrf_token %}
+      <p>
+        <input type="file" name="file"/>
+        <input type="submit" value="{% trans "Upload Lawcase as JSON" %}"/>
+      </p>
+    </form>
+  </div>
+{% endblock %}

@@ -16,3 +16,4 @@ __pycache__/
 
 .coverage
 /htmlcov/*
+legal_advice_builder/templates/legal_advice_builder/admin/.DS_Store

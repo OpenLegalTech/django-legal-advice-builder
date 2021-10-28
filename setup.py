@@ -7,10 +7,6 @@ from setuptools import setup
 with open('legal_advice_builder/__init__.py') as f:
     metadata = dict(re.findall(r'__(.*)__ = [\']([^\']*)[\']', f.read()))
 
-# get install_requires from requirements.txt
-with open('requirements.txt') as f:
-    install_requires = f.readlines()
-
 setup(
     name=metadata['title'],
     version=metadata['version'],
@@ -20,7 +16,14 @@ setup(
     maintainer_email=metadata['email'],
     license=metadata['license'],
     url='https://github.com/OpenLegalTech',
-    install_requires=install_requires,
+    install_requires=[
+        'Django',
+        'django-treebeard',
+        'WeasyPrint',
+        'Markdown',
+        'bleach',
+        'django-tinymce'
+    ],
     packages=find_packages(),
     include_package_data=True
 )
