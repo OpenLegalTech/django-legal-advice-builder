@@ -9,11 +9,14 @@ from .law_case import LawCase
 
 class Answer(models.Model):
     law_case = models.ForeignKey(LawCase, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True)
     rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
     extra_info = models.JSONField(default=dict, blank=True, null=True)
+    external_id = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.law_case.title
