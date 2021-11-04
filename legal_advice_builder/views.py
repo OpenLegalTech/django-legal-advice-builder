@@ -75,8 +75,27 @@ class FormWizardView(TemplateView,
                                                    answers=answers,
                                                    data=self.request.POST)
 
+    def get_progrees(self):
+        question = self.get_current_question()
+        questions = question.questionaire.questions
+        question_count = questions.count()
+        question_ids = questions.values_list('id', flat=True)
+        answers = self.storage.get_data().get('answers')
+        answers_ids = [int(answer.get('question')) for answer in answers]
+
+        answers_count = len([answer_id
+                             for answer_id in answers_ids if answer_id in question_ids])
+        answers_count = answers_count + 1
+        percentage = 0
+
+        if not answers_count == 0 or not question_count == 0:
+            percentage = int(answers_count / question_count * 100)
+
+        return question_count, answers_count, percentage
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        qcount, acount, perc = self.get_progrees()
         context.update({
             'allow_download': self.allow_download,
             'save_answers_enabled': self.save_answers,
@@ -84,7 +103,10 @@ class FormWizardView(TemplateView,
             'question': self.get_current_question(),
             'current_step': self.law_case.get_index_of_questionaire(
                 self.get_current_question().questionaire),
-            'step_count': self.law_case.questionaire_count()
+            'step_count': self.law_case.questionaire_count(),
+            'progess': perc,
+            'answer_count': acount,
+            'question_count': qcount
         })
         return context
 
