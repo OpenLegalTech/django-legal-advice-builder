@@ -9,5 +9,8 @@
 {% endif %}
 <div class="form-group mb-3">
     {{ field }}
+    {% if field.help_text %}
+    <div class="form-text">{{ field.help_text }}</div>
+    {% endif %}
 </div>
 {% endif %}
