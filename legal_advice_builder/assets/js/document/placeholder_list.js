@@ -1,8 +1,11 @@
-import Vue from 'vue/dist/vue.js';
+import Vue from 'vue';
+import Placeholder from "./Placeholder"
 
-Vue.component(
-  "placeholders",
-  require("./Placeholder.vue").default
-);
+Vue.component("placeholder", Placeholder)
 
-new Vue({}).$mount("#placeholders");
+new Vue({
+  el: "#placeholders",
+  render: (createElement) => {
+    return createElement(Placeholder)
+  },
+})

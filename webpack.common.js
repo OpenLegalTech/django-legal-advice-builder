@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   entry: {
@@ -42,7 +42,7 @@ module.exports = {
       "crypto-browserify": require.resolve('crypto-browserify')
     },
     alias: {
-      vue$: "vue/dist/vue.runtime.esm.js",
+      'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ["*", ".js", ".vue", ".json"],
   },
@@ -77,7 +77,7 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: "vue-loader",
+        loader: 'vue-loader'
       },
       {
         test: /\.svg$|\.png$/,
