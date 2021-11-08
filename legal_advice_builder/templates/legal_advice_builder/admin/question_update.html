@@ -63,6 +63,7 @@
                     {% endif %}
                     {{ form.media }}
 
+                    {% include 'legal_advice_builder/admin/form_field.html' with field=form.help_text %}
                     {% include 'legal_advice_builder/admin/form_field.html' with field=form.information %}
                     <div class="text-end mt-3">
                         <input class="btn btn-success btn-sm pull-right" name="content" type="submit" value="{% trans 'Save' %}" />

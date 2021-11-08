@@ -239,7 +239,7 @@ class QuestionUpdateForm(FormControllClassMixin, forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'field_type', 'options', 'information')
+        fields = ('text', 'field_type', 'options', 'help_text', 'information')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
