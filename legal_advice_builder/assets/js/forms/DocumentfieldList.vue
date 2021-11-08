@@ -27,7 +27,7 @@ import DocumentField from "./Documentfield.vue";
 export default {
   name: "documentfieldlist",
   props: {
-    document: Number,
+    document: String,
     initial: Array,
     questions: Array
   },

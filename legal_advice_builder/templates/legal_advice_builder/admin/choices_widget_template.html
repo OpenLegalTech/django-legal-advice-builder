@@ -1,7 +1,8 @@
 <input type="hidden" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
 
-<div id="{{ widget.name }}">
+<div>
   <choice-field
+    id="{{ widget.name }}"
     inputtype="{{ widget.type }}"
     name="{{ widget.name }}"
     :initial="{{ widget.value }}"

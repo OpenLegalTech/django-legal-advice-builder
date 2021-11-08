@@ -174,12 +174,12 @@ class Question(MP_Node):
     def get_options_by_type(self):
         if self.field_type in [self.SINGLE_OPTION, self.MULTIPLE_OPTIONS, self.YES_NO]:
             return {
-                'is': _('is')
+                'is': str(_('is'))
             }
         elif self.field_type == self.DATE:
             return {
-                'deadline_expired': _('is expired.'),
-                'deadline_running': _('is still running.')
+                'deadline_expired': str(_('is expired.')),
+                'deadline_running': str(_('is still running.'))
             }
         return {}
 

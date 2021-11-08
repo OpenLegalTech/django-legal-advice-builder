@@ -35,8 +35,7 @@ export default {
   data: function () {
     return {
       choices: this.initial,
-      newChoice: '',
-      count: Object.keys(this.initial).length
+      newChoice: ''
     };
   },
   methods: {

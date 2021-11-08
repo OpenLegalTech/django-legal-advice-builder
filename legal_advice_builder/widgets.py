@@ -74,15 +74,15 @@ class ConditionsWidget(forms.TextInput):
             'questions': json.dumps(self.get_other_questions()),
             'default_next': self.get_default_next(),
             'question_id': str(self.question.id),
-            'if_options': self.get_if_options(),
-            'options': self.question.options,
+            'if_options': json.dumps(self.get_if_options()),
+            'options': json.dumps(self.question.options),
             'then_options': json.dumps(self.get_then_options()),
-            'period_options': self.get_period_options(),
+            'period_options': json.dumps(self.get_period_options()),
             'question_type': self.question.field_type,
-            'text': {
-                'if': self.question.get_if_text_by_type(),
-                'then': _('then')
-            }
+            'text': json.dumps({
+                'if': str(self.question.get_if_text_by_type()),
+                'then': str(_('then'))
+            })
         })
         return context
 

@@ -1,13 +1,19 @@
 import Vue from 'vue';
+import DocumentfieldList from "./DocumentfieldList"
+import {renderComponent} from '../helpers/vue-helper'
 
-Vue.component(
-  "document-field",
-  require("./Documentfield.vue").default
-);
 
-Vue.component(
-  "document-field-list",
-  require("./DocumentfieldList.vue").default
-);
+function createDocumentfieldList (selector) {
+  new Vue({
+    components: { DocumentfieldList},
+    render: renderComponent(selector, DocumentfieldList)
+  }).$mount(selector)
+}
 
-let vue = new Vue({}).$mount("#app");
+document.addEventListener('DOMContentLoaded', function () {
+  createDocumentfieldList('#app')
+})
+
+export default {
+  createDocumentfieldList
+}

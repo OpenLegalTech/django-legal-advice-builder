@@ -1,7 +1,8 @@
 <input type="hidden" name="{{ widget.name }}"{% if conditions != None %} value="{{ conditions|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
 
-<div id="conditions">
+<div>
     <conditions-field
+        id="conditions"
         question="{{ question_id }}"
         name="{{ widget.name }}"
         defaultnext="{{ default_next }}"

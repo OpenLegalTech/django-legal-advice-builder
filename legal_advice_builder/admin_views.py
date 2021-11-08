@@ -231,8 +231,10 @@ class DocumentFormView(PermissionMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'form': self.get_form(),
-            'placeholders': self.get_placeholders(),
+            'placeholders': json.dumps(self.get_placeholders()),
             'document': self.document,
+            'initial': self.document.fields_dict,
+            'questions': json.dumps(self.document.options_questions),
             'lawcase': self.document.lawcase,
             'questionaire_form': QuestionaireCreateForm()
         })

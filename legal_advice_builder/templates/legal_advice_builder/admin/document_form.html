@@ -14,12 +14,13 @@
                 <a href="{% url 'legal_advice_builder:document-detail' lawcase.id %}" class="btn btn-sm btn-primary" type="button">{% trans 'test document' %}</a>
             </div>
             <div class="border">
-                <div id="app">
+                <div>
                     {% csrf_token %}
                     <document-field-list
+                        id="app"
                         :document='{{ document.id }}'
-                        :initial='{{ document.fields_dict }}'
-                        :questions='{{ document.options_questions }}'
+                        :initial='{{ initial }}'
+                        :questions='{{ questions }}'
                         >
                     </document-field-list>
                 </div>
@@ -32,8 +33,9 @@
                 {% trans 'Click on '%} <i class="bi bi-clipboard"></i> {% trans 'to copy placeholder.'%}
               </div>
             <div class="sticky-top">
-                <div id="placeholders" class="sticky-top pt-3">
+                <div class="sticky-top pt-3">
                     <placeholders
+                        id="placeholders"
                         :placeholders="{{ placeholders }}"
                     ></placeholders>
                 </div>

@@ -1,8 +1,19 @@
 import Vue from 'vue';
+import ChoiceField from "./ChoiceField"
+import {renderComponent} from '../helpers/vue-helper'
 
-Vue.component(
-  "choice-field",
-  require("./ChoiceField.vue").default
-);
 
-let vue = new Vue({}).$mount("#options");
+function createChoiceField (selector) {
+  new Vue({
+    components: { ChoiceField },
+    render: renderComponent(selector, ChoiceField)
+  }).$mount(selector)
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  createChoiceField('#options')
+})
+
+export default {
+  createChoiceField
+}

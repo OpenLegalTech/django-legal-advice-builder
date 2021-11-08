@@ -1,8 +1,19 @@
-import Vue from 'vue';
+import Vue from 'vue'
+import ConditionsField from "./ConditionsField"
+import {renderComponent} from '../helpers/vue-helper'
 
-Vue.component(
-  "conditions-field",
-  require("./ConditionsField.vue").default
-);
 
-let vue = new Vue({}).$mount("#conditions");
+function createConditionsField (selector) {
+  new Vue({
+    components: { ConditionsField },
+    render: renderComponent(selector, ConditionsField)
+  }).$mount(selector)
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  createConditionsField('#conditions')
+})
+
+export default {
+  createConditionsField
+}
