@@ -11,6 +11,8 @@ class LawCase(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=250, blank=True,
+                            unique=True, null=True)
     description = models.TextField(blank=True)
     allow_download = models.BooleanField(default=True)
     save_answers = models.BooleanField(default=True)
