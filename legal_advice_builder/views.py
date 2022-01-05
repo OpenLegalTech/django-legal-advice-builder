@@ -75,14 +75,13 @@ class FormWizardView(TemplateView,
                                                    answers=answers,
                                                    data=self.request.POST)
 
-    def get_progrees(self):
+    def get_progress(self):
         question = self.get_current_question()
         questions = question.questionaire.questions
         question_count = questions.count()
         question_ids = questions.values_list('id', flat=True)
         answers = self.storage.get_data().get('answers')
         answers_ids = [int(answer.get('question')) for answer in answers]
-
         answers_count = len([answer_id
                              for answer_id in answers_ids if answer_id in question_ids])
         answers_count = answers_count + 1
@@ -95,7 +94,7 @@ class FormWizardView(TemplateView,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        qcount, acount, perc = self.get_progrees()
+        qcount, acount, perc = self.get_progress()
         context.update({
             'allow_download': self.allow_download,
             'save_answers_enabled': self.save_answers,
