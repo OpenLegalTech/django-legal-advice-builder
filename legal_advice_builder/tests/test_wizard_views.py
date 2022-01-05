@@ -584,4 +584,4 @@ def test_form_wizard_test_date_formating(rf, law_case_factory, questionaire_fact
     }
     request.session.save()
     resp = TestWizardView.as_view()(request)
-    assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '2021-10-10'
+    assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '10.10.2021'
