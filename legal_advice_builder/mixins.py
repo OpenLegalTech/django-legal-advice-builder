@@ -86,7 +86,7 @@ class GenrateFormWizardMixin:
             next_question = status.get('next')
             date = cleaned_data.get('date')
             if date:
-                cleaned_data['date'] = dateformat.format(date, "Y-m-d")
+                cleaned_data['date'] = dateformat.format(date, "m.d.Y")
             answers = answers + [cleaned_data]
             if not status.get('ongoing'):
                 self.storage.set_data({
