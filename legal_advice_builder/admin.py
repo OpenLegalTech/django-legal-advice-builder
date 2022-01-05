@@ -1,14 +1,13 @@
 import os.path
 import tempfile
 
-from django.conf.urls import url
 from django.contrib import admin
-from django.core.exceptions import PermissionDenied
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
 from django.core.management import call_command
 from django.http import HttpResponse
 from django.shortcuts import redirect
-
+from django.urls import re_path
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
@@ -69,9 +68,9 @@ class LawcaseAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         upload_urls = [
-            url(r'^upload/$',
-                self.admin_site.admin_view(self.upload_lawcase),
-                name='legal_advice_builder-admin_upload'),
+            re_path(r'^upload/$',
+                    self.admin_site.admin_view(self.upload_lawcase),
+                    name='legal_advice_builder-admin_upload'),
         ]
         return upload_urls + urls
 
