@@ -1,5 +1,10 @@
 from django.db import models
+from django.template import Context
+from django.template import Template
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+
+from legal_advice_builder.utils import generate_answers_dict_for_template
 
 
 class Questionaire(models.Model):
@@ -28,6 +33,13 @@ class Questionaire(models.Model):
 
     def get_last_question(self):
         return self.questions.last()
+
+    def success_message_with_data(self, answer):
+        template = Template(mark_safe(self.success_message))
+        result = template.render(Context(
+            {'answers': generate_answers_dict_for_template(answer.answers)}
+        ))
+        return result
 
     def add_new_after_question(self, data, parent_question=None):
         from . import Question
