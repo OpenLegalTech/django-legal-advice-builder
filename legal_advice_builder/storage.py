@@ -1,3 +1,8 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
+
+
 class SessionStorage:
     current_questionaire = 'questionaire_id'
     current_question = 'question_id'
@@ -20,10 +25,10 @@ class SessionStorage:
 
     def get_data(self):
         self.request.session.modified = True
-        return self.request.session[self.prefix]
+        return json.loads(self.request.session[self.prefix])
 
     def set_data(self, value):
-        self.request.session[self.prefix] = value
+        self.request.session[self.prefix] = json.dumps(value, cls=DjangoJSONEncoder)
         self.request.session.modified = True
 
     def reset(self):

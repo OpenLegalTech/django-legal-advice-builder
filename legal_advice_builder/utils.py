@@ -1,3 +1,5 @@
+import datetime
+
 import bleach
 
 
@@ -10,6 +12,8 @@ def generate_answers_dict_for_template(answers):
         option = answer.get('option')
         text = answer.get('text')
         date = answer.get('date')
+        if date:
+            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         key, value = question.get_dict_key(option, text, date)
         answers_dict[key] = value
     return answers_dict

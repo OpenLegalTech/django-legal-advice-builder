@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -13,7 +14,7 @@ class Answer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 null=True, on_delete=models.SET_NULL)
-    answers = models.JSONField(null=True, default=dict, blank=True)
+    answers = models.JSONField(null=True, default=dict, blank=True, encoder=DjangoJSONEncoder)
     rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
     extra_info = models.JSONField(default=dict, blank=True, null=True)
     external_id = models.IntegerField(blank=True, null=True)

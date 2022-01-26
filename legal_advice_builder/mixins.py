@@ -1,7 +1,6 @@
 import weasyprint as wp
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.utils import dateformat
 
 from .models import Answer
 from .models import Question
@@ -84,9 +83,6 @@ class GenrateFormWizardMixin:
                 text=cleaned_data.get('text'),
                 date=cleaned_data.get('date'))
             next_question = status.get('next')
-            date = cleaned_data.get('date')
-            if date:
-                cleaned_data['date'] = dateformat.format(date, "m.d.Y")
             answers = answers + [cleaned_data]
             if not status.get('ongoing'):
                 self.storage.set_data({
