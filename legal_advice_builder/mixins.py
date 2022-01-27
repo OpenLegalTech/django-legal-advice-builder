@@ -39,14 +39,15 @@ class GenrateFormWizardMixin:
             return question_data.get('options')
         return question.options
 
-    def render_next(self, question, answers):
+    def render_next(self, question, answers, initial_data=None):
         self.storage.set_data({
             'current_questionaire': question.questionaire.id,
             'current_question': question.id,
             'answers': answers
         })
-        initial_data = self.get_initial_data(question)
         initial_options = self.get_initial_options(question)
+        if not initial_data:
+            initial_data = self.get_initial_data(question)
         form = self.get_form(question=question,
                              initial_data=initial_data,
                              options=initial_options)

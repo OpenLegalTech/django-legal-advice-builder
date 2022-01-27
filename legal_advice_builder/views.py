@@ -52,6 +52,7 @@ class FormWizardView(TemplateView,
         question = self.get_current_question()
         download = self.request.POST.get('download')
         next_question = self.request.POST.get('next')
+        to_previous_question = self.request.POST.get('previous-question')
 
         if next_question:
             next_question = Question.objects.get(id=next_question)
@@ -69,6 +70,15 @@ class FormWizardView(TemplateView,
         elif self.answer:
             return self.render_document_form(
                 self.request.POST, self.answer, **kwargs)
+
+        elif to_previous_question:
+            try:
+                previous_question = self.storage.get_data().get('answers')[-1]
+                next_question = Question.objects.get(id=previous_question.get('question'))
+                del answers[-1]
+                return self.render_next(next_question, answers, initial_data=previous_question)
+            except IndexError:
+                return self.render_next(question, answers)
 
         else:
             return self.validate_form_and_get_next(question=question,
@@ -92,6 +102,9 @@ class FormWizardView(TemplateView,
 
         return question_count, answers_count, percentage
 
+    def has_previuos_question(self):
+        return not len(self.storage.get_data().get('answers', [])) == 0
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         qcount, acount, perc = self.get_progress()
@@ -105,7 +118,8 @@ class FormWizardView(TemplateView,
             'step_count': self.law_case.questionaire_count(),
             'progess': perc,
             'answer_count': acount,
-            'question_count': qcount
+            'question_count': qcount,
+            'has_previous_question': self.has_previuos_question()
         })
         return context
 
