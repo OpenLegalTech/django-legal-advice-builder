@@ -1,4 +1,5 @@
 import pytest
+from django.utils.timezone import datetime
 
 from legal_advice_builder.models import Question
 
@@ -12,7 +13,7 @@ def test_str(answer_factory, law_case_factory):
     answer = answer_factory(
         law_case=law_case
     )
-    assert str(answer) == 'Title'
+    assert str(answer) == '{} Title (None)'.format(str(datetime.today().date()))
 
 
 @pytest.mark.django_db
