@@ -127,9 +127,14 @@ class LawcaseAdmin(admin.ModelAdmin):
         return redirect('admin:legal_advice_builder_lawcase_changelist')
 
 
+class AnswerAdmin(admin.ModelAdmin):
+    model = Answer
+    raw_id_fields = ('creator',)
+
+
 admin.site.register(Questionaire, QuestionaireAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(TextBlock, TextBlockAdmin)
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.register(LawCase, LawcaseAdmin)

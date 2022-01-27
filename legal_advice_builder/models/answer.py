@@ -12,7 +12,7 @@ class Answer(models.Model):
     law_case = models.ForeignKey(LawCase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL,
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True,
                                 null=True, on_delete=models.SET_NULL)
     answers = models.JSONField(null=True, default=dict, blank=True, encoder=DjangoJSONEncoder)
     rendered_document = models.TextField(blank=True, verbose_name=_('Rendered Document'))
@@ -20,7 +20,8 @@ class Answer(models.Model):
     external_id = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.law_case.title
+        date = str(self.created_at.date())
+        return '{} {} ({})'.format(date, self.law_case.title, self.creator)
 
     def save(self, *args, **kwargs):
         self.rendered_document = clean_html_field(self.rendered_document)
