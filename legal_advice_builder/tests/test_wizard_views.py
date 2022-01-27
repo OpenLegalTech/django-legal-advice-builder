@@ -1,5 +1,8 @@
+import json
+
 import pytest
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.core.serializers.json import DjangoJSONEncoder
 
 from legal_advice_builder.models import Answer
 from legal_advice_builder.models import Condition
@@ -46,9 +49,9 @@ def test_form_wizard_returns_first_question_form(
 
     praefix = 'legal_advice_builder_{}'.format(law_case.id)
 
-    assert response._request.session.get(praefix).get('current_questionaire') == qn_1.id
-    assert response._request.session.get(praefix).get('current_question') == q1.id
-    assert response._request.session.get(praefix).get('answers') == []
+    assert json.loads(response._request.session.get(praefix)).get('current_questionaire') == qn_1.id
+    assert json.loads(response._request.session.get(praefix)).get('current_question') == q1.id
+    assert json.loads(response._request.session.get(praefix)).get('answers') == []
 
 
 @pytest.mark.django_db
@@ -98,9 +101,9 @@ def test_form_wizard_return_next_question_by_option(rf, law_case_factory,
     resp = TestWizardView.as_view()(request)
 
     assert resp.context_data.get('form').fields['question'].initial == q2.id
-    assert resp._request.session.get(praefix).get('current_questionaire') == qn_1.id
-    assert resp._request.session.get(praefix).get('current_question') == q2.id
-    assert resp._request.session.get(praefix).get('answers') == [{
+    assert json.loads(resp._request.session.get(praefix)).get('current_questionaire') == qn_1.id
+    assert json.loads(resp._request.session.get(praefix)).get('current_question') == q2.id
+    assert json.loads(resp._request.session.get(praefix)).get('answers') == [{
         'option': 'yes', 'question': '1'
     }]
 
@@ -145,9 +148,9 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
     praefix = 'legal_advice_builder_{}'.format(law_case.id)
 
     session_data = response._request.session.get(praefix)
-    assert response._request.session.get(praefix).get('current_questionaire') == qn_1.id
-    assert response._request.session.get(praefix).get('current_question') == q1.id
-    assert response._request.session.get(praefix).get('answers') == []
+    assert json.loads(response._request.session.get(praefix)).get('current_questionaire') == qn_1.id
+    assert json.loads(response._request.session.get(praefix)).get('current_question') == q1.id
+    assert json.loads(response._request.session.get(praefix)).get('answers') == []
 
     data = {
         'question': q1.id,
@@ -163,9 +166,9 @@ def test_form_wizard_returns_failure_by_option(rf, law_case_factory, questionair
 
     assert 'legal_advice_builder/form_wizard.html' in response.template_name
     assert response.context_data.get('form').fields['question'].initial == q2.id
-    assert response._request.session.get(praefix).get('current_questionaire') == qn_1.id
-    assert response._request.session.get(praefix).get('current_question') == q2.id
-    assert response._request.session.get(praefix).get('answers') == [{
+    assert json.loads(response._request.session.get(praefix)).get('current_questionaire') == qn_1.id
+    assert json.loads(response._request.session.get(praefix)).get('current_question') == q2.id
+    assert json.loads(response._request.session.get(praefix)).get('answers') == [{
         'option': 'yes', 'question': '1'
     }]
 
@@ -356,10 +359,10 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q3.id,
         'answers': answers
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
     assert resp['content-type'] == 'application/pdf'
@@ -369,10 +372,10 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q3.id,
         'answers': answers
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
 
@@ -384,10 +387,10 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q3.id,
         'answers': answers
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
     assert resp.status_code == 405
@@ -427,10 +430,10 @@ def test_form_wizard_next_in_post(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': [{'question': q1.id, 'option': 'yes'}]
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
     assert resp.context_data.get('question') == q2
@@ -467,10 +470,10 @@ def test_form_wizard_render_done(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': []
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     assert Answer.objects.all().count() == 0
     TestWizardView.as_view()(request)
@@ -508,10 +511,10 @@ def test_form_wizard_test_download(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': []
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     assert Answer.objects.all().count() == 0
     TestWizardView.as_view()(request)
@@ -523,10 +526,10 @@ def test_form_wizard_test_download(rf, law_case_factory,
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': []
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     TestWizardView.as_view()(request)
 
@@ -550,10 +553,10 @@ def test_form_wizard_test_invalid_form(rf, law_case_factory, questionaire_factor
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': []
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
     assert 'option' in resp.context_data.get('form').errors
@@ -578,10 +581,10 @@ def test_form_wizard_test_date_formating(rf, law_case_factory, questionaire_fact
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
     praefix = 'legal_advice_builder_{}'.format(lc.id)
-    request.session[praefix] = {
+    request.session[praefix] = json.dumps({
         'current_question': q1.id,
         'answers': []
-    }
+    }, cls=DjangoJSONEncoder)
     request.session.save()
     resp = TestWizardView.as_view()(request)
-    assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '10.10.2021'
+    assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '2021-10-10'
