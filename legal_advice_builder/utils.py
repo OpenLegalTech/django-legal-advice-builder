@@ -13,7 +13,10 @@ def generate_answers_dict_for_template(answers):
         text = answer.get('text')
         date = answer.get('date')
         if date:
-            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+            try:
+                date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+            except ValueError:
+                pass
         key, value = question.get_dict_key(option, text, date)
         answers_dict[key] = value
     return answers_dict
