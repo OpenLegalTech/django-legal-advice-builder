@@ -58,6 +58,22 @@ class GenrateFormWizardMixin:
         question_id = self.storage.get_data().get('current_question')
         return Question.objects.get(id=question_id)
 
+    def get_answer_for_question(self, question_short_title, questionaire_short_title=None):
+        filters = {
+            'short_title': question_short_title
+        }
+        if questionaire_short_title:
+            filters['questionaire__short_title'] = questionaire_short_title
+        questions = Question.objects.filter(**filters)
+        if questions:
+            question_id = questions.first().id
+            answers = self.storage.get_data().get('answers')
+            if answers:
+                for answer in answers:
+                    if answer.get('question') == str(question_id):
+                        return answer.get('text') or answer.get('date') or answer.get('option')
+        return ""
+
     def get_form(self, question=None, data=None, initial_data=None, options=None):
         form_class = self.wizard_form_class
         form_kwargs = {
