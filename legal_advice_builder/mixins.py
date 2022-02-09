@@ -13,9 +13,10 @@ class GenrateFormWizardMixin:
         return {}
 
     def _get_dict_entry_for_question(self, question):
+        initial_dict = self.get_initial_dict()
         questionaire = question.questionaire
         if questionaire.short_title and question.short_title:
-            questionaire_dict = self.initial_dict.get(questionaire.short_title)
+            questionaire_dict = initial_dict.get(questionaire.short_title)
             if questionaire_dict:
                 return questionaire_dict.get(question.short_title)
 

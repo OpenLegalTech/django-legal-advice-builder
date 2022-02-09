@@ -35,7 +35,6 @@ class FormWizardView(TemplateView,
         self.law_case = self.get_lawcase()
         self.allow_download = self.law_case.allow_download
         self.save_answers_enabled = self.law_case.save_answers
-        self.initial_dict = self.get_initial_dict()
         self.answer = None
         if request.POST.get('answer_id'):
             self.answer = Answer.objects.get(id=request.POST.get('answer_id'))
