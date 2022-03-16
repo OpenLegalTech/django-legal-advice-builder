@@ -1,4 +1,4 @@
-Django==3.2
+Django==3.2.12
 django-treebeard==4.5.1
 WeasyPrint==52.5
 Markdown==3.3.4
