@@ -1,6 +1,10 @@
+import io
+
 import weasyprint as wp
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from docx import Document
+from htmldocx import HtmlToDocx
 
 from .models import Answer
 from .models import Question
@@ -152,7 +156,6 @@ class GenerateEditableDocumentMixin:
             answer_form.save()
 
     def render_document_form(self, data, answer, **kwargs):
-
         answer_form = self.document_form_class(data=data, instance=answer)
         if answer_form.is_valid():
             answer_form.save()
@@ -182,7 +185,7 @@ class GeneratePDFDownloadMixin:
         return self.get_context_data(template=template, **kwargs)
 
     def get_filename(self):
-        return 'download.pdf'
+        return 'download'
 
     def get_pdf_bytes(self, html_string):
         doc = wp.HTML(string=html_string)
@@ -193,7 +196,7 @@ class GeneratePDFDownloadMixin:
             wp.CSS(string='body { line-height: 1.5 !important }')
         ])
 
-    def render_download_response(self, answers, answer=None):
+    def render_pdf_download_response(self, answers, answer=None):
         html_string = ''
         if answer:
             html_string = answer.rendered_document
@@ -207,6 +210,47 @@ class GeneratePDFDownloadMixin:
             content_type='application/pdf'
         )
         filename = self.get_filename()
-        attachment = 'attachment; filename="{}"'.format(filename)
+        attachment = 'attachment; filename="{}{}"'.format(filename, '.pdf')
+        response['Content-Disposition'] = attachment
+        return response
+
+
+class GenerateWordDownloadMixin:
+
+    def get_word_from_html(self, html_string):
+        document = Document()
+        new_parser = HtmlToDocx()
+        new_parser.add_html_to_document(html_string, document)
+        doc_io = io.BytesIO()
+        document.save(doc_io)
+        doc_io.seek(0)
+        return doc_io
+
+    def get_template_with_context(self, answers, **kwargs):
+        template = self.get_lawcase().document.template_with_answers(answers)
+        return self.get_context_data(template=template, **kwargs)
+
+    def get_html_string(self, answers):
+        context = self.get_template_with_context(answers)
+        return render_to_string(self.download_template_name, context)
+
+    def render_word_download_response(self, answers, answer=None):
+        html_string = ''
+        if answer:
+            html_string = answer.rendered_document
+        else:
+            html_string = self.get_html_string(answers)
+        return self.generate_word_download(html_string)
+
+    def get_filename(self):
+        return 'download'
+
+    def generate_word_download(self, html_string):
+        response = HttpResponse(
+            self.get_word_from_html(html_string).read(),
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+        filename = self.get_filename()
+        attachment = 'attachment; filename="{}{}"'.format(filename, '.docx')
         response['Content-Disposition'] = attachment
         return response

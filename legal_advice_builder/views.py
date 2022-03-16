@@ -6,6 +6,7 @@ from .forms import RenderedDocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
+from .mixins import GenerateWordDownloadMixin
 from .mixins import GenrateFormWizardMixin
 from .models import Answer
 from .models import Question
@@ -15,6 +16,7 @@ from .storage import SessionStorage
 class FormWizardView(TemplateView,
                      GenrateFormWizardMixin,
                      GenerateEditableDocumentMixin,
+                     GenerateWordDownloadMixin,
                      GeneratePDFDownloadMixin):
     template_name = 'legal_advice_builder/form_wizard.html'
     download_template_name = 'legal_advice_builder/pdf_download.html'
@@ -46,6 +48,15 @@ class FormWizardView(TemplateView,
         question = questionaire.get_first_question()
         return self.render_next(question, [])
 
+    def render_previous_question(self, answers, question):
+        try:
+            previous_question = self.storage.get_data().get('answers')[-1]
+            next_question = Question.objects.get(id=previous_question.get('question'))
+            del answers[-1]
+            return self.render_next(next_question, answers, initial_data=previous_question)
+        except IndexError:
+            return self.render_next(question, answers)
+
     def post(self, *args, **kwargs):
         answers = self.storage.get_data().get('answers')
         question = self.get_current_question()
@@ -61,8 +72,12 @@ class FormWizardView(TemplateView,
             if self.allow_download:
                 if self.answer:
                     self.save_document_form(self.request.POST, self.answer)
-                return self.render_download_response(
-                    answers, answer=self.answer)
+                if download == 'pdf':
+                    return self.render_pdf_download_response(
+                        answers, answer=self.answer)
+                if download == 'word':
+                    return self.render_word_download_response(
+                        answers, answer=self.answer)
             else:
                 return HttpResponseNotAllowed(['POST'])
 
@@ -71,13 +86,7 @@ class FormWizardView(TemplateView,
                 self.request.POST, self.answer, **kwargs)
 
         elif to_previous_question:
-            try:
-                previous_question = self.storage.get_data().get('answers')[-1]
-                next_question = Question.objects.get(id=previous_question.get('question'))
-                del answers[-1]
-                return self.render_next(next_question, answers, initial_data=previous_question)
-            except IndexError:
-                return self.render_next(question, answers)
+            return self.render_previous_question(answers, question)
 
         else:
             return self.validate_form_and_get_next(question=question,
@@ -141,3 +150,22 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
     def get(self, request, *args, **kwargs):
         html_string = self.get_html_string()
         return self.generate_pdf_download(html_string)
+
+
+class WordDownloadView(TemplateView, GenerateWordDownloadMixin):
+    template_name = 'legal_advice_builder/pdf_download.html'
+    download_template_name = 'legal_advice_builder/pdf_download.html'
+
+    def get_answer(self):
+        raise NotImplementedError
+
+    def get_html_string(self):
+        ctx = self.get_context_data()
+        ctx.update({
+            'answer': self.get_answer().rendered_document
+        })
+        return render_to_string(self.download_template_name, ctx)
+
+    def get(self, request, *args, **kwargs):
+        html_string = self.get_html_string()
+        return self.generate_word_download(html_string)

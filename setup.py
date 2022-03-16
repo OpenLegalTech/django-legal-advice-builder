@@ -22,7 +22,8 @@ setup(
         'WeasyPrint',
         'Markdown',
         'bleach',
-        'django-tinymce'
+        'django-tinymce',
+        'htmldocx'
     ],
     packages=find_packages(),
     include_package_data=True
