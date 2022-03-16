@@ -354,7 +354,7 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
     answer.answers = answers
     answer.save()
 
-    data = {'answer_id': answer.id, 'download': 'download'}
+    data = {'answer_id': answer.id, 'download': 'pdf'}
     request = rf.post('/', data)
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
@@ -382,7 +382,7 @@ def test_form_wizard_update_answer_for_download(rf, law_case_factory,
     lc.allow_download = False
     lc.save()
 
-    data = {'answer_id': answer.id, 'download': 'download'}
+    data = {'answer_id': answer.id, 'download': 'pdf'}
     request = rf.post('/', data)
     middleware = SessionMiddleware(dummy_get_response)
     middleware.process_request(request)
