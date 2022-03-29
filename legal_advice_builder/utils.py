@@ -33,3 +33,18 @@ def clean_html_field(text, setting='default'):
                         attributes=allowed_attrs,
                         styles=allowed_styles,
                         strip=True)
+
+
+def get_answer_from_list(answers, question):
+    for answer in answers:
+        if answer.get('question') == str(question.id):
+            option = answer.get('option')
+            text = answer.get('text')
+            date = answer.get('date')
+            if date:
+                try:
+                    date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+                except ValueError:
+                    pass
+            return text or date or option
+    return False

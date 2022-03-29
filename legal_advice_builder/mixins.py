@@ -9,6 +9,7 @@ from htmldocx import HtmlToDocx
 from .models import Answer
 from .models import Question
 from .signals import answer_created
+from .utils import get_answer_from_list
 
 
 class GenrateFormWizardMixin:
@@ -70,12 +71,11 @@ class GenrateFormWizardMixin:
             filters['questionaire__short_title'] = questionaire_short_title
         questions = Question.objects.filter(**filters)
         if questions:
-            question_id = questions.first().id
+            answers = self.storage.get_data().get('answers')
+            question = questions.first()
             answers = self.storage.get_data().get('answers')
             if answers:
-                for answer in answers:
-                    if answer.get('question') == str(question_id):
-                        return answer.get('text') or answer.get('date') or answer.get('option')
+                return get_answer_from_list(answers, question)
         return ""
 
     def get_form(self, question=None, data=None, initial_data=None, options=None):

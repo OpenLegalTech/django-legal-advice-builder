@@ -4,8 +4,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from legal_advice_builder.utils import clean_html_field
+from legal_advice_builder.utils import get_answer_from_list
 
 from .law_case import LawCase
+from .question import Question
 
 
 class Answer(models.Model):
@@ -35,3 +37,11 @@ class Answer(models.Model):
     @property
     def template(self):
         return self.law_case.document.template_with_answers(self.answers)
+
+    def get_answer_for_question(self, question_short_title):
+        questions = Question.objects.filter(
+            questionaire__law_case=self.law_case)
+        question = questions.filter(
+            short_title=question_short_title)
+        if question:
+            return get_answer_from_list(self.answers, question.first())
