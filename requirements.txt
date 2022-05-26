@@ -3,5 +3,5 @@ django-treebeard==4.5.1
 WeasyPrint==52.5
 Markdown==3.3.4
 bleach==3.3.0
-django-tinymce==3.3.0
+django-tinymce>=3.4.0
 htmldocx==0.0.6
