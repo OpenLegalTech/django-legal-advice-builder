@@ -21,12 +21,14 @@ from .forms import DocumentForm
 from .forms import LawCaseCreateForm
 from .forms import LawCaseUpdateForm
 from .forms import PrepareDocumentForm
+from .forms import RenderedDocumentForm
 from .forms import QuestionaireCreateForm
 from .forms import QuestionaireForm
 from .forms import QuestionConditionForm
 from .forms import QuestionCreateForm
 from .forms import QuestionForm
 from .forms import QuestionUpdateForm
+from .models import Answer
 from .models import Document
 from .models import LawCase
 from .models import Question
@@ -34,6 +36,9 @@ from .models import Questionaire
 from .models import TextBlock
 from .models import TextBlockCondition
 from .views import FormWizardView
+from .views import WordDownloadView
+from .views import PdfDownloadView
+from .views import HTMLDownloadView
 
 try:
     PermissionMixin = import_string(
@@ -342,7 +347,7 @@ class QuestionUpdate(PermissionMixin, SuccessMessageMixin, UpdateView):
     template_name = 'legal_advice_builder/admin/question_update.html'
     model = Question
     form_class = QuestionUpdateForm
-    success_message = _('Question geupdated')
+    success_message = _('Question updated')
 
     def get_success_url(self):
         return reverse(
@@ -385,3 +390,53 @@ class QuestionUpdate(PermissionMixin, SuccessMessageMixin, UpdateView):
             'questionaire_form': QuestionaireCreateForm()
         })
         return context
+
+
+class AnswerEditView(PermissionMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'legal_advice_builder/admin/answer_update.html'
+    model = Answer
+    form_class = RenderedDocumentForm
+    success_message = _('Answer updated')
+
+    def get_success_url(self):
+        return self.request.path
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'lawcase': self.object.law_case
+        })
+        return context
+
+
+class DownloadAnswerAsPDFView(PermissionMixin, DetailView, PdfDownloadView):
+    model = Answer
+
+    @property
+    def object(self):
+        return self.get_object()
+
+    def get_answer(self):
+        return self.object
+
+
+class DownloadAnswerAsWordView(PermissionMixin, DetailView, WordDownloadView):
+    model = Answer
+
+    @property
+    def object(self):
+        return self.get_object()
+
+    def get_answer(self):
+        return self.object
+
+
+class DownloadAnswerAsHTMLView(PermissionMixin, DetailView, HTMLDownloadView):
+    model = Answer
+
+    @property
+    def object(self):
+        return self.get_object()
+
+    def get_answer(self):
+        return self.object

@@ -1,0 +1,33 @@
+{% extends 'legal_advice_builder/admin/law_case_detail.html' %}
+{% load static i18n %}
+
+
+{% block main_content %}
+<div class="row mb-3">
+  <div class="col-8">
+    {% if law_case.extra_help %}
+    <div class="alert alert-success mt-5" role="alert">
+      {{ law_case.extra_help }}
+    </div>
+    {% endif %}
+    {{ form.media }}
+    <form method="post">
+      {% csrf_token %}
+      {% include 'legal_advice_builder/admin/form.html' with form=form %}
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-3">
+        <div class="dropdown">
+          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            {% translate 'Download' %}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'legal_advice_builder:answer-pdf-download' object.id %}">{% translate 'as pdf file' %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'legal_advice_builder:answer-word-download' object.id %}">{% translate 'as word document' %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'legal_advice_builder:answer-html-download' object.id %}">{% translate 'as html file' %}</a></li>
+          </ul>
+        </div>
+        <input class="btn btn-primary btn-sm" type="submit" value="Änderungen speichern" />
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

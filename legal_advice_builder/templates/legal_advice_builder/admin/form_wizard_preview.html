@@ -97,7 +97,9 @@
                 {% csrf_token %}
                 {% include 'legal_advice_builder/admin/form.html' with form=answer_form %}
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-3">
-                    <input class="btn btn-primary btn-lg" type="submit" name="download" value="download" />
+                    <button class="btn btn-primary btn-lg" type="submit" name="download" value="pdf">PDF download</button>
+                    <button class="btn btn-primary btn-lg" type="submit" name="download" value="word">Word download</button>
+                    <button class="btn btn-primary btn-lg" type="submit" name="download" value="html" />HTML download</button>
                     <input class="btn btn-primary btn-lg" type="submit" value="Änderungen speichern" />
                 </div>
                 </form>

@@ -8,6 +8,7 @@ from .mixins import GenerateEditableDocumentMixin
 from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenerateWordDownloadMixin
 from .mixins import GenrateFormWizardMixin
+from .mixins import GenerateHTMLDownloadMixin
 from .models import Answer
 from .models import Question
 from .storage import SessionStorage
@@ -17,7 +18,9 @@ class FormWizardView(TemplateView,
                      GenrateFormWizardMixin,
                      GenerateEditableDocumentMixin,
                      GenerateWordDownloadMixin,
-                     GeneratePDFDownloadMixin):
+                     GeneratePDFDownloadMixin,
+                     GenerateHTMLDownloadMixin
+                     ):
     template_name = 'legal_advice_builder/form_wizard.html'
     download_template_name = 'legal_advice_builder/pdf_download.html'
     wizard_form_class = WizardForm
@@ -78,6 +81,9 @@ class FormWizardView(TemplateView,
                 if download == 'word':
                     return self.render_word_download_response(
                         answers, answer=self.answer)
+                if download == 'html':
+                    return self.render_html_download_response(
+                        answers, answer=self.answer)
             else:
                 return HttpResponseNotAllowed(['POST'])
 
@@ -133,9 +139,8 @@ class FormWizardView(TemplateView,
 
 
 class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
-
-    template_name = 'legal_advice_builder/pdf_download.html'
-    download_template_name = 'legal_advice_builder/pdf_download.html'
+    template_name = 'legal_advice_builder/download.html'
+    download_template_name = 'legal_advice_builder/download.html'
 
     def get_answer(self):
         raise NotImplementedError
@@ -153,8 +158,8 @@ class PdfDownloadView(TemplateView, GeneratePDFDownloadMixin):
 
 
 class WordDownloadView(TemplateView, GenerateWordDownloadMixin):
-    template_name = 'legal_advice_builder/pdf_download.html'
-    download_template_name = 'legal_advice_builder/pdf_download.html'
+    template_name = 'legal_advice_builder/download.html'
+    download_template_name = 'legal_advice_builder/download.html'
 
     def get_answer(self):
         raise NotImplementedError
@@ -169,3 +174,22 @@ class WordDownloadView(TemplateView, GenerateWordDownloadMixin):
     def get(self, request, *args, **kwargs):
         html_string = self.get_html_string()
         return self.generate_word_download(html_string)
+
+
+class HTMLDownloadView(TemplateView, GenerateHTMLDownloadMixin):
+    template_name = 'legal_advice_builder/download.html'
+    download_template_name = 'legal_advice_builder/download.html'
+
+    def get_answer(self):
+        raise NotImplementedError
+
+    def get_html_string(self):
+        ctx = self.get_context_data()
+        ctx.update({
+            'answer': self.get_answer().rendered_document
+        })
+        return render_to_string(self.download_template_name, ctx)
+
+    def get(self, request, *args, **kwargs):
+        html_string = self.get_html_string()
+        return self.generate_html_download(html_string)

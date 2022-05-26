@@ -254,3 +254,37 @@ class GenerateWordDownloadMixin:
         attachment = 'attachment; filename="{}{}"'.format(filename, '.docx')
         response['Content-Disposition'] = attachment
         return response
+
+
+class GenerateHTMLDownloadMixin:
+
+    def get_html(self, html_string):
+        return html_string
+
+    def get_template_with_context(self, answers, **kwargs):
+        template = self.get_lawcase().document.template_with_answers(answers)
+        return self.get_context_data(template=template, **kwargs)
+
+    def get_html_string(self, answers):
+        context = self.get_template_with_context(answers)
+        return render_to_string(self.download_template_name, context)
+
+    def render_html_download_response(self, answers, answer=None):
+        html_string = ''
+        if answer:
+            html_string = answer.rendered_document
+        else:
+            html_string = self.get_html_string(answers)
+        return self.generate_html_download(html_string)
+
+    def get_filename(self):
+        return 'download'
+
+    def generate_html_download(self, html_string):
+        response = HttpResponse(
+            self.get_html(html_string)
+        )
+        filename = self.get_filename()
+        attachment = 'attachment; filename="{}{}"'.format(filename, '.html')
+        response['Content-Disposition'] = attachment
+        return response

@@ -12,6 +12,10 @@ from .admin_views import QuestionaireDeleteView
 from .admin_views import QuestionaireDetail
 from .admin_views import QuestionDelete
 from .admin_views import QuestionUpdate
+from .admin_views import AnswerEditView
+from .admin_views import DownloadAnswerAsPDFView
+from .admin_views import DownloadAnswerAsWordView
+from .admin_views import DownloadAnswerAsHTMLView
 
 app_name = 'legal_advice_builder'
 urlpatterns = [
@@ -26,5 +30,9 @@ urlpatterns = [
     path('question/<int:pk>/edit', QuestionUpdate.as_view(), name='question-update'),
     path('question/<int:pk>/delete', QuestionDelete.as_view(), name='question-delete'),
     path('document/<int:pk>/edit/', DocumentFormView.as_view(), name='document-update'),
-    path('document/<int:pk>/preview/', DocumentPreviewView.as_view(), name='document-detail')
+    path('document/<int:pk>/preview/', DocumentPreviewView.as_view(), name='document-detail'),
+    path('answer/<int:pk>/edit/', AnswerEditView.as_view(), name='answer-update'),
+    path('answer/<int:pk>/pdfdownload/', DownloadAnswerAsPDFView.as_view(), name='answer-pdf-download'),
+    path('answer/<int:pk>/worddownload/', DownloadAnswerAsWordView.as_view(), name='answer-word-download'),
+    path('answer/<int:pk>/htmldownload/', DownloadAnswerAsHTMLView.as_view(), name='answer-html-download')
 ]
