@@ -5,10 +5,10 @@ from django.views.generic import TemplateView
 from .forms import RenderedDocumentForm
 from .forms import WizardForm
 from .mixins import GenerateEditableDocumentMixin
+from .mixins import GenerateHTMLDownloadMixin
 from .mixins import GeneratePDFDownloadMixin
 from .mixins import GenerateWordDownloadMixin
 from .mixins import GenrateFormWizardMixin
-from .mixins import GenerateHTMLDownloadMixin
 from .models import Answer
 from .models import Question
 from .storage import SessionStorage
@@ -26,43 +26,30 @@ class FormWizardView(TemplateView,
     wizard_form_class = WizardForm
     document_form_class = RenderedDocumentForm
 
-    def get_lawcase(self):
-        raise NotImplementedError
-
-    def get_prefix(self):
-        return 'legal_advice_builder_{}'.format(self.get_lawcase().id)
-
     def dispatch(self, request, *args, **kwargs):
-        self.prefix = self.get_prefix()
         self.storage = SessionStorage(
-            self.prefix, request
+            self.get_prefix(), request
         )
         self.law_case = self.get_lawcase()
         self.allow_download = self.law_case.allow_download
         self.save_answers_enabled = self.law_case.save_answers
         self.answer = None
         if request.POST.get('answer_id'):
-            self.answer = Answer.objects.get(id=request.POST.get('answer_id'))
+            try:
+                self.answer = Answer.objects.get(id=request.POST.get('answer_id'))
+            except Answer.DoesNotExist:
+                pass
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.storage.reset()
-        questionaire = self.get_lawcase().get_first_questionaire()
+        questionaire = self.law_case.get_first_questionaire()
         question = questionaire.get_first_question()
         return self.render_next(question, [])
 
-    def render_previous_question(self, answers, question):
-        try:
-            previous_question = self.storage.get_data().get('answers')[-1]
-            next_question = Question.objects.get(id=previous_question.get('question'))
-            del answers[-1]
-            return self.render_next(next_question, answers, initial_data=previous_question)
-        except IndexError:
-            return self.render_next(question, answers)
-
     def post(self, *args, **kwargs):
         answers = self.storage.get_data().get('answers')
-        question = self.get_current_question()
+        question = self.storage.get_current_question()
         download = self.request.POST.get('download')
         next_question = self.request.POST.get('next')
         to_previous_question = self.request.POST.get('previous-question')
@@ -99,8 +86,26 @@ class FormWizardView(TemplateView,
                                                    answers=answers,
                                                    data=self.request.POST)
 
+    def get_lawcase(self):
+        raise NotImplementedError
+
+    def get_prefix(self):
+        return 'legal_advice_builder_{}'.format(self.get_lawcase().id)
+
+    def get_initial_dict(self):
+        return {}
+
+    def render_previous_question(self, answers, question):
+        try:
+            previous_question = self.storage.get_data().get('answers')[-1]
+            next_question = Question.objects.get(id=previous_question.get('question'))
+            del answers[-1]
+            return self.render_next(next_question, answers, initial_data=previous_question)
+        except IndexError:
+            return self.render_next(question, answers)
+
     def get_progress(self):
-        question = self.get_current_question()
+        question = self.storage.get_current_question()
         questions = question.questionaire.questions
         question_count = questions.count()
         question_ids = questions.values_list('id', flat=True)
@@ -116,9 +121,6 @@ class FormWizardView(TemplateView,
 
         return question_count, answers_count, percentage
 
-    def has_previuos_question(self):
-        return not len(self.storage.get_data().get('answers', [])) == 0
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         qcount, acount, perc = self.get_progress()
@@ -126,14 +128,14 @@ class FormWizardView(TemplateView,
             'allow_download': self.allow_download,
             'save_answers_enabled': self.save_answers,
             'law_case': self.get_lawcase(),
-            'question': self.get_current_question(),
+            'question': self.storage.get_current_question(),
             'current_step': self.law_case.get_index_of_questionaire(
-                self.get_current_question().questionaire),
+                self.storage.get_current_question().questionaire),
             'step_count': self.law_case.questionaire_count(),
             'progess': perc,
             'answer_count': acount,
             'question_count': qcount,
-            'has_previous_question': self.has_previuos_question()
+            'has_previous_question': self.storage.has_previuos_question()
         })
         return context
 

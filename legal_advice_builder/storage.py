@@ -2,6 +2,9 @@ import json
 
 from django.core.serializers.json import DjangoJSONEncoder
 
+from .models import Question
+from .utils import get_answer_from_list
+
 
 class SessionStorage:
     current_questionaire = 'questionaire_id'
@@ -33,3 +36,18 @@ class SessionStorage:
 
     def reset(self):
         self.init_data()
+
+    def get_answer_for_questions(self, question_id):
+        answers = self.get_data().get('answers')
+        if answers:
+            return get_answer_from_list(answers, question_id)
+        return ""
+
+    def get_current_question(self):
+        try:
+            return Question.objects.get(id=self.get_data().get('current_question'))
+        except Question.DoesNotExist:
+            return None
+
+    def has_previuos_question(self):
+        return not len(self.get_data().get('answers', [])) == 0

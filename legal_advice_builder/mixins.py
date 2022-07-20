@@ -9,41 +9,9 @@ from htmldocx import HtmlToDocx
 from .models import Answer
 from .models import Question
 from .signals import answer_created
-from .utils import get_answer_from_list
 
 
 class GenrateFormWizardMixin:
-
-    def get_initial_dict(self):
-        return {}
-
-    def _get_dict_entry_for_question(self, question):
-        initial_dict = self.get_initial_dict()
-        questionaire = question.questionaire
-        if questionaire.short_title and question.short_title:
-            questionaire_dict = initial_dict.get(questionaire.short_title)
-            if questionaire_dict:
-                return questionaire_dict.get(question.short_title)
-
-    def get_initial_data(self, question):
-        question_data = self._get_dict_entry_for_question(question)
-        if question_data and 'initial' in question_data:
-            text_types = [question.TEXT, question.SINGLE_LINE]
-            single_option_types = [question.SINGLE_OPTION, question.YES_NO]
-            if question.field_type in text_types:
-                return {'text': question_data.get('initial')}
-            elif question.field_type in single_option_types:
-                return {'option': question_data.get('initial')}
-            elif question.field_type == question.MULTIPLE_OPTIONS:
-                return {'option': question_data.get('initial')}
-            elif question.field_type == question.DATE:
-                return {'date': question_data.get('initial')}
-
-    def get_initial_options(self, question):
-        question_data = self._get_dict_entry_for_question(question)
-        if question_data and 'options' in question_data:
-            return question_data.get('options')
-        return question.options
 
     def render_next(self, question, answers, initial_data=None):
         self.storage.set_data({
@@ -51,31 +19,19 @@ class GenrateFormWizardMixin:
             'current_question': question.id,
             'answers': answers
         })
-        initial_options = self.get_initial_options(question)
+        initial_dict = self.get_initial_dict()
+        initial_options = question.get_initial_options(initial_dict)
         if not initial_data:
-            initial_data = self.get_initial_data(question)
+            initial_data = question.get_initial_data(initial_dict)
         form = self.get_form(question=question,
                              initial_data=initial_data,
                              options=initial_options)
         return self.render_form(form)
 
-    def get_current_question(self):
-        question_id = self.storage.get_data().get('current_question')
-        return Question.objects.get(id=question_id)
-
     def get_answer_for_question(self, question_short_title, questionaire_short_title=None):
-        filters = {
-            'short_title': question_short_title
-        }
-        if questionaire_short_title:
-            filters['questionaire__short_title'] = questionaire_short_title
-        questions = Question.objects.filter(**filters)
+        questions = Question.objects.get_questions_by_short_titles(question_short_title, questionaire_short_title)
         if questions:
-            answers = self.storage.get_data().get('answers')
-            question = questions.first()
-            answers = self.storage.get_data().get('answers')
-            if answers:
-                return get_answer_from_list(answers, question)
+            return self.storage.get_answer_for_questions(questions.first())
         return ""
 
     def get_form(self, question=None, data=None, initial_data=None, options=None):
@@ -94,7 +50,8 @@ class GenrateFormWizardMixin:
         return self.render_to_response(context)
 
     def validate_form_and_get_next(self, question=None, answers=None, data=None):
-        initial_options = self.get_initial_options(question)
+        initial_dict = self.get_initial_dict()
+        initial_options = question.get_initial_options(initial_dict)
         question_form = self.get_form(question=question,
                                       data=self.request.POST,
                                       options=initial_options)
