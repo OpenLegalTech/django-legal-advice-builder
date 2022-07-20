@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import pytest
@@ -588,3 +589,56 @@ def test_form_wizard_test_date_formating(rf, law_case_factory, questionaire_fact
     request.session.save()
     resp = TestWizardView.as_view()(request)
     assert resp.context_data.get('view').storage.get_data().get('answers')[0].get('date') == '2021-10-10'
+
+
+@pytest.mark.django_db
+def test_form_wizard_get_answer_for_question(rf, law_case_factory, questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory()
+    qn = questionaire_factory(law_case=lc)
+    q1 = Question.add_root(**get_date_question(
+        questionaire=qn
+    ))
+    q1.short_title = 'short'
+    q1.save()
+    date_string = '2021-10-10'
+    data = {'question': q1.id, 'date': date_string}
+    request = rf.post('/', data)
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    praefix = 'legal_advice_builder_{}'.format(lc.id)
+    request.session[praefix] = json.dumps({
+        'current_question': q1.id,
+        'answers': []
+    }, cls=DjangoJSONEncoder)
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    date = datetime.datetime.strptime(date_string, '%Y-%m-%d').date()
+    assert resp.context_data.get('view').get_answer_for_question('short') == date
+
+
+@pytest.mark.django_db
+def test_form_wizard_get_previous_question(rf, law_case_factory, questionaire_factory):
+
+    class TestWizardView(FormWizardView):
+
+        def get_lawcase(self):
+            return LawCase.objects.all().first()
+
+    lc = law_case_factory()
+    qn = questionaire_factory(law_case=lc)
+    Question.add_root(**get_date_question(
+        questionaire=qn
+    ))
+
+    request = rf.get('/')
+    middleware = SessionMiddleware(dummy_get_response)
+    middleware.process_request(request)
+    request.session.save()
+    resp = TestWizardView.as_view()(request)
+    assert not resp.context_data.get('view').storage.has_previuos_question()

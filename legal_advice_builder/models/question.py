@@ -1,6 +1,18 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from treebeard.mp_tree import MP_Node
+from treebeard.mp_tree import MP_NodeManager
+
+
+class QuestionManager(MP_NodeManager):
+
+    def get_questions_by_short_titles(self, question_short_title, questionaire_short_title):
+        filters = {
+            'short_title': question_short_title
+        }
+        if questionaire_short_title:
+            filters['questionaire__short_title'] = questionaire_short_title
+        return self.filter(**filters)
 
 
 class Question(MP_Node):
@@ -48,13 +60,10 @@ class Question(MP_Node):
     next_question = models.ForeignKey('legal_advice_builder.Question', null=True, blank=True,
                                       on_delete=models.SET_NULL)
     is_last = models.BooleanField(default=False)
+    objects = QuestionManager()
 
-    @property
-    def conditions(self):
-        return self.question_condition
-
-    def is_option_question(self):
-        return self.field_type in [self.SINGLE_OPTION, self.YES_NO, self.MULTIPLE_OPTIONS]
+    def __str__(self):
+        return self.text
 
     def save(self, *args, **kwargs):
         if self.field_type == self.YES_NO:
@@ -63,6 +72,40 @@ class Question(MP_Node):
                 'no': str(_('no'))
             }
         super().save(*args, **kwargs)
+
+    @property
+    def conditions(self):
+        return self.question_condition
+
+    def is_option_question(self):
+        return self.field_type in [self.SINGLE_OPTION, self.YES_NO, self.MULTIPLE_OPTIONS]
+
+    def _get_dict_entry_for_question(self, initial_dict):
+        questionaire = self.questionaire
+        if questionaire.short_title and self.short_title:
+            questionaire_dict = initial_dict.get(questionaire.short_title)
+            if questionaire_dict:
+                return questionaire_dict.get(self.short_title)
+
+    def get_initial_options(self, initial_dict):
+        question_data = self._get_dict_entry_for_question(initial_dict)
+        if question_data and 'options' in question_data:
+            return question_data.get('options')
+        return self.options
+
+    def get_initial_data(self, initial_dict):
+        question_data = self._get_dict_entry_for_question(initial_dict)
+        if question_data and 'initial' in question_data:
+            text_types = [self.TEXT, self.SINGLE_LINE]
+            single_option_types = [self.SINGLE_OPTION, self.YES_NO]
+            if self.field_type in text_types:
+                return {'text': question_data.get('initial')}
+            elif self.field_type in single_option_types:
+                return {'option': question_data.get('initial')}
+            elif self.field_type == self.MULTIPLE_OPTIONS:
+                return {'option': question_data.get('initial')}
+            elif self.field_type == self.DATE:
+                return {'date': question_data.get('initial')}
 
     def prepare_for_delete(self):
         if self.is_root():
@@ -215,6 +258,3 @@ class Question(MP_Node):
         elif date:
             value = date
         return '{}_{}'.format(qn_key, question_key), value
-
-    def __str__(self):
-        return self.text
