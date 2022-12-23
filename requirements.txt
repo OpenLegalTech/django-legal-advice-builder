@@ -2,6 +2,6 @@ Django~=3.2.13
 django-treebeard==4.5.1
 WeasyPrint==52.5
 Markdown==3.3.4
-bleach==3.3.0
+bleach==5.0.1
 django-tinymce>=3.4.0
 htmldocx==0.0.6

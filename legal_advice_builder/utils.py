@@ -1,6 +1,8 @@
 import datetime
 
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
+
 
 
 def generate_answers_dict_for_template(answers):
@@ -27,11 +29,12 @@ def clean_html_field(text, setting='default'):
                     'u', 'ol', 'li', 'ul', 'h1',
                     'h2', 'h3', 'h4', 'h5']
     allowed_attrs = {'*': ['style']}
-    allowed_styles = ['text-align']
+    css_sanitizer = CSSSanitizer(allowed_css_properties=['text-align'])
+
     return bleach.clean(text,
                         tags=allowed_tags,
                         attributes=allowed_attrs,
-                        styles=allowed_styles,
+                        css_sanitizer=css_sanitizer,
                         strip=True)
 
 
